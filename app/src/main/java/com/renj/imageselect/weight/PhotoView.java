@@ -37,7 +37,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     // 移动临界值
     private int touchSlop;
     // 初始时的缩放比例，在自动缩放时使用到的
-    private float initScal;
+    private float initScal = 1.0f;
     // 是否自动缩放
     private boolean isAutoScal = false;
 
@@ -62,6 +62,9 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
             new ScaleGestureDetector.SimpleOnScaleGestureListener() {
                 @Override
                 public boolean onScale(ScaleGestureDetector detector) {
+                    if (getDrawable() == null)
+                        return false;
+
                     // 当前缩放比例和手指缩放比例比较
                     float scaleFactor = detector.getScaleFactor();
                     float currentScale = getCurrentScale();
@@ -80,6 +83,9 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     private GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onDoubleTap(MotionEvent e) {
+            if (getDrawable() == null)
+                return false;
+
             if (isAutoScal) return false;
 
             float currentScale = getCurrentScale();
@@ -101,14 +107,15 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     });
 
     private boolean isCanMove = true; // 是否能移动
-    private int moveX, moveY, lastPointerCount;
+    private int lastX, lastY, lastPointerCount;
     private boolean isCheckTopBottom, isCheckLeftRight; // 是否需要检查边界
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         // 事件转交
+        if (gestureDetector.onTouchEvent(event))
+            return true;
         scaleGestureDetector.onTouchEvent(event);
-        gestureDetector.onTouchEvent(event);
 
         int downX = 0, downY = 0, pointerCount;
         pointerCount = event.getPointerCount();
@@ -121,26 +128,39 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
 
         if (pointerCount != lastPointerCount) {
             isCanMove = false;
-            moveX = downX;
-            moveY = downY;
+            lastX = downX;
+            lastY = downY;
         }
 
         lastPointerCount = pointerCount;
-
+        RectF imageRect = getImageRect();
         switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (imageRect.width() > getWidth() || imageRect.height() > getHeight())
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                break;
             case MotionEvent.ACTION_MOVE:
-                int dx = downX - moveX;
-                int dy = downY - moveY;
+                if (imageRect.width() > getWidth() || imageRect.height() > getHeight())
+                    getParent().requestDisallowInterceptTouchEvent(true);
+
+                int dx = downX - lastX;
+                int dy = downY - lastY;
                 if (!isCanMove)
                     isCanMove = isCanMove(dx, dy);
 
                 if (isCanMove) {
                     Drawable drawable = getDrawable();
                     if (drawable != null) {
+                        // 当达到边界之后不再将事件交给父窗体
+                        if (imageRect.left == 0 && dx > 0)
+                            getParent().requestDisallowInterceptTouchEvent(false);
+
+                        if (imageRect.right == getWidth() && dx < 0)
+                            getParent().requestDisallowInterceptTouchEvent(false);
+
                         isCheckTopBottom = true;
                         isCheckLeftRight = true;
 
-                        RectF imageRect = getImageRect();
                         // 图片宽度 <= 控件宽度
                         if (imageRect.width() <= getWidth()) {
                             isCheckLeftRight = false;
@@ -157,8 +177,8 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
                         setImageMatrix(imageMatrix);
                     }
                 }
-                moveX = downX;
-                moveY = downY;
+                lastX = downX;
+                lastY = downY;
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -171,7 +191,6 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
             default:
                 break;
         }
-
         return true;
     }
 
