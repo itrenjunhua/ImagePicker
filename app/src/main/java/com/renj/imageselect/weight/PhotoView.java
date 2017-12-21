@@ -6,6 +6,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -31,12 +32,14 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     private Matrix imageMatrix = new Matrix();
     // 最小、最大缩放比例
     private float minScale = 0.25f, maxScale = 4f;
-    // 初始时的缩放比例
-    private float initScal;
     // 增加一个变量减少重复的调用布局完成监听方法
     private boolean isOnce = true;
     // 移动临界值
-    private int touchSlop = ViewConfiguration.getTouchSlop();
+    private int touchSlop;
+    // 初始时的缩放比例，在自动缩放时使用到的
+    private float initScal;
+    // 是否自动缩放
+    private boolean isAutoScal = false;
 
     public PhotoView(Context context) {
         this(context, null);
@@ -49,6 +52,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     public PhotoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         setScaleType(ScaleType.MATRIX);
         setOnTouchListener(this);
     }
@@ -72,14 +76,39 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
                 }
             });
 
-    boolean isCanMove = true;
-    int moveX, moveY, lastPointerCount;
-    boolean isCheckTopBottom, isCheckLeftRight;
+    // 用于检测双击的事件，双击效果，当前缩放比例在 2 以下时，将比例设置为 2，当前缩放比例在2-4之间时，将比例设置为 4，其他情况将比例设置为初始比例
+    private GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            if (isAutoScal) return false;
+
+            float currentScale = getCurrentScale();
+            if (currentScale < 2) {
+                isAutoScal = true;
+                AutoScalTask autoScalTask = new AutoScalTask(2, (int) e.getX(), (int) e.getY());
+                post(autoScalTask);
+            } else if (currentScale >= 2 && currentScale < maxScale) {
+                isAutoScal = true;
+                AutoScalTask autoScalTask = new AutoScalTask(4, (int) e.getX(), (int) e.getY());
+                post(autoScalTask);
+            } else {
+                isAutoScal = true;
+                AutoScalTask autoScalTask = new AutoScalTask(initScal, (int) e.getX(), (int) e.getY());
+                post(autoScalTask);
+            }
+            return true;
+        }
+    });
+
+    private boolean isCanMove = true; // 是否能移动
+    private int moveX, moveY, lastPointerCount;
+    private boolean isCheckTopBottom, isCheckLeftRight; // 是否需要检查边界
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         // 事件转交
         scaleGestureDetector.onTouchEvent(event);
+        gestureDetector.onTouchEvent(event);
 
         int downX = 0, downY = 0, pointerCount;
         pointerCount = event.getPointerCount();
@@ -327,5 +356,51 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         getViewTreeObserver().removeOnGlobalLayoutListener(this);
+    }
+
+    /**
+     * 自动方法和缩小的任务
+     */
+    class AutoScalTask implements Runnable {
+        // 每次放大的倍数
+        private final float BIGGER = 1.04f;
+        // 每次缩小的倍数
+        private final float SMALLER = 0.96f;
+        private int centerX, centerY;
+        // 目标比例
+        private float targetScal;
+        // 自动进行缩放时使用的比例
+        private float tempScal;
+
+        public AutoScalTask(float targetScal, int centerX, int centerY) {
+            this.targetScal = targetScal;
+            this.centerX = centerX;
+            this.centerY = centerY;
+
+            // 判断是缩小还是放大
+            float currentScale = getCurrentScale();
+            if (currentScale > targetScal)
+                tempScal = SMALLER;
+            else tempScal = BIGGER;
+        }
+
+        @Override
+        public void run() {
+            imageMatrix.postScale(tempScal, tempScal, centerX, centerY);
+            scaleCheck();
+            setImageMatrix(imageMatrix);
+
+            float currentScale = getCurrentScale();
+            if ((tempScal > 1 && currentScale < targetScal) || (tempScal < 1 && currentScale > targetScal)) {
+                PhotoView.this.postDelayed(this, 15);
+            } else {
+                // 根据当前比例和目标比例计算出最终的的缩放比例才能到达目标比例
+                float lastScale = targetScal / currentScale;
+                imageMatrix.postScale(lastScale, lastScale, centerX, centerY);
+                scaleCheck();
+                setImageMatrix(imageMatrix);
+                isAutoScal = false;
+            }
+        }
     }
 }
