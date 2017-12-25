@@ -198,11 +198,12 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     }
 
     public Bitmap cropBitmap(@NonNull CropView.CropShape cropShape, @NonNull RectF cropRectf) {
-        Bitmap bitmap = Bitmap.createBitmap((int) (cropRectf.width()), (int) (cropRectf.height()), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(),
+                Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        Drawable drawable = getDrawable();
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
+        draw(canvas);
+        bitmap = Bitmap.createBitmap(bitmap, (int) cropRectf.left,
+                (int) cropRectf.top, (int) cropRectf.width(), (int) cropRectf.height());
         return bitmap;
     }
 
