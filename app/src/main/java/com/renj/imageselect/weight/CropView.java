@@ -57,12 +57,17 @@ public class CropView extends View {
     private RectF cropRect = new RectF();
     // 裁剪形状
     private CropShape cropShape = DEFAULT_CROP_SHAPE;
+    // 裁剪范围监听
+    private OnCropRangeListener onCropRangeListener;
+    // 控件的宽、高
+    private int width, height;
+    // 控件的范围
+    private RectF rectF;
 
-    /**
-     * 裁剪形状枚举
-     */
-    public enum CropShape {
-        CROP_RECT, CROP_CIRCLE
+    public void confirmCrop(OnCropRangeListener onCropRangeListener) {
+        if (onCropRangeListener != null) {
+            onCropRangeListener.cropRange(cropShape, cropRect);
+        }
     }
 
     public CropView(Context context) {
@@ -96,12 +101,16 @@ public class CropView extends View {
     }
 
     @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        width = w;
+        height = h;
+        rectF = new RectF(0, 0, width, height);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        int width = getWidth();
-        int height = getHeight();
-        RectF rectF = new RectF(0, 0, width, height);
 
         int saveLayer = canvas.saveLayer(rectF, null, ALL_SAVE_FLAG);
 
@@ -134,5 +143,19 @@ public class CropView extends View {
      */
     private int dp2Px(int dp) {
         return (int) (getResources().getDisplayMetrics().density * dp + 0.5);
+    }
+
+    /**
+     * 裁剪形状枚举
+     */
+    public enum CropShape {
+        CROP_RECT, CROP_CIRCLE
+    }
+
+    /**
+     * 裁剪监听
+     */
+    public interface OnCropRangeListener {
+        void cropRange(CropShape cropShape, RectF cropRectF);
     }
 }
