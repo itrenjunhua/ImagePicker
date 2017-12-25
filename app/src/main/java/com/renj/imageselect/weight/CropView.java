@@ -36,6 +36,8 @@ public class CropView extends View {
     private final int DEFAULT_BORDER_WIDTH = 1;
     // 默认裁剪宽高相等，都为 200dp，默认矩形
     private final int DEFAULT_SIZE = 200;
+    // 默认裁剪形状 矩形
+    private CropShape DEFAULT_CROP_SHAPE = CropShape.CROP_RECT;
 
     // 用户绘制背景的画笔
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -53,6 +55,15 @@ public class CropView extends View {
     private int cropHeight = dp2Px(DEFAULT_SIZE);
     // 裁剪范围
     private RectF cropRect = new RectF();
+    // 裁剪形状
+    private CropShape cropShape = DEFAULT_CROP_SHAPE;
+
+    /**
+     * 裁剪形状枚举
+     */
+    public enum CropShape {
+        CROP_RECT, CROP_CIRCLE
+    }
 
     public CropView(Context context) {
         this(context, null);
@@ -80,6 +91,8 @@ public class CropView extends View {
         borderPaint.setColor(borderColor);
         borderPaint.setStrokeWidth(dp2Px(borderWidth));
         borderPaint.setStyle(Paint.Style.STROKE);
+
+        cropShape = CropShape.CROP_CIRCLE;
     }
 
     @Override
@@ -97,10 +110,18 @@ public class CropView extends View {
         int left = (width - cropWidth) / 2;
         int top = (height - cropHeight) / 2;
         cropRect = new RectF(left, top, left + cropWidth, top + cropHeight);
-        canvas.drawRect(cropRect, paint);
-        paint.setXfermode(null);
 
-        canvas.drawRect(cropRect,borderPaint);
+        if (CropShape.CROP_RECT == cropShape) { // 矩形
+            canvas.drawRect(cropRect, paint);
+            canvas.drawRect(cropRect, borderPaint);
+        } else { // 圆形
+            float centerX = (cropRect.left + cropRect.right) / 2;
+            float centerY = (cropRect.top + cropRect.bottom) / 2;
+            int radius = (Math.min(cropWidth, cropHeight)) / 2;
+            canvas.drawCircle(centerX, centerY, radius, paint);
+            canvas.drawCircle(centerX, centerY, radius, borderPaint);
+        }
+        paint.setXfermode(null);
 
         canvas.restoreToCount(saveLayer);
     }
