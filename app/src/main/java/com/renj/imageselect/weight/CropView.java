@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
@@ -64,7 +65,7 @@ public class CropView extends View {
     // 控件的范围
     private RectF rectF;
 
-    public void confirmCrop(OnCropRangeListener onCropRangeListener) {
+    public void confirmCrop(@NonNull  OnCropRangeListener onCropRangeListener) {
         if (onCropRangeListener != null) {
             onCropRangeListener.cropRange(cropShape, cropRect);
         }

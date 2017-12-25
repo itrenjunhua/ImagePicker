@@ -1,9 +1,12 @@
 package com.renj.imageselect.weight;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -192,6 +195,15 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
                 break;
         }
         return true;
+    }
+
+    public Bitmap cropBitmap(@NonNull CropView.CropShape cropShape, @NonNull RectF cropRectf) {
+        Bitmap bitmap = Bitmap.createBitmap((int) (cropRectf.width()), (int) (cropRectf.height()), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable drawable = getDrawable();
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
     /**
