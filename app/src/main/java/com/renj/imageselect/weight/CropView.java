@@ -58,8 +58,6 @@ public class CropView extends View {
     private RectF cropRect = new RectF();
     // 裁剪形状
     private CropShape cropShape = DEFAULT_CROP_SHAPE;
-    // 裁剪范围监听
-    private OnCropRangeListener onCropRangeListener;
     // 控件的宽、高
     private int width, height;
     // 控件的范围

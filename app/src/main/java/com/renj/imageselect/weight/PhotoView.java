@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -16,6 +19,8 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+
+import static android.graphics.Canvas.ALL_SAVE_FLAG;
 
 /**
  * ======================================================================
@@ -198,12 +203,33 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     }
 
     public Bitmap cropBitmap(@NonNull CropView.CropShape cropShape, @NonNull RectF cropRectf) {
+        setDrawingCacheEnabled(true);
+        Bitmap source = getDrawingCache();
+
         Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(),
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        draw(canvas);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        int saveLayer = canvas.saveLayer(cropRectf, null, ALL_SAVE_FLAG);
+        if (CropView.CropShape.CROP_CIRCLE == cropShape) {
+            float centerX = (cropRectf.left + cropRectf.right) / 2;
+            float centerY = (cropRectf.top + cropRectf.bottom) / 2;
+            int radius = (int) ((Math.min(cropRectf.width(), cropRectf.height())) / 2);
+
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawCircle(centerX, centerY, radius, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(source, 0, 0, paint);
+            paint.setXfermode(null);
+        } else {
+            canvas.drawBitmap(source, 0, 0, paint);
+        }
+        canvas.restoreToCount(saveLayer);
+
         bitmap = Bitmap.createBitmap(bitmap, (int) cropRectf.left,
                 (int) cropRectf.top, (int) cropRectf.width(), (int) cropRectf.height());
+        setDrawingCacheEnabled(false);
         return bitmap;
     }
 
