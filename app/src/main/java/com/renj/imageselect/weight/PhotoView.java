@@ -202,6 +202,13 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
         return true;
     }
 
+    /**
+     * 裁剪图片方法
+     *
+     * @param cropShape 才加形状
+     * @param cropRectf 裁剪范围
+     * @return 裁剪后的图片
+     */
     public Bitmap cropBitmap(@NonNull CropView.CropShape cropShape, @NonNull RectF cropRectf) {
         setDrawingCacheEnabled(true);
         Bitmap source = getDrawingCache();
