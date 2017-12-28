@@ -64,7 +64,7 @@ public class ImageSelectAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_image_select, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.image_select_item, null);
             viewHolder = new ViewHolder(convertView);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();

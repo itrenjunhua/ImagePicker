@@ -8,13 +8,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-        <!--Dialog样式-->
-        <style name="crop_dialog" parent="android:Theme.Dialog">
-            <item name="android:windowIsFloating">true</item>
-            <item name="android:windowNoTitle">true</item>
-            <item name="android:windowFullscreen">true</item>
-            <item name="android:windowBackground">@android:color/transparent</item>
-            <item name="android:windowAnimationStyle">@null</item>
-        </style>
-
 </resources>

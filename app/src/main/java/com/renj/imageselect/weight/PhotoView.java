@@ -209,7 +209,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
      * @param cropRectf 裁剪范围
      * @return 裁剪后的图片
      */
-    public Bitmap cropBitmap(@NonNull CropView.CropShape cropShape, @NonNull RectF cropRectf) {
+    public Bitmap cropBitmap(@NonNull ClipView.CropShape cropShape, @NonNull RectF cropRectf) {
         setDrawingCacheEnabled(true);
         Bitmap source = getDrawingCache();
 
@@ -219,7 +219,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         int saveLayer = canvas.saveLayer(cropRectf, null, ALL_SAVE_FLAG);
-        if (CropView.CropShape.CROP_CIRCLE == cropShape) {
+        if (ClipView.CropShape.CROP_CIRCLE == cropShape) {
             float centerX = (cropRectf.left + cropRectf.right) / 2;
             float centerY = (cropRectf.top + cropRectf.bottom) / 2;
             int radius = (int) ((Math.min(cropRectf.width(), cropRectf.height())) / 2);
@@ -308,43 +308,55 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
         imageMatrix.postTranslate(dx, dy);
     }
 
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+        super.setImageBitmap(bm);
+        updateScalAndPosstion();
+    }
+
     /**
      * 布局完成时，根据图片大小进行图片的缩放和位置摆放
      */
     @Override
     public void onGlobalLayout() {
         if (isOnce) {
-            Drawable drawable = getDrawable();
-            if (drawable == null) return;
-
-            int width = getWidth();
-            int height = getHeight();
-            int intrinsicWidth = drawable.getIntrinsicWidth();
-            int intrinsicHeight = drawable.getIntrinsicHeight();
-
-            // 如果图片宽和高大于控件的宽和高，就缩小图片
-            // 如果图片宽和高小于控件的宽和高，就将图片放在控件中间
-            float scal = 1.0f;
-            if (intrinsicWidth > width && intrinsicHeight < height) {
-                scal = width * 1.0f / intrinsicWidth;
-            }
-
-            if (intrinsicHeight > height && intrinsicWidth < width) {
-                scal = height * 1.0f / intrinsicHeight;
-            }
-
-            if (intrinsicWidth > width && intrinsicHeight > height) {
-                scal = Math.min(width * 1.0f / intrinsicWidth, height * 1.0f / intrinsicHeight);
-            }
-
-            initScal = scal;
-            // 注意先进行平移操作在进行缩放操作，否则可能导致缩放后的图片不能居中显示
-            imageMatrix.postTranslate((width - intrinsicWidth) * 0.5f, (height - intrinsicHeight) * 0.5f);
-            imageMatrix.postScale(scal, scal, width * 0.5f, height * 0.5f);
-            setImageMatrix(imageMatrix);
-
+            updateScalAndPosstion();
             isOnce = false;
         }
+    }
+
+    /**
+     * 更新图片位置
+     */
+    private void updateScalAndPosstion() {
+        Drawable drawable = getDrawable();
+        if (drawable == null) return;
+
+        int width = getWidth();
+        int height = getHeight();
+        int intrinsicWidth = drawable.getIntrinsicWidth();
+        int intrinsicHeight = drawable.getIntrinsicHeight();
+
+        // 如果图片宽和高大于控件的宽和高，就缩小图片
+        // 如果图片宽和高小于控件的宽和高，就将图片放在控件中间
+        float scal = 1.0f;
+        if (intrinsicWidth > width && intrinsicHeight < height) {
+            scal = width * 1.0f / intrinsicWidth;
+        }
+
+        if (intrinsicHeight > height && intrinsicWidth < width) {
+            scal = height * 1.0f / intrinsicHeight;
+        }
+
+        if (intrinsicWidth > width && intrinsicHeight > height) {
+            scal = Math.min(width * 1.0f / intrinsicWidth, height * 1.0f / intrinsicHeight);
+        }
+
+        initScal = scal;
+        // 注意先进行平移操作在进行缩放操作，否则可能导致缩放后的图片不能居中显示
+        imageMatrix.postTranslate((width - intrinsicWidth) * 0.5f, (height - intrinsicHeight) * 0.5f);
+        imageMatrix.postScale(scal, scal, width * 0.5f, height * 0.5f);
+        setImageMatrix(imageMatrix);
     }
 
     /**

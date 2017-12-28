@@ -28,7 +28,7 @@ import static android.graphics.Canvas.ALL_SAVE_FLAG;
  * <p>
  * ======================================================================
  */
-public class CropView extends View {
+public class ClipView extends View {
     // 默认遮罩层颜色
     private final int DEFAULT_MASK_COLOR = 0xaa000000;
     // 默认边框颜色
@@ -69,21 +69,21 @@ public class CropView extends View {
         }
     }
 
-    public CropView(Context context) {
+    public ClipView(Context context) {
         this(context, null);
     }
 
-    public CropView(Context context, @Nullable AttributeSet attrs) {
+    public ClipView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CropView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ClipView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public CropView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ClipView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }

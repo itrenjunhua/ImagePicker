@@ -2,7 +2,7 @@ package com.renj.imageselect.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.adapter.ImageMenuAdapter;
@@ -21,6 +23,7 @@ import com.renj.imageselect.adapter.ImageSelectAdapter;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.select.LoadSDImageUtil;
+import com.renj.imageselect.weight.ImageClipLayout;
 
 import java.util.List;
 
@@ -41,24 +44,29 @@ public class ImageSelectActivity extends AppCompatActivity {
     private GridView gvImages;
     private ListView lvMenu;
     private DrawerLayout drawerLayout;
+    private LinearLayout clipLayout;
+    private TextView tvCancel, tvClip;
+    private ImageClipLayout imageClipLayout;
+
     private ImageSelectAdapter imageSelectAdapter;
     private ImageMenuAdapter imageMenuAdapter;
-    private ImageCropDialog imageCropDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_select);
+        setContentView(R.layout.image_activity_select);
         gvImages = findViewById(R.id.gv_images);
         lvMenu = findViewById(R.id.lv_menu);
         drawerLayout = findViewById(R.id.drawer_layout);
+        clipLayout = findViewById(R.id.clip_layout);
+        tvCancel = findViewById(R.id.tv_cancel);
+        tvClip = findViewById(R.id.tv_clip);
+        imageClipLayout = findViewById(R.id.image_clip_layout);
 
         imageSelectAdapter = new ImageSelectAdapter(this);
         imageMenuAdapter = new ImageMenuAdapter(this);
         gvImages.setAdapter(imageSelectAdapter);
         lvMenu.setAdapter(imageMenuAdapter);
-
-        imageCropDialog = new ImageCropDialog(this);
 
         setListener();
 
@@ -89,11 +97,25 @@ public class ImageSelectActivity extends AppCompatActivity {
                 Object itemData = parent.getItemAtPosition(position);
                 if (itemData instanceof ImageModel) {
                     ImageModel imageModel = (ImageModel) itemData;
-                    //Intent intent = new Intent(ImageSelectActivity.this,ImageCropDialog.class);
-                    //startActivity(intent);
-                    imageCropDialog.setImageViewBitmap(BitmapFactory.decodeFile(imageModel.path));
-                    imageCropDialog.show();
+                    gvImages.setVisibility(View.GONE);
+                    clipLayout.setVisibility(View.VISIBLE);
+                    imageClipLayout.setImage(imageModel.path);
                 }
+            }
+        });
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        tvClip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap = imageClipLayout.cut();
+                imageClipLayout.setImage(bitmap);
             }
         });
     }
