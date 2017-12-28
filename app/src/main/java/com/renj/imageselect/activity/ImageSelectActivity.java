@@ -2,6 +2,7 @@ package com.renj.imageselect.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +20,7 @@ import com.renj.imageselect.adapter.ImageMenuAdapter;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.select.ImageSelectUtil;
+import com.renj.imageselect.select.LoadSDImageUtil;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class ImageSelectActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ImageSelectAdapter imageSelectAdapter;
     private ImageMenuAdapter imageMenuAdapter;
+    private ImageCropDialog imageCropDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +57,8 @@ public class ImageSelectActivity extends AppCompatActivity {
         imageMenuAdapter = new ImageMenuAdapter(this);
         gvImages.setAdapter(imageSelectAdapter);
         lvMenu.setAdapter(imageMenuAdapter);
+
+        imageCropDialog = new ImageCropDialog(this);
 
         setListener();
 
@@ -79,13 +83,26 @@ public class ImageSelectActivity extends AppCompatActivity {
             }
         });
 
+        gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object itemData = parent.getItemAtPosition(position);
+                if (itemData instanceof ImageModel) {
+                    ImageModel imageModel = (ImageModel) itemData;
+                    //Intent intent = new Intent(ImageSelectActivity.this,ImageCropDialog.class);
+                    //startActivity(intent);
+                    imageCropDialog.setImageViewBitmap(BitmapFactory.decodeFile(imageModel.path));
+                    imageCropDialog.show();
+                }
+            }
+        });
     }
 
     /**
      * 开始从SD卡中加载图片
      */
     private void startLoadImage() {
-        ImageSelectUtil.loadImageForSdCaard(this, new ImageSelectUtil.LoadImageForSdCardFinishListener() {
+        LoadSDImageUtil.loadImageForSdCaard(this, new LoadSDImageUtil.LoadImageForSdCardFinishListener() {
             @Override
             public void finish(List<ImageModel> imageModels, List<FolderModel> folderModels) {
                 imageSelectAdapter.setImageModels(imageModels);

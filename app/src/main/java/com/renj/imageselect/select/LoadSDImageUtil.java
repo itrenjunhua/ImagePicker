@@ -25,13 +25,13 @@ import java.util.List;
  * <p>
  * 创建时间：2017-12-27   14:58
  * <p>
- * 描述：图片选择工具类
+ * 描述：从SD卡中加载图片的工具类
  * <p>
  * 修订历史：
  * <p>
  * ======================================================================
  */
-public class ImageSelectUtil {
+public class LoadSDImageUtil {
 
     /**
      * 从sd卡中加载图片

@@ -3,34 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <Button
+        android:id="@+id/click_select"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.renj.imageselect.weight.PhotoView
-            android:id="@+id/photo_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@mipmap/a1" />
-
-        <com.renj.imageselect.weight.CropView
-            android:id="@+id/crop_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <Button
-            android:id="@+id/click_select"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="选择图片" />
-
-        <Button
-            android:id="@+id/click_crop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="裁剪" />
-
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:text="选择图片" />
 
 </LinearLayout>
