@@ -1,6 +1,7 @@
 package com.renj.imageselect.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -114,7 +115,10 @@ public class ImageSelectActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ImageModel imageModel = imageClipLayout.cut();
-                imageClipLayout.setImage(imageModel.path);
+                Intent intent = new Intent();
+                intent.putExtra("result", imageModel);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }

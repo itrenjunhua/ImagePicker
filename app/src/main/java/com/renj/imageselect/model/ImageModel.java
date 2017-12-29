@@ -1,5 +1,8 @@
 package com.renj.imageselect.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * ======================================================================
  * <p>
@@ -13,7 +16,7 @@ package com.renj.imageselect.model;
  * <p>
  * ======================================================================
  */
-public class ImageModel {
+public class ImageModel implements Parcelable {
     // 图片路径
     public String path;
     // 图片名称
@@ -31,4 +34,34 @@ public class ImageModel {
     public String toString() {
         return "{ path = [" + path + "], name = [" + name + "], time = [" + time + "] }";
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.path);
+        dest.writeString(this.name);
+        dest.writeLong(this.time);
+    }
+
+    protected ImageModel(Parcel in) {
+        this.path = in.readString();
+        this.name = in.readString();
+        this.time = in.readLong();
+    }
+
+    public static final Parcelable.Creator<ImageModel> CREATOR = new Parcelable.Creator<ImageModel>() {
+        @Override
+        public ImageModel createFromParcel(Parcel source) {
+            return new ImageModel(source);
+        }
+
+        @Override
+        public ImageModel[] newArray(int size) {
+            return new ImageModel[size];
+        }
+    };
 }
