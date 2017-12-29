@@ -31,7 +31,7 @@ import java.util.List;
  * <p>
  * ======================================================================
  */
-public class LoadSDImageUtil {
+public class LoadSDImageUtils {
 
     /**
      * 从sd卡中加载图片

@@ -8,8 +8,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.renj.imageselect.activity.ImageSelectActivity;
 import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.utils.ImageSelectUtil;
+import com.renj.imageselect.utils.OnResultCallBack;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_SELECT = 0x88;
@@ -27,8 +28,16 @@ public class MainActivity extends AppCompatActivity {
         clickSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ImageSelectActivity.class);
-                startActivityForResult(intent, REQUEST_IMAGE_SELECT);
+//                Intent intent = new Intent(MainActivity.this, ImageSelectActivity.class);
+//                startActivityForResult(intent, REQUEST_IMAGE_SELECT);
+                ImageSelectUtil.create()
+                        .openActivity(MainActivity.this)
+                        .onResult(new OnResultCallBack<ImageModel>() {
+                            @Override
+                            public void onResult(ImageModel selectResult) {
+                                Glide.with(MainActivity.this).load(selectResult.path).into(imageView);
+                            }
+                        });
             }
         });
     }
@@ -36,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (RESULT_OK == resultCode && REQUEST_IMAGE_SELECT == requestCode && data != null) {
-            ImageModel imageModel = data.getParcelableExtra("result");
-            Glide.with(this).load(imageModel.path).into(imageView);
-        }
+//        if (RESULT_OK == resultCode && REQUEST_IMAGE_SELECT == requestCode && data != null) {
+//            ImageModel imageModel = data.getParcelableExtra("result");
+//            Glide.with(this).load(imageModel.path).into(imageView);
+//        }
     }
 }

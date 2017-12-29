@@ -1,10 +1,12 @@
 package com.renj.imageselect.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,7 +24,8 @@ import com.renj.imageselect.adapter.ImageMenuAdapter;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.utils.LoadSDImageUtil;
+import com.renj.imageselect.utils.LoadSDImageUtils;
+import com.renj.imageselect.utils.OnResultCallBack;
 import com.renj.imageselect.weight.ImageClipLayout;
 
 import java.util.List;
@@ -115,9 +118,11 @@ public class ImageSelectActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ImageModel imageModel = imageClipLayout.cut();
-                Intent intent = new Intent();
-                intent.putExtra("result", imageModel);
-                setResult(RESULT_OK, intent);
+//                Intent intent = new Intent();
+//                intent.putExtra("result", imageModel);
+//                setResult(RESULT_OK, intent);
+                if (create().onResultCallBack != null)
+                    create().onResultCallBack.onResult(imageModel);
                 finish();
             }
         });
@@ -127,7 +132,7 @@ public class ImageSelectActivity extends AppCompatActivity {
      * 开始从SD卡中加载图片
      */
     private void startLoadImage() {
-        LoadSDImageUtil.loadImageForSdCaard(this, new LoadSDImageUtil.LoadImageForSdCardFinishListener() {
+        LoadSDImageUtils.loadImageForSdCaard(this, new LoadSDImageUtils.LoadImageForSdCardFinishListener() {
             @Override
             public void finish(List<ImageModel> imageModels, List<FolderModel> folderModels) {
                 imageSelectAdapter.setImageModels(imageModels);
@@ -163,6 +168,31 @@ public class ImageSelectActivity extends AppCompatActivity {
         if (requestCode == 12 && grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             startLoadImage();
+        }
+    }
+
+    private static ImageSelectObservable imageSelectObservable;
+
+    public static ImageSelectObservable create() {
+        if (imageSelectObservable == null)
+            imageSelectObservable = new ImageSelectObservable();
+        return imageSelectObservable;
+    }
+
+    public static class ImageSelectObservable {
+        OnResultCallBack onResultCallBack;
+
+        ImageSelectObservable() {
+        }
+
+        public ImageSelectObservable openActivity(@NonNull Context context) {
+            Intent intent = new Intent(context, ImageSelectActivity.class);
+            context.startActivity(intent);
+            return this;
+        }
+
+        public void onResult(@NonNull OnResultCallBack onResultCallBack) {
+            this.onResultCallBack = onResultCallBack;
         }
     }
 }
