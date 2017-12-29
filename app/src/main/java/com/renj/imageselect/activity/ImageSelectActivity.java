@@ -2,7 +2,6 @@ package com.renj.imageselect.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,7 +21,7 @@ import com.renj.imageselect.adapter.ImageMenuAdapter;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.select.LoadSDImageUtil;
+import com.renj.imageselect.utils.LoadSDImageUtil;
 import com.renj.imageselect.weight.ImageClipLayout;
 
 import java.util.List;
@@ -114,8 +113,8 @@ public class ImageSelectActivity extends AppCompatActivity {
         tvClip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bitmap bitmap = imageClipLayout.cut();
-                imageClipLayout.setImage(bitmap);
+                ImageModel imageModel = imageClipLayout.cut();
+                imageClipLayout.setImage(imageModel.path);
             }
         });
     }
@@ -136,15 +135,18 @@ public class ImageSelectActivity extends AppCompatActivity {
     private void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 12);
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 12);
             } else {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 12);
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 12);
             }
         } else {
             startLoadImage();

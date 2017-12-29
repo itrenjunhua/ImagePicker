@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.renj.imageselect.R;
+import com.renj.imageselect.model.ImageModel;
 
 /**
  * ======================================================================
@@ -61,21 +62,21 @@ public class ImageClipLayout extends RelativeLayout {
 
     public void setImage(@NonNull String path) {
         Glide.with(getContext()).load(path).into(photoView);
-        //photoView.setImageBitmap(BitmapFactory.decodeFile(path));
     }
 
     public void setImage(@NonNull Bitmap bitmap) {
         photoView.setImageBitmap(bitmap);
     }
 
-    Bitmap bitmap = null;
-    public Bitmap cut() {
+    ImageModel imageModel;
+
+    public ImageModel cut() {
         clipView.confirmCrop(new ClipView.OnCropRangeListener() {
             @Override
             public void cropRange(ClipView.CropShape cropShape, RectF cropRectF) {
-                bitmap = photoView.cropBitmap(cropShape, cropRectF);
+                imageModel = photoView.cropBitmap(cropShape, cropRectF);
             }
         });
-        return bitmap;
+        return imageModel;
     }
 }

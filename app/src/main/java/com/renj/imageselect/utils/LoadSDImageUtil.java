@@ -1,4 +1,4 @@
-package com.renj.imageselect.select;
+package com.renj.imageselect.utils;
 
 import android.app.Activity;
 import android.content.ContentResolver;

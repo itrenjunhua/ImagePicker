@@ -20,6 +20,9 @@ import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.utils.Utils;
+
 import static android.graphics.Canvas.ALL_SAVE_FLAG;
 
 /**
@@ -209,7 +212,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
      * @param cropRectf 裁剪范围
      * @return 裁剪后的图片
      */
-    public Bitmap cropBitmap(@NonNull ClipView.CropShape cropShape, @NonNull RectF cropRectf) {
+    public ImageModel cropBitmap(@NonNull ClipView.CropShape cropShape, @NonNull RectF cropRectf) {
         setDrawingCacheEnabled(true);
         Bitmap source = getDrawingCache();
 
@@ -237,7 +240,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
         bitmap = Bitmap.createBitmap(bitmap, (int) cropRectf.left,
                 (int) cropRectf.top, (int) cropRectf.width(), (int) cropRectf.height());
         setDrawingCacheEnabled(false);
-        return bitmap;
+        return Utils.saveBitmap2File(Utils.getName(), bitmap);
     }
 
     /**
@@ -340,11 +343,11 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
         // 如果图片宽和高大于控件的宽和高，就缩小图片
         // 如果图片宽和高小于控件的宽和高，就将图片放在控件中间
         float scal = 1.0f;
-        if (intrinsicWidth > width && intrinsicHeight < height) {
+        if (intrinsicWidth > width && intrinsicHeight <= height) {
             scal = width * 1.0f / intrinsicWidth;
         }
 
-        if (intrinsicHeight > height && intrinsicWidth < width) {
+        if (intrinsicHeight > height && intrinsicWidth <= width) {
             scal = height * 1.0f / intrinsicHeight;
         }
 
@@ -440,9 +443,9 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
      */
     class AutoScalTask implements Runnable {
         // 每次放大的倍数
-        private final float BIGGER = 1.04f;
+        private final float BIGGER = 1.02f;
         // 每次缩小的倍数
-        private final float SMALLER = 0.96f;
+        private final float SMALLER = 0.98f;
         private int centerX, centerY;
         // 目标比例
         private float targetScal;
@@ -469,7 +472,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
 
             float currentScale = getCurrentScale();
             if ((tempScal > 1 && currentScale < targetScal) || (tempScal < 1 && currentScale > targetScal)) {
-                PhotoView.this.postDelayed(this, 15);
+                PhotoView.this.postDelayed(this, 8);
             } else {
                 // 根据当前比例和目标比例计算出最终的的缩放比例才能到达目标比例
                 float lastScale = targetScal / currentScale;
