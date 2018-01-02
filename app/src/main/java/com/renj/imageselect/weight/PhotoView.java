@@ -162,12 +162,14 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
                 if (isCanMove) {
                     Drawable drawable = getDrawable();
                     if (drawable != null) {
-                        // 当达到边界之后不再将事件交给父窗体
-                        if (imageRect.left == 0 && dx > 0)
-                            getParent().requestDisallowInterceptTouchEvent(false);
+                        // 当达到边界之后再将事件交给父窗体
+//                        if (imageRect.left == 0 && dx > 0)
+//                            getParent().requestDisallowInterceptTouchEvent(false);
+//
+//                        if (imageRect.right == getWidth() && dx < 0)
+//                            getParent().requestDisallowInterceptTouchEvent(false);
 
-                        if (imageRect.right == getWidth() && dx < 0)
-                            getParent().requestDisallowInterceptTouchEvent(false);
+                        getParent().requestDisallowInterceptTouchEvent(true);
 
                         isCheckTopBottom = true;
                         isCheckLeftRight = true;

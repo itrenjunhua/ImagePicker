@@ -30,8 +30,13 @@ public class NoScrollViewPager extends ViewPager {
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
+    public boolean onInterceptHoverEvent(MotionEvent event) {
         return false;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
