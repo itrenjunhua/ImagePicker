@@ -6,12 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +33,8 @@ import java.util.List;
 public class ImageSelectAdapter extends BaseAdapter {
     private Context context;
     private List<ImageModel> imageModels;
+    private int maxCount = 1;
+    private List<ImageModel> checkImages = new ArrayList<>();
 
     public ImageSelectAdapter(Context context) {
         this.context = context;
@@ -43,6 +48,32 @@ public class ImageSelectAdapter extends BaseAdapter {
     public void setImageModels(@NonNull List<ImageModel> imageModels) {
         this.imageModels = imageModels;
         notifyDataSetChanged();
+    }
+
+    public void setMaxCount(int maxCount) {
+        this.maxCount = maxCount;
+    }
+
+    public boolean addOrClearCheckedPosition(int position) {
+        if (checkImages.size() >= maxCount && !checkImages.contains(imageModels.get(position))) {
+            Toast.makeText(context, "最多选择" + maxCount + "张图片", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        boolean result;
+        if (checkImages.contains(imageModels.get(position))) {
+            checkImages.remove(imageModels.get(position));
+            result = false;
+        } else {
+            checkImages.add(imageModels.get(position));
+            result = true;
+        }
+        notifyDataSetChanged();
+        return result;
+    }
+
+    public List<ImageModel> getCheckImages(){
+        return checkImages;
     }
 
     @Override
@@ -70,15 +101,22 @@ public class ImageSelectAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.setData(imageModels.get(position));
+
+        if (checkImages.contains(imageModels.get(position)))
+            viewHolder.checkBox.setChecked(true);
+        else
+            viewHolder.checkBox.setChecked(false);
         return convertView;
     }
 
     class ViewHolder {
         ImageView imageView;
+        CheckBox checkBox;
 
         public ViewHolder(@NonNull View view) {
             view.setTag(this);
             imageView = view.findViewById(R.id.iv_item);
+            checkBox = view.findViewById(R.id.item_checkbox);
         }
 
         public void setData(@NonNull ImageModel imageModel) {

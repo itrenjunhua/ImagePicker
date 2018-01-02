@@ -17,7 +17,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.adapter.ImageMenuAdapter;
@@ -43,12 +45,22 @@ import java.util.List;
  * <p>
  * ======================================================================
  */
-public class ImageSelectActivity extends AppCompatActivity {
+public class ImageSelectActivity extends AppCompatActivity implements View.OnClickListener {
+    // 图片选择页面
+    private final int STATU_IMAGE_SELECT_PAGE = 0x01;
+    // 裁剪单个图片页面
+    private final int STATU_CLIP_SINGLE_PAGE = 0x02;
+    // 裁剪多个图片页面
+    private final int STATU_SLIP_MORE_PAGE = 0x03;
+    // 当前页面
+    private int currentStatu;
+
     private GridView gvImages;
     private ListView lvMenu;
     private DrawerLayout drawerLayout;
     private LinearLayout clipLayout;
-    private TextView tvCancel, tvClip;
+    private RelativeLayout selectMoreTitle;
+    private TextView tvCancel, tvClip, tvCancelSelect, tvConfirmSelect;
     private ImageClipLayout imageClipLayout;
 
     private ImageSelectAdapter imageSelectAdapter;
@@ -64,13 +76,18 @@ public class ImageSelectActivity extends AppCompatActivity {
         clipLayout = findViewById(R.id.clip_layout);
         tvCancel = findViewById(R.id.tv_cancel);
         tvClip = findViewById(R.id.tv_clip);
+        tvCancelSelect = findViewById(R.id.tv_cancel_select);
+        tvConfirmSelect = findViewById(R.id.tv_confirm_select);
         imageClipLayout = findViewById(R.id.image_clip_layout);
+        selectMoreTitle = findViewById(R.id.rl_select_more);
 
         imageSelectAdapter = new ImageSelectAdapter(this);
         imageMenuAdapter = new ImageMenuAdapter(this);
         gvImages.setAdapter(imageSelectAdapter);
         lvMenu.setAdapter(imageMenuAdapter);
 
+        imageSelectAdapter.setMaxCount(9);
+        pageStatuChange(STATU_IMAGE_SELECT_PAGE);
         setListener();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -100,32 +117,19 @@ public class ImageSelectActivity extends AppCompatActivity {
                 Object itemData = parent.getItemAtPosition(position);
                 if (itemData instanceof ImageModel) {
                     ImageModel imageModel = (ImageModel) itemData;
-                    gvImages.setVisibility(View.GONE);
-                    clipLayout.setVisibility(View.VISIBLE);
-                    imageClipLayout.setImage(imageModel.path);
+                    imageSelectAdapter.addOrClearCheckedPosition(position);
+
+                    tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / 9) 确定");
+                    //pageStatuChange(STATU_CLIP_SINGLE_PAGE);
+                    //imageClipLayout.setImage(imageModel.path);
                 }
             }
         });
 
-        tvCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        tvClip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageModel imageModel = imageClipLayout.cut();
-//                Intent intent = new Intent();
-//                intent.putExtra("result", imageModel);
-//                setResult(RESULT_OK, intent);
-                if (create().onResultCallBack != null)
-                    create().onResultCallBack.onResult(imageModel);
-                finish();
-            }
-        });
+        tvCancelSelect.setOnClickListener(this);
+        tvConfirmSelect.setOnClickListener(this);
+        tvCancel.setOnClickListener(this);
+        tvClip.setOnClickListener(this);
     }
 
     /**
@@ -139,6 +143,26 @@ public class ImageSelectActivity extends AppCompatActivity {
                 imageMenuAdapter.setFolderModels(folderModels);
             }
         });
+    }
+
+    /**
+     * 根据参数显示不同页面
+     *
+     * @param page
+     */
+    private void pageStatuChange(int page) {
+        if (currentStatu != page) {
+            if (STATU_IMAGE_SELECT_PAGE == page) {
+                gvImages.setVisibility(View.VISIBLE);
+                clipLayout.setVisibility(View.GONE);
+            } else if (STATU_CLIP_SINGLE_PAGE == page) {
+                gvImages.setVisibility(View.GONE);
+                clipLayout.setVisibility(View.VISIBLE);
+            } else {
+
+            }
+        }
+        currentStatu = page;
     }
 
     private void requestPermissions() {
@@ -177,6 +201,31 @@ public class ImageSelectActivity extends AppCompatActivity {
         if (imageSelectObservable == null)
             imageSelectObservable = new ImageSelectObservable();
         return imageSelectObservable;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int vId = v.getId();
+        switch (vId) {
+            case R.id.tv_cancel:
+            case R.id.tv_cancel_select:
+                finish();
+                break;
+            case R.id.tv_confirm_select:
+                Toast.makeText(ImageSelectActivity.this, "选择了多张图片", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.tv_clip:
+                ImageModel imageModel = imageClipLayout.cut();
+//                Intent intent = new Intent();
+//                intent.putExtra("result", imageModel);
+//                setResult(RESULT_OK, intent);
+                if (create().onResultCallBack != null)
+                    create().onResultCallBack.onResult(imageModel);
+                finish();
+                break;
+            default:
+                break;
+        }
     }
 
     public static class ImageSelectObservable {
