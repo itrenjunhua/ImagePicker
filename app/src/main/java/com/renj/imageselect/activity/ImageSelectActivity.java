@@ -29,6 +29,7 @@ import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.utils.LoadSDImageUtils;
 import com.renj.imageselect.utils.OnResultCallBack;
 import com.renj.imageselect.weight.ImageClipLayout;
+import com.renj.imageselect.weight.ImageClipMoreLayout;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     // 裁剪单个图片页面
     private final int STATU_CLIP_SINGLE_PAGE = 0x02;
     // 裁剪多个图片页面
-    private final int STATU_SLIP_MORE_PAGE = 0x03;
+    private final int STATU_CLIP_MORE_PAGE = 0x03;
     // 当前页面
     private int currentStatu;
 
@@ -59,9 +60,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private ListView lvMenu;
     private DrawerLayout drawerLayout;
     private LinearLayout clipLayout;
+    private LinearLayout llSelectView;
     private RelativeLayout selectMoreTitle;
     private TextView tvCancel, tvClip, tvCancelSelect, tvConfirmSelect;
     private ImageClipLayout imageClipLayout;
+    private ImageClipMoreLayout clipMoreLayout;
 
     private ImageSelectAdapter imageSelectAdapter;
     private ImageMenuAdapter imageMenuAdapter;
@@ -80,6 +83,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         tvConfirmSelect = findViewById(R.id.tv_confirm_select);
         imageClipLayout = findViewById(R.id.image_clip_layout);
         selectMoreTitle = findViewById(R.id.rl_select_more);
+        clipMoreLayout = findViewById(R.id.image_clip_more);
+        llSelectView = findViewById(R.id.ll_select_view);
 
         imageSelectAdapter = new ImageSelectAdapter(this);
         imageMenuAdapter = new ImageMenuAdapter(this);
@@ -153,13 +158,31 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private void pageStatuChange(int page) {
         if (currentStatu != page) {
             if (STATU_IMAGE_SELECT_PAGE == page) {
-                gvImages.setVisibility(View.VISIBLE);
                 clipLayout.setVisibility(View.GONE);
+                clipMoreLayout.setVisibility(View.GONE);
+                llSelectView.setVisibility(View.VISIBLE);
             } else if (STATU_CLIP_SINGLE_PAGE == page) {
-                gvImages.setVisibility(View.GONE);
+                llSelectView.setVisibility(View.GONE);
+                clipMoreLayout.setVisibility(View.GONE);
                 clipLayout.setVisibility(View.VISIBLE);
             } else {
+                llSelectView.setVisibility(View.GONE);
+                clipLayout.setVisibility(View.GONE);
+                clipMoreLayout.setVisibility(View.VISIBLE);
 
+                clipMoreLayout.setOnImageClipMoreListener(new ImageClipMoreLayout.OnImageClipMoreListener() {
+                    @Override
+                    public void cancel() {
+                        ImageSelectActivity.this.finish();
+                    }
+
+                    @Override
+                    public void finish(List<ImageModel> clipResult) {
+                        if (create().onResultCallBack != null)
+                            create().onResultCallBack.onResult(clipResult);
+                        ImageSelectActivity.this.finish();
+                    }
+                });
             }
         }
         currentStatu = page;
@@ -195,14 +218,6 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private static ImageSelectObservable imageSelectObservable;
-
-    public static ImageSelectObservable create() {
-        if (imageSelectObservable == null)
-            imageSelectObservable = new ImageSelectObservable();
-        return imageSelectObservable;
-    }
-
     @Override
     public void onClick(View v) {
         int vId = v.getId();
@@ -212,7 +227,13 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 finish();
                 break;
             case R.id.tv_confirm_select:
-                Toast.makeText(ImageSelectActivity.this, "选择了多张图片", Toast.LENGTH_SHORT).show();
+                List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
+                if (checkImages.size() <= 0) {
+                    Toast.makeText(ImageSelectActivity.this, "没有选择图片", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                clipMoreLayout.setImageData(checkImages);
+                pageStatuChange(STATU_CLIP_MORE_PAGE);
                 break;
             case R.id.tv_clip:
                 ImageModel imageModel = imageClipLayout.cut();
@@ -226,6 +247,14 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             default:
                 break;
         }
+    }
+
+    private static ImageSelectObservable imageSelectObservable;
+
+    public static ImageSelectObservable create() {
+        if (imageSelectObservable == null)
+            imageSelectObservable = new ImageSelectObservable();
+        return imageSelectObservable;
     }
 
     public static class ImageSelectObservable {

@@ -22,7 +22,7 @@ import com.renj.imageselect.model.ImageModel;
  * <p>
  * 创建时间：2017-12-28   17:07
  * <p>
- * 描述：
+ * 描述：图片裁剪控件
  * <p>
  * 修订历史：
  * <p>
@@ -55,7 +55,7 @@ public class ImageClipLayout extends RelativeLayout {
     private void initView(Context context) {
         View clipViewLayout = LayoutInflater.from(context).inflate(R.layout.image_clip_layout, null);
         photoView = clipViewLayout.findViewById(R.id.photo_view);
-        clipView = clipViewLayout.findViewById(R.id.crop_view);
+        clipView = clipViewLayout.findViewById(R.id.clip_view);
 
         addView(clipViewLayout);
     }
