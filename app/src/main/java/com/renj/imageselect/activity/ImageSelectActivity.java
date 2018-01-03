@@ -26,6 +26,7 @@ import com.renj.imageselect.adapter.ImageMenuAdapter;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
 import com.renj.imageselect.utils.OnResultCallBack;
 import com.renj.imageselect.weight.ImageClipLayout;
@@ -259,11 +260,17 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
     public static class ImageSelectObservable {
         OnResultCallBack onResultCallBack;
+        ImageSelectConfig imageSelectConfig;
 
         ImageSelectObservable() {
         }
 
-        public ImageSelectObservable openActivity(@NonNull Context context) {
+        public ImageSelectObservable clipConfig(@NonNull ImageSelectConfig imageSelectConfig) {
+            this.imageSelectConfig = imageSelectConfig;
+            return this;
+        }
+
+        public ImageSelectObservable openImageSelectPage(@NonNull Context context) {
             Intent intent = new Intent(context, ImageSelectActivity.class);
             context.startActivity(intent);
             return this;

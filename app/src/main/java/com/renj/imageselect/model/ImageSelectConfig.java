@@ -56,6 +56,18 @@ public class ImageSelectConfig {
         return this.configModel.aspectRatioBase;
     }
 
+    public int getClipLineWidth() {
+        return this.configModel.clipLineWidth;
+    }
+
+    public int getClipLineColor() {
+        return this.configModel.clipLineColor;
+    }
+
+    public int getMaskColorColor() {
+        return this.configModel.maskColorColor;
+    }
+
     private static class ConfigModel {
         int width; // 裁剪宽度
         int height; // 裁剪高度
@@ -66,6 +78,9 @@ public class ImageSelectConfig {
         float maxScale; // 图片最大缩放倍数
         float aspectRatio; // 宽高比例
         int aspectRatioBase; // 宽高比以宽还是高为1，0表示以宽为 1，非0表示以高为1，这里的宽或者高以设置的 width 或 height 属性为准，没设置宽高使用默认的
+        int clipLineWidth; // 裁剪线条宽度
+        int clipLineColor; // 裁剪线条颜色
+        int maskColorColor; // 遮罩层颜色
     }
 
     public static class Builder {
@@ -116,6 +131,21 @@ public class ImageSelectConfig {
 
         public Builder aspectRatioBase(int aspectRatioBase) {
             configModel.aspectRatioBase = aspectRatioBase;
+            return this;
+        }
+
+        public Builder clipLineWidth(int clipLineWidth) {
+            configModel.clipLineWidth = clipLineWidth;
+            return this;
+        }
+
+        public Builder clipLineColor(int clipLineColor) {
+            configModel.clipLineColor = clipLineColor;
+            return this;
+        }
+
+        public Builder maskColorColor(int maskColorColor) {
+            configModel.maskColorColor = maskColorColor;
             return this;
         }
 

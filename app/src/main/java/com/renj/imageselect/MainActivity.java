@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // 单张图片
 //                ImageSelectUtil.create()
-//                        .openActivity(MainActivity.this)
+//                        .openImageSelectPage(MainActivity.this)
 //                        .onResult(new OnResultCallBack<ImageModel>() {
 //                            @Override
 //                            public void onResult(ImageModel selectResult) {
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // 多张图片
                 ImageSelectUtil.create()
-                        .openActivity(MainActivity.this)
+                        .openImageSelectPage(MainActivity.this)
                         .onResult(new OnResultCallBack<List<ImageModel>>() {
                             @Override
                             public void onResult(List<ImageModel> selectResults) {

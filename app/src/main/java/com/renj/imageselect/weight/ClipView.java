@@ -96,7 +96,7 @@ public class ClipView extends View {
         borderPaint.setStrokeWidth(dp2Px(borderWidth));
         borderPaint.setStyle(Paint.Style.STROKE);
 
-        cropShape = CropShape.CROP_CIRCLE;
+        cropShape = CropShape.CROP_RECT;
     }
 
     @Override
