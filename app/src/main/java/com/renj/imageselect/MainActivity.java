@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.ImageSelectUtil;
 import com.renj.imageselect.utils.OnResultCallBack;
 
@@ -45,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
 //                        });
 
                 // 多张图片
+                ImageSelectConfig imageSelectConfig = new ImageSelectConfig.Builder().width(400).build();
                 ImageSelectUtil.create()
+                        .clipConfig(imageSelectConfig)
                         .openImageSelectPage(MainActivity.this)
                         .onResult(new OnResultCallBack<List<ImageModel>>() {
                             @Override

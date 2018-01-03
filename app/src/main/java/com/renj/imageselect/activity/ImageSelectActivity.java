@@ -28,6 +28,7 @@ import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
+import com.renj.imageselect.utils.Logger;
 import com.renj.imageselect.utils.OnResultCallBack;
 import com.renj.imageselect.weight.ImageClipLayout;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
@@ -69,11 +70,16 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
     private ImageSelectAdapter imageSelectAdapter;
     private ImageMenuAdapter imageMenuAdapter;
+    private ImageSelectConfig imageSelectConfig;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_activity_select);
+
+        imageSelectConfig = getIntent().getParcelableExtra("imageSelectConfig");
+        Logger.i("----------- " + imageSelectConfig.getWidth());
+
         gvImages = findViewById(R.id.gv_images);
         lvMenu = findViewById(R.id.lv_menu);
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -272,6 +278,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         public ImageSelectObservable openImageSelectPage(@NonNull Context context) {
             Intent intent = new Intent(context, ImageSelectActivity.class);
+            intent.putExtra("imageSelectConfig",imageSelectConfig);
             context.startActivity(intent);
             return this;
         }

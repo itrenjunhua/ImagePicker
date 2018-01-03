@@ -1,5 +1,8 @@
 package com.renj.imageselect.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * ======================================================================
  * <p>
@@ -13,7 +16,7 @@ package com.renj.imageselect.model;
  * <p>
  * ======================================================================
  */
-public class ImageSelectConfig {
+public class ImageSelectConfig implements Parcelable {
     private ConfigModel configModel = new ConfigModel();
 
     private ImageSelectConfig(ConfigModel configModel) {
@@ -68,7 +71,33 @@ public class ImageSelectConfig {
         return this.configModel.maskColorColor;
     }
 
-    private static class ConfigModel {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.configModel, flags);
+    }
+
+    protected ImageSelectConfig(Parcel in) {
+        this.configModel = in.readParcelable(ConfigModel.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<ImageSelectConfig> CREATOR = new Parcelable.Creator<ImageSelectConfig>() {
+        @Override
+        public ImageSelectConfig createFromParcel(Parcel source) {
+            return new ImageSelectConfig(source);
+        }
+
+        @Override
+        public ImageSelectConfig[] newArray(int size) {
+            return new ImageSelectConfig[size];
+        }
+    };
+
+    private static class ConfigModel implements Parcelable {
         int width; // 裁剪宽度
         int height; // 裁剪高度
         int selectCount; // 选择图片张数
@@ -81,6 +110,58 @@ public class ImageSelectConfig {
         int clipLineWidth; // 裁剪线条宽度
         int clipLineColor; // 裁剪线条颜色
         int maskColorColor; // 遮罩层颜色
+
+        public ConfigModel() {
+
+        }
+
+        protected ConfigModel(Parcel in) {
+            width = in.readInt();
+            height = in.readInt();
+            selectCount = in.readInt();
+            isClip = in.readByte() != 0;
+            isCircleClip = in.readByte() != 0;
+            minScale = in.readFloat();
+            maxScale = in.readFloat();
+            aspectRatio = in.readFloat();
+            aspectRatioBase = in.readInt();
+            clipLineWidth = in.readInt();
+            clipLineColor = in.readInt();
+            maskColorColor = in.readInt();
+        }
+
+        public static final Creator<ConfigModel> CREATOR = new Creator<ConfigModel>() {
+            @Override
+            public ConfigModel createFromParcel(Parcel in) {
+                return new ConfigModel(in);
+            }
+
+            @Override
+            public ConfigModel[] newArray(int size) {
+                return new ConfigModel[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(width);
+            dest.writeInt(height);
+            dest.writeInt(selectCount);
+            dest.writeByte((byte) (isClip ? 1 : 0));
+            dest.writeByte((byte) (isCircleClip ? 1 : 0));
+            dest.writeFloat(minScale);
+            dest.writeFloat(maxScale);
+            dest.writeFloat(aspectRatio);
+            dest.writeInt(aspectRatioBase);
+            dest.writeInt(clipLineWidth);
+            dest.writeInt(clipLineColor);
+            dest.writeInt(maskColorColor);
+        }
     }
 
     public static class Builder {
