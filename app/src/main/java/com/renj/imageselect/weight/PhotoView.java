@@ -208,16 +208,25 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     }
 
     /**
-     * 裁剪图片方法
+     * 裁剪图片并保存到本地方法
      *
      * @param cropShape 才加形状
      * @param cropRectf 裁剪范围
      * @return 裁剪后的图片
      */
-    public ImageModel cropBitmap(@NonNull ClipView.CropShape cropShape, @NonNull RectF cropRectf) {
+    public ImageModel clipBitmap(@NonNull ClipView.CropShape cropShape, @NonNull RectF cropRectf) {
         setDrawingCacheEnabled(true);
         Bitmap source = getDrawingCache();
+        Bitmap bitmap = clipBitmap(cropShape, cropRectf, source);
+        setDrawingCacheEnabled(false);
+        return Utils.saveBitmap2File(Utils.getName(), bitmap);
+    }
 
+    /**
+     * 裁剪图片方法
+     */
+    private Bitmap clipBitmap(@NonNull ClipView.CropShape cropShape, @NonNull RectF cropRectf, @NonNull Bitmap source) {
+        if (source == null) return null;
         Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(),
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -241,8 +250,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
 
         bitmap = Bitmap.createBitmap(bitmap, (int) cropRectf.left,
                 (int) cropRectf.top, (int) cropRectf.width(), (int) cropRectf.height());
-        setDrawingCacheEnabled(false);
-        return Utils.saveBitmap2File(Utils.getName(), bitmap);
+        return bitmap;
     }
 
     /**

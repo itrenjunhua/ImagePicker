@@ -16,8 +16,6 @@ import com.renj.imageselect.activity.ImageSelectActivity;
  * ======================================================================
  */
 public class ImageSelectUtil {
-    private OnResultCallBack onResultCallBack;
-
     private ImageSelectUtil() {
     }
 

@@ -74,7 +74,7 @@ public class ImageClipView extends RelativeLayout {
         clipView.confirmCrop(new ClipView.OnCropRangeListener() {
             @Override
             public void cropRange(ClipView.CropShape cropShape, RectF cropRectF) {
-                imageModel = photoView.cropBitmap(cropShape, cropRectF);
+                imageModel = photoView.clipBitmap(cropShape, cropRectF);
             }
         });
         return imageModel;

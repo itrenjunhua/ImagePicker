@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -57,49 +58,73 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     // 当前页面
     private int currentStatu;
 
+    /***** 页面基本控件 *****/
     private GridView gvImages;
     private ListView lvMenu;
     private DrawerLayout drawerLayout;
-    private LinearLayout clipLayout;
+    private ViewStub vsClipSingle; // 裁剪单张图片时加载
+    private ViewStub vsClipMore; // 裁剪多张图片时加载
+
+    /***** 多选图片时的取消、确认(已选张数)等控件 *****/
     private LinearLayout llSelectView;
+    private TextView tvCancelSelect, tvConfirmSelect;
     private RelativeLayout selectMoreTitle;
-    private TextView tvCancel, tvClip, tvCancelSelect, tvConfirmSelect;
+
+    /***** 裁剪单张图片时使用到的控件 *****/
+    private TextView tvCancel, tvClip;
+    private LinearLayout clipLayout;
+
+    /***** 裁剪多张图片时使用到的控件 *****/
     private ImageClipView imageClipView;
     private ImageClipMoreLayout clipMoreLayout;
 
-    private ImageSelectAdapter imageSelectAdapter;
-    private ImageMenuAdapter imageMenuAdapter;
-    private ImageSelectConfig imageSelectConfig;
+    private ImageSelectAdapter imageSelectAdapter; // 图片展示的适配器
+    private ImageMenuAdapter imageMenuAdapter;     // 目录的适配器
+    private ImageSelectConfig imageSelectConfig;   // 保存图片选择配置信息的对象
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_select_activity);
 
+        // 获取配置参数
         imageSelectConfig = getIntent().getParcelableExtra("imageSelectConfig");
 
+        /***** 页面基本控件 *****/
         gvImages = findViewById(R.id.gv_images);
         lvMenu = findViewById(R.id.lv_menu);
         drawerLayout = findViewById(R.id.drawer_layout);
-        clipLayout = findViewById(R.id.clip_layout);
-        tvCancel = findViewById(R.id.tv_cancel);
-        tvClip = findViewById(R.id.tv_clip);
+        vsClipSingle = findViewById(R.id.vs_clip_single);
+        vsClipSingle = findViewById(R.id.vs_clip_single);
+
+        /***** 多选图片时的取消、确认(已选张数)等控件 *****/
         tvCancelSelect = findViewById(R.id.tv_cancel_select);
         tvConfirmSelect = findViewById(R.id.tv_confirm_select);
-        imageClipView = findViewById(R.id.image_clip_layout);
+        llSelectView = findViewById(R.id.ll_select_view);
+
+        /***** 裁剪单张图片时使用到的控件 *****/
+        tvClip = findViewById(R.id.tv_clip);
+        tvCancel = findViewById(R.id.tv_cancel);
+        imageClipView = findViewById(R.id.image_clip_view);
+        clipLayout = findViewById(R.id.clip_layout);
+
+        /***** 裁剪多张图片时使用到的控件 *****/
         selectMoreTitle = findViewById(R.id.rl_select_more);
         clipMoreLayout = findViewById(R.id.image_clip_more);
-        llSelectView = findViewById(R.id.ll_select_view);
 
         imageSelectAdapter = new ImageSelectAdapter(this);
         imageMenuAdapter = new ImageMenuAdapter(this);
         gvImages.setAdapter(imageSelectAdapter);
         lvMenu.setAdapter(imageMenuAdapter);
 
-        imageSelectAdapter.setMaxCount(9);
+        // 配置数据解析
+        configDataParse();
+        // 显示图片选择界面
         pageStatuChange(STATU_IMAGE_SELECT_PAGE);
-        setListener();
+        // 设置各个条目监听
+        setItemListener();
 
+        // 根据系统版本申请权限并加载SD卡图片
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions();
         } else {
@@ -107,7 +132,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private void setListener() {
+    private void configDataParse() {
+        imageSelectAdapter.setMaxCount(9);
+    }
+
+    private void setItemListener() {
         // 目录条目监听
         lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -121,6 +150,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
+        // 图片点击监听
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -128,16 +158,15 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 if (itemData instanceof ImageModel) {
                     ImageModel imageModel = (ImageModel) itemData;
                     imageSelectAdapter.addOrClearCheckedPosition(position);
-
                     tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / 9) 确定");
                 }
             }
         });
 
-        tvCancelSelect.setOnClickListener(this);
-        tvConfirmSelect.setOnClickListener(this);
-        tvCancel.setOnClickListener(this);
-        tvClip.setOnClickListener(this);
+//        tvCancelSelect.setOnClickListener(this);
+//        tvConfirmSelect.setOnClickListener(this);
+//        tvCancel.setOnClickListener(this);
+//        tvClip.setOnClickListener(this);
     }
 
     /**
@@ -159,33 +188,40 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * @param page
      */
     private void pageStatuChange(int page) {
+        if (clipLayout == null && clipMoreLayout == null) return;
         if (currentStatu != page) {
             if (STATU_IMAGE_SELECT_PAGE == page) {
-                clipLayout.setVisibility(View.GONE);
-                clipMoreLayout.setVisibility(View.GONE);
+                if (clipLayout != null)
+                    clipLayout.setVisibility(View.GONE);
+                if (clipMoreLayout != null)
+                    clipMoreLayout.setVisibility(View.GONE);
                 llSelectView.setVisibility(View.VISIBLE);
             } else if (STATU_CLIP_SINGLE_PAGE == page) {
                 llSelectView.setVisibility(View.GONE);
-                clipMoreLayout.setVisibility(View.GONE);
-                clipLayout.setVisibility(View.VISIBLE);
+                if (clipMoreLayout != null)
+                    clipMoreLayout.setVisibility(View.GONE);
+                if (clipLayout != null)
+                    clipLayout.setVisibility(View.VISIBLE);
             } else {
                 llSelectView.setVisibility(View.GONE);
-                clipLayout.setVisibility(View.GONE);
-                clipMoreLayout.setVisibility(View.VISIBLE);
+                if (clipLayout != null)
+                    clipLayout.setVisibility(View.GONE);
+                if (clipMoreLayout != null) {
+                    clipMoreLayout.setVisibility(View.VISIBLE);
+                    clipMoreLayout.setOnImageClipMoreListener(new ImageClipMoreLayout.OnImageClipMoreListener() {
+                        @Override
+                        public void cancel() {
+                            ImageSelectActivity.this.finish();
+                        }
 
-                clipMoreLayout.setOnImageClipMoreListener(new ImageClipMoreLayout.OnImageClipMoreListener() {
-                    @Override
-                    public void cancel() {
-                        ImageSelectActivity.this.finish();
-                    }
-
-                    @Override
-                    public void finish(List<ImageModel> clipResult) {
-                        if (create().onResultCallBack != null)
-                            create().onResultCallBack.onResult(clipResult);
-                        ImageSelectActivity.this.finish();
-                    }
-                });
+                        @Override
+                        public void finish(List<ImageModel> clipResult) {
+                            if (create().onResultCallBack != null)
+                                create().onResultCallBack.onResult(clipResult);
+                            ImageSelectActivity.this.finish();
+                        }
+                    });
+                }
             }
         }
         currentStatu = page;
@@ -271,7 +307,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         public ImageSelectObservable openImageSelectPage(@NonNull Context context) {
             Intent intent = new Intent(context, ImageSelectActivity.class);
-            intent.putExtra("imageSelectConfig",imageSelectConfig);
+            intent.putExtra("imageSelectConfig", imageSelectConfig);
             context.startActivity(intent);
             return this;
         }
