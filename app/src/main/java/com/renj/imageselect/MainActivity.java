@@ -1,6 +1,5 @@
 package com.renj.imageselect;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,7 +16,6 @@ import com.renj.imageselect.utils.OnResultCallBack;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int REQUEST_IMAGE_SELECT = 0x88;
     private Button clickSelect;
     private ImageView imageView;
 
@@ -32,9 +30,6 @@ public class MainActivity extends AppCompatActivity {
         clickSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, ImageSelectActivity.class);
-//                startActivityForResult(intent, REQUEST_IMAGE_SELECT);
-
                 // 单张图片
 //                ImageSelectUtil.create()
 //                        .openImageSelectPage(MainActivity.this)
@@ -59,14 +54,5 @@ public class MainActivity extends AppCompatActivity {
                         });
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if (RESULT_OK == resultCode && REQUEST_IMAGE_SELECT == requestCode && data != null) {
-//            ImageModel imageModel = data.getParcelableExtra("result");
-//            Glide.with(this).load(imageModel.path).into(imageView);
-//        }
     }
 }

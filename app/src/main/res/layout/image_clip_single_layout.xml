@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--裁剪单张图片布局-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/clip_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:visibility="gone">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -33,7 +32,7 @@
 
     </RelativeLayout>
 
-    <com.renj.imageselect.weight.ImageClipLayout
+    <com.renj.imageselect.weight.ImageClipView
         android:id="@+id/image_clip_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

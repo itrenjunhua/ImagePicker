@@ -28,9 +28,8 @@ import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
-import com.renj.imageselect.utils.Logger;
 import com.renj.imageselect.utils.OnResultCallBack;
-import com.renj.imageselect.weight.ImageClipLayout;
+import com.renj.imageselect.weight.ImageClipView;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
 
 import java.util.List;
@@ -65,7 +64,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private LinearLayout llSelectView;
     private RelativeLayout selectMoreTitle;
     private TextView tvCancel, tvClip, tvCancelSelect, tvConfirmSelect;
-    private ImageClipLayout imageClipLayout;
+    private ImageClipView imageClipView;
     private ImageClipMoreLayout clipMoreLayout;
 
     private ImageSelectAdapter imageSelectAdapter;
@@ -75,10 +74,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.image_activity_select);
+        setContentView(R.layout.image_select_activity);
 
         imageSelectConfig = getIntent().getParcelableExtra("imageSelectConfig");
-        Logger.i("----------- " + imageSelectConfig.getWidth());
 
         gvImages = findViewById(R.id.gv_images);
         lvMenu = findViewById(R.id.lv_menu);
@@ -88,7 +86,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         tvClip = findViewById(R.id.tv_clip);
         tvCancelSelect = findViewById(R.id.tv_cancel_select);
         tvConfirmSelect = findViewById(R.id.tv_confirm_select);
-        imageClipLayout = findViewById(R.id.image_clip_layout);
+        imageClipView = findViewById(R.id.image_clip_layout);
         selectMoreTitle = findViewById(R.id.rl_select_more);
         clipMoreLayout = findViewById(R.id.image_clip_more);
         llSelectView = findViewById(R.id.ll_select_view);
@@ -132,8 +130,6 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                     imageSelectAdapter.addOrClearCheckedPosition(position);
 
                     tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / 9) 确定");
-                    //pageStatuChange(STATU_CLIP_SINGLE_PAGE);
-                    //imageClipLayout.setImage(imageModel.path);
                 }
             }
         });
@@ -243,10 +239,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 pageStatuChange(STATU_CLIP_MORE_PAGE);
                 break;
             case R.id.tv_clip:
-                ImageModel imageModel = imageClipLayout.cut();
-//                Intent intent = new Intent();
-//                intent.putExtra("result", imageModel);
-//                setResult(RESULT_OK, intent);
+                ImageModel imageModel = imageClipView.cut();
                 if (create().onResultCallBack != null)
                     create().onResultCallBack.onResult(imageModel);
                 finish();

@@ -28,32 +28,32 @@ import com.renj.imageselect.model.ImageModel;
  * <p>
  * ======================================================================
  */
-public class ImageClipLayout extends RelativeLayout {
+public class ImageClipView extends RelativeLayout {
 
     private PhotoView photoView;
     private ClipView clipView;
 
-    public ImageClipLayout(Context context) {
+    public ImageClipView(Context context) {
         this(context, null);
     }
 
-    public ImageClipLayout(Context context, AttributeSet attrs) {
+    public ImageClipView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ImageClipLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ImageClipView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public ImageClipLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ImageClipView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initView(context);
     }
 
     private void initView(Context context) {
-        View clipViewLayout = LayoutInflater.from(context).inflate(R.layout.image_clip_layout, null);
+        View clipViewLayout = LayoutInflater.from(context).inflate(R.layout.image_clip_view, null);
         photoView = clipViewLayout.findViewById(R.id.photo_view);
         clipView = clipViewLayout.findViewById(R.id.clip_view);
 

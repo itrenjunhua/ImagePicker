@@ -103,7 +103,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
                     onImageClipMoreListener.cancel();
                 break;
             case R.id.tv_clip_more:
-                ImageClipLayout focusedChild = clipMorePagerAdapter.getPrimaryItem();
+                ImageClipView focusedChild = clipMorePagerAdapter.getPrimaryItem();
                 ImageModel imageModel = focusedChild.cut();
                 resoutImages.add(imageModel);
 
@@ -128,14 +128,14 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
     }
 
     class ClipMorePagerAdapter extends PagerAdapter {
-        private ImageClipLayout mCurrentView;
+        private ImageClipView mCurrentView;
 
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
-            mCurrentView = (ImageClipLayout) object;
+            mCurrentView = (ImageClipView) object;
         }
 
-        public ImageClipLayout getPrimaryItem() {
+        public ImageClipView getPrimaryItem() {
             return mCurrentView;
         }
 
@@ -152,10 +152,10 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            ImageClipLayout imageClipLayout = new ImageClipLayout(getContext());
-            imageClipLayout.setImage(srcImages.get(position).path);
-            container.addView(imageClipLayout);
-            return imageClipLayout;
+            ImageClipView imageClipView = new ImageClipView(getContext());
+            imageClipView.setImage(srcImages.get(position).path);
+            container.addView(imageClipView);
+            return imageClipView;
         }
 
         @Override
