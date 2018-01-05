@@ -132,10 +132,24 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    /**
+     * 解析配置数据
+     */
     private void configDataParse() {
+        defaultConfig();
         imageSelectAdapter.setMaxCount(9);
     }
 
+    /**
+     * 没有配置信息时，使用默认的配置信息
+     */
+    private void defaultConfig() {
+
+    }
+
+    /**
+     * 设置条目相关监听
+     */
     private void setItemListener() {
         // 目录条目监听
         lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -227,6 +241,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         currentStatu = page;
     }
 
+    /**
+     * 请求权限
+     */
     private void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -293,6 +310,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         return imageSelectObservable;
     }
 
+    /**
+     * 提供设置配置参数、打开图片选择界面的返回结果回调方法
+     */
     public static class ImageSelectObservable {
         OnResultCallBack onResultCallBack;
         ImageSelectConfig imageSelectConfig;
@@ -300,11 +320,25 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         ImageSelectObservable() {
         }
 
+        /**
+         * 设置选择和裁剪配置参数<br/>
+         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #clipConfig(ImageSelectConfig)} 方法，在调用 {@link #openImageSelectPage(Context)} 方法</b>
+         *
+         * @param imageSelectConfig {@link ImageSelectConfig} 对象
+         * @return {@link ImageSelectObservable} 对象
+         */
         public ImageSelectObservable clipConfig(@NonNull ImageSelectConfig imageSelectConfig) {
             this.imageSelectConfig = imageSelectConfig;
             return this;
         }
 
+        /**
+         * 打开图片选择界面<br/>
+         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #clipConfig(ImageSelectConfig)} 方法，在调用 {@link #openImageSelectPage(Context)} 方法</b>
+         *
+         * @param context 上下文
+         * @return {@link ImageSelectObservable} 对象
+         */
         public ImageSelectObservable openImageSelectPage(@NonNull Context context) {
             Intent intent = new Intent(context, ImageSelectActivity.class);
             intent.putExtra("imageSelectConfig", imageSelectConfig);
@@ -312,6 +346,16 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             return this;
         }
 
+        /**
+         * 获取返回结果的回调<br/>
+         * <b>{@link OnResultCallBack} 注意泛型：</b>
+         * <br/>&nbsp;&nbsp;&nbsp;&nbsp;
+         * <b>1.当需要选择或裁剪的只是单张图片时，泛型应该为 {@link com.renj.imageselect.model.ImageModel}</b>
+         * <br/>&nbsp;&nbsp;&nbsp;&nbsp;
+         * <b>2.当需要选择或裁剪的只是多张图片时，泛型应该为 List<{@link com.renj.imageselect.model.ImageModel}></{@link></b>
+         *
+         * @param onResultCallBack 结果回调
+         */
         public void onResult(@NonNull OnResultCallBack onResultCallBack) {
             this.onResultCallBack = onResultCallBack;
         }

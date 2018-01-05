@@ -63,7 +63,7 @@ public class ClipView extends View {
     // 控件的范围
     private RectF rectF;
 
-    public void confirmCrop(@NonNull  OnCropRangeListener onCropRangeListener) {
+    public void confirmCrop(@NonNull OnCropRangeListener onCropRangeListener) {
         if (onCropRangeListener != null) {
             onCropRangeListener.cropRange(cropShape, cropRect);
         }
@@ -88,6 +88,7 @@ public class ClipView extends View {
         init();
     }
 
+    // 初始化设置裁剪控件基本属性
     private void init() {
         paint.setColor(maskColor);
         paint.setStyle(Paint.Style.FILL);
@@ -135,12 +136,91 @@ public class ClipView extends View {
     }
 
     /**
+     * 设置遮罩层颜色<br/>
+     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
+     *
+     * @param maskColor 遮罩层颜色
+     * @return
+     */
+    public ClipView setMaskColor(int maskColor) {
+        this.maskColor = maskColor;
+        return this;
+    }
+
+    /**
+     * 设置边框颜色<br/>
+     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
+     *
+     * @param borderColor 边框颜色
+     * @return
+     */
+    public ClipView setBorderColor(int borderColor) {
+        this.borderColor = borderColor;
+        return this;
+    }
+
+    /**
+     * 设置边框宽度 单位 dp<br/>
+     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
+     *
+     * @param borderWidth 边框颜色
+     * @return
+     */
+    public ClipView setBorderWidth(float borderWidth) {
+        this.borderWidth = dp2Px(borderWidth);
+        return this;
+    }
+
+    /**
+     * 设置裁剪范围的宽度 单位 dp<br/>
+     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
+     *
+     * @param cropWidth 裁剪宽度 单位 dp
+     * @return
+     */
+    public ClipView setCropWidth(int cropWidth) {
+        this.cropWidth = dp2Px(cropWidth);
+        return this;
+    }
+
+    /**
+     * 设置裁剪范围的高度 单位 dp<br/>
+     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
+     *
+     * @param cropHeight 裁剪高度 单位 dp
+     * @return
+     */
+    public ClipView setCropHeight(int cropHeight) {
+        this.cropHeight = dp2Px(cropHeight);
+        return this;
+    }
+
+    /**
+     * 设置裁剪的形状，当形状为 圆形 {@link CropShape#CROP_CIRCLE} 时，半径 = 宽或者高的最小值 / 2<br/>
+     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
+     *
+     * @param cropShape 裁剪形状 {@link CropShape#CROP_CIRCLE} 或 {@link CropShape#CROP_RECT}
+     * @return
+     */
+    public ClipView setCropShape(CropShape cropShape) {
+        this.cropShape = cropShape;
+        return this;
+    }
+
+    /**
+     * 使设置的各种属性生效
+     */
+    public void makeEffective() {
+        postInvalidate();
+    }
+
+    /**
      * dp转换成px
      *
      * @param dp
      * @return
      */
-    private int dp2Px(int dp) {
+    private int dp2Px(float dp) {
         return (int) (getResources().getDisplayMetrics().density * dp + 0.5);
     }
 
@@ -148,7 +228,14 @@ public class ClipView extends View {
      * 裁剪形状枚举
      */
     public enum CropShape {
-        CROP_RECT, CROP_CIRCLE
+        /**
+         * 矩形
+         */
+        CROP_RECT,
+        /**
+         * 圆形
+         */
+        CROP_CIRCLE
     }
 
     /**
