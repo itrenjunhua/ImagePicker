@@ -61,14 +61,14 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     /***** 页面基本控件 *****/
     private GridView gvImages;
     private ListView lvMenu;
+    private RelativeLayout selectMoreTitle;
     private DrawerLayout drawerLayout;
     private ViewStub vsClipSingle; // 裁剪单张图片时加载
     private ViewStub vsClipMore; // 裁剪多张图片时加载
+    private LinearLayout llSelectView;
 
     /***** 多选图片时的取消、确认(已选张数)等控件 *****/
-    private LinearLayout llSelectView;
     private TextView tvCancelSelect, tvConfirmSelect;
-    private RelativeLayout selectMoreTitle;
 
     /***** 裁剪单张图片时使用到的控件 *****/
     private TextView tvCancel, tvClip;
@@ -93,24 +93,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         /***** 页面基本控件 *****/
         gvImages = findViewById(R.id.gv_images);
         lvMenu = findViewById(R.id.lv_menu);
+        selectMoreTitle = findViewById(R.id.rl_select_more);
         drawerLayout = findViewById(R.id.drawer_layout);
         vsClipSingle = findViewById(R.id.vs_clip_single);
-        vsClipSingle = findViewById(R.id.vs_clip_single);
-
-        /***** 多选图片时的取消、确认(已选张数)等控件 *****/
-        tvCancelSelect = findViewById(R.id.tv_cancel_select);
-        tvConfirmSelect = findViewById(R.id.tv_confirm_select);
+        vsClipMore = findViewById(R.id.vs_clip_more);
         llSelectView = findViewById(R.id.ll_select_view);
-
-        /***** 裁剪单张图片时使用到的控件 *****/
-        tvClip = findViewById(R.id.tv_clip);
-        tvCancel = findViewById(R.id.tv_cancel);
-        imageClipView = findViewById(R.id.image_clip_view);
-        clipLayout = findViewById(R.id.clip_layout);
-
-        /***** 裁剪多张图片时使用到的控件 *****/
-        selectMoreTitle = findViewById(R.id.rl_select_more);
-        clipMoreLayout = findViewById(R.id.image_clip_more);
 
         imageSelectAdapter = new ImageSelectAdapter(this);
         imageMenuAdapter = new ImageMenuAdapter(this);
@@ -136,8 +123,17 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 解析配置数据
      */
     private void configDataParse() {
-        defaultConfig();
-        imageSelectAdapter.setMaxCount(9);
+        if (imageSelectConfig == null) {
+            defaultConfig();
+            return;
+        }
+
+        isSelectMore(imageSelectConfig.getSelectCount() > 1);
+
+        if (imageSelectConfig.isClip()) {
+            if (imageSelectConfig.getSelectCount() > 1) initClipMorePage();
+            else initClipSinglePage();
+        }
     }
 
     /**
@@ -145,6 +141,56 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void defaultConfig() {
 
+    }
+
+    /**
+     * 是否选择多张图片
+     *
+     * @param selectMore true：是 false：不是
+     */
+    private void isSelectMore(boolean selectMore) {
+        if (selectMore) {
+            // 告诉Adapter最多选择的图片
+            imageSelectAdapter.setMaxCount(imageSelectConfig.getSelectCount());
+
+            selectMoreTitle.setVisibility(View.VISIBLE);
+            /***** 多选图片时的取消、确认(已选张数)等控件 *****/
+            tvCancelSelect = findViewById(R.id.tv_cancel_select);
+            tvConfirmSelect = findViewById(R.id.tv_confirm_select);
+
+            tvCancelSelect.setOnClickListener(this);
+            tvConfirmSelect.setOnClickListener(this);
+        } else {
+            selectMoreTitle.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 初始化裁剪单张图片页面
+     */
+    private void initClipSinglePage() {
+        vsClipSingle.setLayoutResource(R.layout.image_clip_single_layout);
+        View clipSingleView = vsClipSingle.inflate();
+
+        /***** 裁剪单张图片时使用到的控件 *****/
+        tvClip = clipSingleView.findViewById(R.id.tv_clip);
+        tvCancel = clipSingleView.findViewById(R.id.tv_cancel);
+        imageClipView = clipSingleView.findViewById(R.id.image_clip_view);
+        clipLayout = clipSingleView.findViewById(R.id.clip_layout);
+
+        tvCancel.setOnClickListener(this);
+        tvClip.setOnClickListener(this);
+    }
+
+    /**
+     * 初始化裁剪多张图片页面
+     */
+    private void initClipMorePage() {
+        vsClipMore.setLayoutResource(R.layout.image_single_clip_more_layout);
+        View clipMoreleView = vsClipMore.inflate();
+
+        /***** 裁剪多张图片时使用到的控件 *****/
+        clipMoreLayout = clipMoreleView.findViewById(R.id.image_clip_more);
     }
 
     /**
@@ -170,17 +216,42 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object itemData = parent.getItemAtPosition(position);
                 if (itemData instanceof ImageModel) {
-                    ImageModel imageModel = (ImageModel) itemData;
-                    imageSelectAdapter.addOrClearCheckedPosition(position);
-                    tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / 9) 确定");
+                    // 判断是否选择单张还是多张
+                    if (imageSelectConfig.getSelectCount() > 1) {
+                        selectMore(position);
+                    } else {
+                        ImageModel imageModel = (ImageModel) itemData;
+                        selectSingle(imageModel);
+                    }
                 }
             }
         });
+    }
 
-//        tvCancelSelect.setOnClickListener(this);
-//        tvConfirmSelect.setOnClickListener(this);
-//        tvCancel.setOnClickListener(this);
-//        tvClip.setOnClickListener(this);
+    /**
+     * 选择单张图片完成
+     *
+     * @param imageModel
+     */
+    private void selectSingle(@NonNull ImageModel imageModel) {
+        if (imageSelectConfig.isClip()) {
+            imageClipView.setImage(imageModel.path);
+            pageStatuChange(STATU_CLIP_SINGLE_PAGE);
+        } else {
+            if (create().onResultCallBack != null)
+                create().onResultCallBack.onResult(imageModel);
+            ImageSelectActivity.this.finish();
+        }
+    }
+
+    /**
+     * 选择多张图片时点击图片操作
+     *
+     * @param position
+     */
+    private void selectMore(int position) {
+        imageSelectAdapter.addOrClearCheckedPosition(position);
+        tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
     }
 
     /**
@@ -222,6 +293,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                     clipLayout.setVisibility(View.GONE);
                 if (clipMoreLayout != null) {
                     clipMoreLayout.setVisibility(View.VISIBLE);
+                    List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
+                    clipMoreLayout.setImageData(checkImages);
                     clipMoreLayout.setOnImageClipMoreListener(new ImageClipMoreLayout.OnImageClipMoreListener() {
                         @Override
                         public void cancel() {
@@ -288,8 +361,13 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                     Toast.makeText(ImageSelectActivity.this, "没有选择图片", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                clipMoreLayout.setImageData(checkImages);
-                pageStatuChange(STATU_CLIP_MORE_PAGE);
+                if (imageSelectConfig.isClip()) {
+                    pageStatuChange(STATU_CLIP_MORE_PAGE);
+                } else {
+                    if (create().onResultCallBack != null)
+                        create().onResultCallBack.onResult(checkImages);
+                    finish();
+                }
                 break;
             case R.id.tv_clip:
                 ImageModel imageModel = imageClipView.cut();

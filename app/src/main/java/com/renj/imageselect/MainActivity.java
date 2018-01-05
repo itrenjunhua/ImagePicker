@@ -41,7 +41,14 @@ public class MainActivity extends AppCompatActivity {
 //                        });
 
                 // 多张图片
-                ImageSelectConfig imageSelectConfig = new ImageSelectConfig.Builder().width(400).build();
+                ImageSelectConfig imageSelectConfig = new ImageSelectConfig
+                        .Builder()
+                        .width(400)
+                        .height(500)
+                        .clipLineWidth(3)
+                        .selectCount(3)
+                        .isClip(false)
+                        .build();
                 ImageSelectUtil.create()
                         .clipConfig(imageSelectConfig)
                         .openImageSelectPage(MainActivity.this)
