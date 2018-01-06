@@ -30,8 +30,8 @@ import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
 import com.renj.imageselect.utils.OnResultCallBack;
-import com.renj.imageselect.weight.ImageClipView;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
+import com.renj.imageselect.weight.ImageClipView;
 
 import java.util.List;
 
@@ -72,10 +72,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
     /***** 裁剪单张图片时使用到的控件 *****/
     private TextView tvCancel, tvClip;
+    private ImageClipView imageClipView;
     private LinearLayout clipLayout;
 
     /***** 裁剪多张图片时使用到的控件 *****/
-    private ImageClipView imageClipView;
     private ImageClipMoreLayout clipMoreLayout;
 
     private ImageSelectAdapter imageSelectAdapter; // 图片展示的适配器
@@ -131,8 +131,15 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         isSelectMore(imageSelectConfig.getSelectCount() > 1);
 
         if (imageSelectConfig.isClip()) {
-            if (imageSelectConfig.getSelectCount() > 1) initClipMorePage();
-            else initClipSinglePage();
+            if (imageSelectConfig.getSelectCount() > 1) {
+                initClipMorePage();
+            } else {
+                initClipSinglePage();
+                imageClipView.setBorderWidth(imageSelectConfig.getClipLineWidth())
+                        .setCropWidth(imageSelectConfig.getWidth())
+                        .setCropHeight(imageSelectConfig.getHeight())
+                        .setCropShape(imageSelectConfig.isCircleClip() ? 0 : 1);
+            }
         }
     }
 
