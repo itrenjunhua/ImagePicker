@@ -133,6 +133,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         if (imageSelectConfig.isClip()) {
             if (imageSelectConfig.getSelectCount() > 1) {
                 initClipMorePage();
+                clipMoreLayout.setClipViewParams(imageSelectConfig);
             } else {
                 initClipSinglePage();
                 imageClipView.setClipViewParams(imageSelectConfig);

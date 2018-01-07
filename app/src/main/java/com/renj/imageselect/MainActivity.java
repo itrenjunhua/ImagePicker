@@ -6,12 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.ImageSelectUtil;
 import com.renj.imageselect.utils.OnResultCallBack;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Button clickSelect;
@@ -40,36 +43,38 @@ public class MainActivity extends AppCompatActivity {
                         .isClip(true)
                         .isCircleClip(true)
                         .build();
-                ImageSelectUtil.create()
-                        .clipConfig(imageSelectConfig)
-                        .openImageSelectPage(MainActivity.this)
-                        .onResult(new OnResultCallBack<ImageModel>() {
-                            @Override
-                            public void onResult(ImageModel selectResult) {
-                                Glide.with(MainActivity.this).load(selectResult.path).into(imageView);
-                            }
-                        });
+//                ImageSelectUtil.create()
+//                        .clipConfig(imageSelectConfig)
+//                        .openImageSelectPage(MainActivity.this)
+//                        .onResult(new OnResultCallBack<ImageModel>() {
+//                            @Override
+//                            public void onResult(ImageModel selectResult) {
+//                                Glide.with(MainActivity.this).load(selectResult.path).into(imageView);
+//                            }
+//                        });
 
                 // 多张图片
                 ImageSelectConfig imageSelectConfig1 = new ImageSelectConfig
                         .Builder()
-                        .width(400)
-                        .height(500)
+                        .width(200)
+                        .height(300)
                         .clipLineWidth(3)
                         .selectCount(3)
-                        .isClip(false)
-                        .isCircleClip(true)
+                        .maskColorColor(Color.parseColor("#000000"))
+                        .clipLineColor(Color.parseColor("#ff0000"))
+                        .isClip(true)
+                        .isCircleClip(false)
                         .build();
-//                ImageSelectUtil.create()
-//                        .clipConfig(imageSelectConfig1)
-//                        .openImageSelectPage(MainActivity.this)
-//                        .onResult(new OnResultCallBack<List<ImageModel>>() {
-//                            @Override
-//                            public void onResult(List<ImageModel> selectResults) {
-//                                Toast.makeText(MainActivity.this, "一共选择了" + selectResults.size() + "张图片", Toast.LENGTH_SHORT).show();
-//                                Glide.with(MainActivity.this).load(selectResults.get(0).path).into(imageView);
-//                            }
-//                        });
+                ImageSelectUtil.create()
+                        .clipConfig(imageSelectConfig1)
+                        .openImageSelectPage(MainActivity.this)
+                        .onResult(new OnResultCallBack<List<ImageModel>>() {
+                            @Override
+                            public void onResult(List<ImageModel> selectResults) {
+                                Toast.makeText(MainActivity.this, "一共选择了" + selectResults.size() + "张图片", Toast.LENGTH_SHORT).show();
+                                Glide.with(MainActivity.this).load(selectResults.get(0).path).into(imageView);
+                            }
+                        });
             }
         });
     }
