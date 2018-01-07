@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.model.ImageSelectConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
     private List<ImageModel> srcImages = new ArrayList<>();
     private List<ImageModel> resoutImages = new ArrayList<>();
     private ClipMorePagerAdapter clipMorePagerAdapter;
+    private ImageSelectConfig imageSelectConfig;
 
     public ImageClipMoreLayout(Context context) {
         this(context, null);
@@ -121,6 +123,16 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
         }
     }
 
+
+    /**
+     * 设置裁剪控件参数
+     *
+     * @param imageSelectConfig
+     */
+    public void setClipViewParams(@NonNull ImageSelectConfig imageSelectConfig) {
+        this.imageSelectConfig = imageSelectConfig;
+    }
+
     public interface OnImageClipMoreListener {
         void cancel();
 
@@ -153,6 +165,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             ImageClipView imageClipView = new ImageClipView(getContext());
+            imageClipView.setClipViewParams(imageSelectConfig);
             imageClipView.setImage(srcImages.get(position).path);
             container.addView(imageClipView);
             return imageClipView;

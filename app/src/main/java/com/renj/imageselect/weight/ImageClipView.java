@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.model.ImageSelectConfig;
 
 /**
  * ======================================================================
@@ -96,81 +97,11 @@ public class ImageClipView extends RelativeLayout {
     }
 
     /**
-     * 设置遮罩层颜色<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
+     * 设置裁剪控件参数
      *
-     * @param maskColor 遮罩层颜色
-     * @return
+     * @param imageSelectConfig
      */
-    public ImageClipView setMaskColor(int maskColor) {
-        clipView.setMaskColor(maskColor);
-        return this;
-    }
-
-    /**
-     * 设置边框颜色<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
-     *
-     * @param borderColor 边框颜色
-     * @return
-     */
-    public ImageClipView setBorderColor(int borderColor) {
-        clipView.setBorderColor(borderColor);
-        return this;
-    }
-
-    /**
-     * 设置边框宽度 单位 dp<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
-     *
-     * @param borderWidth 边框颜色
-     * @return
-     */
-    public ImageClipView setBorderWidth(float borderWidth) {
-        clipView.setBorderWidth(borderWidth);
-        return this;
-    }
-
-    /**
-     * 设置裁剪范围的宽度 单位 dp<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
-     *
-     * @param cropWidth 裁剪宽度 单位 dp
-     * @return
-     */
-    public ImageClipView setCropWidth(int cropWidth) {
-        clipView.setCropWidth(cropWidth);
-        return this;
-    }
-
-    /**
-     * 设置裁剪范围的高度 单位 dp<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
-     *
-     * @param cropHeight 裁剪高度 单位 dp
-     * @return
-     */
-    public ImageClipView setCropHeight(int cropHeight) {
-        clipView.setCropHeight(cropHeight);
-        return this;
-    }
-
-    /**
-     * 设置裁剪的形状，当形状为 圆形时，半径 = 宽或者高的最小值 / 2<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
-     *
-     * @param cropShape 裁剪形状 0：圆形 非0：矩形
-     * @return
-     */
-    public ImageClipView setCropShape(int cropShape) {
-        clipView.setCropShape(0 == cropShape ? ClipView.CropShape.CROP_CIRCLE : ClipView.CropShape.CROP_RECT);
-        return this;
-    }
-
-    /**
-     * 使设置的各种属性生效
-     */
-    public void makeEffective() {
-        clipView.makeEffective();
+    public void setClipViewParams(@NonNull ImageSelectConfig imageSelectConfig) {
+        clipView.setClipViewParams(imageSelectConfig);
     }
 }

@@ -13,6 +13,8 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.renj.imageselect.model.ImageSelectConfig;
+
 import static android.graphics.Canvas.ALL_SAVE_FLAG;
 
 /**
@@ -49,7 +51,7 @@ public class ClipView extends View {
     // 边框颜色
     private int borderColor = DEFAULT_BORDER_COLOR;
     // 边框宽度
-    private int borderWidth = DEFAULT_BORDER_WIDTH;
+    private int borderWidth = dp2Px(DEFAULT_BORDER_WIDTH);
     // 裁剪宽度
     private int cropWidth = dp2Px(DEFAULT_SIZE);
     // 裁剪高度
@@ -90,11 +92,8 @@ public class ClipView extends View {
 
     // 初始化设置裁剪控件基本属性
     private void init() {
-        paint.setColor(maskColor);
         paint.setStyle(Paint.Style.FILL);
 
-        borderPaint.setColor(borderColor);
-        borderPaint.setStrokeWidth(dp2Px(borderWidth));
         borderPaint.setStyle(Paint.Style.STROKE);
 
         cropShape = CropShape.CROP_RECT;
@@ -111,6 +110,11 @@ public class ClipView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        paint.setColor(maskColor);
+
+        borderPaint.setColor(borderColor);
+        borderPaint.setStrokeWidth(borderWidth);
 
         int saveLayer = canvas.saveLayer(rectF, null, ALL_SAVE_FLAG);
 
@@ -136,81 +140,17 @@ public class ClipView extends View {
     }
 
     /**
-     * 设置遮罩层颜色<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
+     * 设置裁剪控件参数
      *
-     * @param maskColor 遮罩层颜色
-     * @return
+     * @param imageSelectConfig
      */
-    public ClipView setMaskColor(int maskColor) {
-        this.maskColor = maskColor;
-        return this;
-    }
-
-    /**
-     * 设置边框颜色<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
-     *
-     * @param borderColor 边框颜色
-     * @return
-     */
-    public ClipView setBorderColor(int borderColor) {
-        this.borderColor = borderColor;
-        return this;
-    }
-
-    /**
-     * 设置边框宽度 单位 dp<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
-     *
-     * @param borderWidth 边框颜色
-     * @return
-     */
-    public ClipView setBorderWidth(float borderWidth) {
-        this.borderWidth = dp2Px(borderWidth);
-        return this;
-    }
-
-    /**
-     * 设置裁剪范围的宽度 单位 dp<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
-     *
-     * @param cropWidth 裁剪宽度 单位 dp
-     * @return
-     */
-    public ClipView setCropWidth(int cropWidth) {
-        this.cropWidth = dp2Px(cropWidth);
-        return this;
-    }
-
-    /**
-     * 设置裁剪范围的高度 单位 dp<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
-     *
-     * @param cropHeight 裁剪高度 单位 dp
-     * @return
-     */
-    public ClipView setCropHeight(int cropHeight) {
-        this.cropHeight = dp2Px(cropHeight);
-        return this;
-    }
-
-    /**
-     * 设置裁剪的形状，当形状为 圆形 {@link CropShape#CROP_CIRCLE} 时，半径 = 宽或者高的最小值 / 2<br/>
-     * <b>注意：如果需要使设置生效，需要调用 {@link #makeEffective()} 方法，{@link #makeEffective()} 方法只需当所有设置完成之后执行一次即可</b>
-     *
-     * @param cropShape 裁剪形状 {@link CropShape#CROP_CIRCLE} 或 {@link CropShape#CROP_RECT}
-     * @return
-     */
-    public ClipView setCropShape(CropShape cropShape) {
-        this.cropShape = cropShape;
-        return this;
-    }
-
-    /**
-     * 使设置的各种属性生效
-     */
-    public void makeEffective() {
+    public void setClipViewParams(@NonNull ImageSelectConfig imageSelectConfig) {
+        this.maskColor = imageSelectConfig.getMaskColorColor();
+        this.cropWidth = dp2Px(imageSelectConfig.getWidth());
+        this.cropHeight = dp2Px(imageSelectConfig.getHeight());
+        this.borderColor = imageSelectConfig.getClipLineColor();
+        this.borderWidth = dp2Px(imageSelectConfig.getClipLineWidth());
+        this.cropShape = imageSelectConfig.isCircleClip() ? CropShape.CROP_CIRCLE : CropShape.CROP_RECT;
         postInvalidate();
     }
 

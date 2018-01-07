@@ -1,5 +1,6 @@
 package com.renj.imageselect;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
                         .height(300)
                         .clipLineWidth(3)
                         .selectCount(1)
+                        .maskColorColor(Color.parseColor("#000000"))
+                        .clipLineColor(Color.parseColor("#ff0000"))
                         .isClip(true)
                         .isCircleClip(true)
                         .build();

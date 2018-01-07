@@ -135,10 +135,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 initClipMorePage();
             } else {
                 initClipSinglePage();
-                imageClipView.setBorderWidth(imageSelectConfig.getClipLineWidth())
-                        .setCropWidth(imageSelectConfig.getWidth())
-                        .setCropHeight(imageSelectConfig.getHeight())
-                        .setCropShape(imageSelectConfig.isCircleClip() ? 0 : 1);
+                imageClipView.setClipViewParams(imageSelectConfig);
             }
         }
     }
