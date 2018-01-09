@@ -51,14 +51,6 @@ public class ImageSelectConfig implements Parcelable {
         return this.configModel.maxScale;
     }
 
-    public float getAspectRatio() {
-        return this.configModel.aspectRatio;
-    }
-
-    public int getAspectRatioBase() {
-        return this.configModel.aspectRatioBase;
-    }
-
     public int getClipLineWidth() {
         return this.configModel.clipLineWidth;
     }
@@ -69,6 +61,10 @@ public class ImageSelectConfig implements Parcelable {
 
     public int getMaskColorColor() {
         return this.configModel.maskColorColor;
+    }
+
+    public boolean isContinuityEnlarge() {
+        return this.configModel.isContinuityEnlarge;
     }
 
     @Override
@@ -105,11 +101,10 @@ public class ImageSelectConfig implements Parcelable {
         boolean isCircleClip; // 是否裁剪成圆形图片
         float minScale; // 图片最小缩放倍数
         float maxScale; // 图片最大缩放倍数
-        float aspectRatio; // 宽高比例
-        int aspectRatioBase; // 宽高比以宽还是高为1，0表示以宽为 1，非0表示以高为1，这里的宽或者高以设置的 width 或 height 属性为准，没设置宽高使用默认的
         int clipLineWidth; // 裁剪线条宽度
         int clipLineColor; // 裁剪线条颜色
         int maskColorColor; // 遮罩层颜色
+        boolean isContinuityEnlarge; // 是否双击连续放大
 
         public ConfigModel() {
 
@@ -123,11 +118,10 @@ public class ImageSelectConfig implements Parcelable {
             isCircleClip = in.readByte() != 0;
             minScale = in.readFloat();
             maxScale = in.readFloat();
-            aspectRatio = in.readFloat();
-            aspectRatioBase = in.readInt();
             clipLineWidth = in.readInt();
             clipLineColor = in.readInt();
             maskColorColor = in.readInt();
+            isContinuityEnlarge = in.readByte() != 0;
         }
 
         public static final Creator<ConfigModel> CREATOR = new Creator<ConfigModel>() {
@@ -156,11 +150,10 @@ public class ImageSelectConfig implements Parcelable {
             dest.writeByte((byte) (isCircleClip ? 1 : 0));
             dest.writeFloat(minScale);
             dest.writeFloat(maxScale);
-            dest.writeFloat(aspectRatio);
-            dest.writeInt(aspectRatioBase);
             dest.writeInt(clipLineWidth);
             dest.writeInt(clipLineColor);
             dest.writeInt(maskColorColor);
+            dest.writeByte((byte) (isContinuityEnlarge ? 1 : 0));
         }
     }
 
@@ -205,16 +198,6 @@ public class ImageSelectConfig implements Parcelable {
             return this;
         }
 
-        public Builder aspectRatio(float aspectRatio) {
-            configModel.aspectRatio = aspectRatio;
-            return this;
-        }
-
-        public Builder aspectRatioBase(int aspectRatioBase) {
-            configModel.aspectRatioBase = aspectRatioBase;
-            return this;
-        }
-
         public Builder clipLineWidth(int clipLineWidth) {
             configModel.clipLineWidth = clipLineWidth;
             return this;
@@ -227,6 +210,11 @@ public class ImageSelectConfig implements Parcelable {
 
         public Builder maskColorColor(int maskColorColor) {
             configModel.maskColorColor = maskColorColor;
+            return this;
+        }
+
+        public Builder isContinuityEnlarge(boolean isContinuityEnlarge) {
+            configModel.isContinuityEnlarge = isContinuityEnlarge;
             return this;
         }
 

@@ -21,6 +21,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.Utils;
 
 import static android.graphics.Canvas.ALL_SAVE_FLAG;
@@ -39,17 +40,23 @@ import static android.graphics.Canvas.ALL_SAVE_FLAG;
  * ======================================================================
  */
 public class PhotoView extends AppCompatImageView implements View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
+    // 最小缩放比例
+    private final static float DEFAULT_MIN_SCALE = 0.25f;
+    // 最大缩放比例
+    private final static float DEFAULT_MAX_SCALE = 4f;
     // 用于进行变换的 Matrix
     private Matrix imageMatrix = new Matrix();
     // 最小、最大缩放比例
-    private float minScale = 0.25f, maxScale = 4f;
+    private float minScale = DEFAULT_MIN_SCALE, maxScale = DEFAULT_MAX_SCALE;
     // 增加一个变量减少重复的调用布局完成监听方法
     private boolean isOnce = true;
     // 移动临界值
     private int touchSlop;
     // 初始时的缩放比例，在自动缩放时使用到的
     private float initScal = 1.0f;
-    // 是否自动缩放
+    // 是否双击连续放大
+    private boolean isContinuityEnlarge = false;
+    // 是否正在自动缩放
     private boolean isAutoScal = false;
 
     public PhotoView(Context context) {
@@ -104,7 +111,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
                 isAutoScal = true;
                 AutoScalTask autoScalTask = new AutoScalTask(2, (int) e.getX(), (int) e.getY());
                 post(autoScalTask);
-            } else if (currentScale >= 2 && currentScale < maxScale) {
+            } else if (currentScale >= 2 && currentScale < maxScale && isContinuityEnlarge) {
                 isAutoScal = true;
                 AutoScalTask autoScalTask = new AutoScalTask(4, (int) e.getX(), (int) e.getY());
                 post(autoScalTask);
@@ -398,6 +405,20 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
         Matrix matrix = getImageMatrix();
         matrix.getValues(floats);
         return floats[Matrix.MSCALE_X];
+    }
+
+    /**
+     * 设置裁剪控件参数
+     *
+     * @param imageSelectConfig
+     */
+    public void setClipViewParams(ImageSelectConfig imageSelectConfig) {
+        this.minScale = imageSelectConfig.getMinScale();
+        this.maxScale = imageSelectConfig.getMaxScale();
+        this.isContinuityEnlarge = imageSelectConfig.isContinuityEnlarge();
+
+        if (this.minScale < 0) this.minScale = DEFAULT_MIN_SCALE;
+        if (this.maxScale < minScale) this.maxScale = DEFAULT_MAX_SCALE;
     }
 
     /**

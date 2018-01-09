@@ -103,5 +103,6 @@ public class ImageClipView extends RelativeLayout {
      */
     public void setClipViewParams(@NonNull ImageSelectConfig imageSelectConfig) {
         clipView.setClipViewParams(imageSelectConfig);
+        photoView.setClipViewParams(imageSelectConfig);
     }
 }
