@@ -56,14 +56,14 @@ public class MainActivity extends AppCompatActivity {
                 // 多张图片
                 ImageSelectConfig imageSelectConfig1 = new ImageSelectConfig
                         .Builder()
-                        .width(200)
-                        .height(300)
+                        .width(600)
+                        .height(800)
                         .clipLineWidth(3)
                         .selectCount(3)
                         .maskColorColor(Color.parseColor("#000000"))
                         .clipLineColor(Color.parseColor("#ff0000"))
                         .isClip(true)
-                        .isCircleClip(false)
+                        .isCircleClip(true)
                         .build();
                 ImageSelectUtil.create()
                         .clipConfig(imageSelectConfig1)

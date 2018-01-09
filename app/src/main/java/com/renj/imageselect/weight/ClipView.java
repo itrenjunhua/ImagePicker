@@ -111,6 +111,9 @@ public class ClipView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // 检查配置的数据
+        checkConfigValue();
+
         paint.setColor(maskColor);
 
         borderPaint.setColor(borderColor);
@@ -151,7 +154,17 @@ public class ClipView extends View {
         this.borderColor = imageSelectConfig.getClipLineColor();
         this.borderWidth = dp2Px(imageSelectConfig.getClipLineWidth());
         this.cropShape = imageSelectConfig.isCircleClip() ? CropShape.CROP_CIRCLE : CropShape.CROP_RECT;
+
         postInvalidate();
+    }
+
+    /**
+     * 检查配置的数据
+     */
+    private void checkConfigValue() {
+        if(this.cropWidth > getMeasuredWidth()) this.cropWidth = getMeasuredWidth();
+        if(this.cropHeight > getMeasuredHeight()) this.cropHeight = getMeasuredHeight();
+        if(this.borderWidth < 0) this.borderWidth = 0;
     }
 
     /**
