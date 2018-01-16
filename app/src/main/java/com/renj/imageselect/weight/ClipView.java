@@ -32,7 +32,7 @@ import static android.graphics.Canvas.ALL_SAVE_FLAG;
  */
 public class ClipView extends View {
     // 默认遮罩层颜色
-    private final int DEFAULT_MASK_COLOR = 0xaa000000;
+    private final int DEFAULT_MASK_COLOR = 0xAA000000;
     // 默认边框颜色
     private final int DEFAULT_BORDER_COLOR = 0xFFFFFFFF;
     // 默认边框宽度 1dp
@@ -40,7 +40,7 @@ public class ClipView extends View {
     // 默认裁剪宽高相等，都为 200dp，默认矩形
     private final int DEFAULT_SIZE = 200;
     // 默认裁剪形状 矩形
-    private CropShape DEFAULT_CROP_SHAPE = CropShape.CROP_RECT;
+    private ClipShape DEFAULT_CLIP_SHAPE = ClipShape.CLIP_RECT;
 
     // 用户绘制背景的画笔
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -51,23 +51,23 @@ public class ClipView extends View {
     // 边框颜色
     private int borderColor = DEFAULT_BORDER_COLOR;
     // 边框宽度
-    private int borderWidth = dp2Px(DEFAULT_BORDER_WIDTH);
+    private float borderWidth = dp2Px(DEFAULT_BORDER_WIDTH);
     // 裁剪宽度
-    private int cropWidth = dp2Px(DEFAULT_SIZE);
+    private int clipWidth = dp2Px(DEFAULT_SIZE);
     // 裁剪高度
-    private int cropHeight = dp2Px(DEFAULT_SIZE);
+    private int clipHeight = dp2Px(DEFAULT_SIZE);
     // 裁剪范围
-    private RectF cropRect = new RectF();
+    private RectF clipRect = new RectF();
     // 裁剪形状
-    private CropShape cropShape = DEFAULT_CROP_SHAPE;
+    private ClipShape clipShape = DEFAULT_CLIP_SHAPE;
     // 控件的宽、高
     private int width, height;
     // 控件的范围
     private RectF rectF;
 
-    public void confirmCrop(@NonNull OnCropRangeListener onCropRangeListener) {
-        if (onCropRangeListener != null) {
-            onCropRangeListener.cropRange(cropShape, cropRect);
+    public void confirmClip(@NonNull OnClipRangeListener onClipRangeListener) {
+        if (onClipRangeListener != null) {
+            onClipRangeListener.clipRange(clipShape, clipRect);
         }
     }
 
@@ -96,7 +96,7 @@ public class ClipView extends View {
 
         borderPaint.setStyle(Paint.Style.STROKE);
 
-        cropShape = CropShape.CROP_RECT;
+        clipShape = ClipShape.CLIP_RECT;
     }
 
     @Override
@@ -123,17 +123,17 @@ public class ClipView extends View {
 
         canvas.drawRect(rectF, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-        int left = (width - cropWidth) / 2;
-        int top = (height - cropHeight) / 2;
-        cropRect = new RectF(left, top, left + cropWidth, top + cropHeight);
+        int left = (width - clipWidth) / 2;
+        int top = (height - clipHeight) / 2;
+        clipRect = new RectF(left, top, left + clipWidth, top + clipHeight);
 
-        if (CropShape.CROP_RECT == cropShape) { // 矩形
-            canvas.drawRect(cropRect, paint);
-            canvas.drawRect(cropRect, borderPaint);
+        if (ClipShape.CLIP_RECT == clipShape) { // 矩形
+            canvas.drawRect(clipRect, paint);
+            canvas.drawRect(clipRect, borderPaint);
         } else { // 圆形
-            float centerX = (cropRect.left + cropRect.right) / 2;
-            float centerY = (cropRect.top + cropRect.bottom) / 2;
-            int radius = (Math.min(cropWidth, cropHeight)) / 2;
+            float centerX = (clipRect.left + clipRect.right) / 2;
+            float centerY = (clipRect.top + clipRect.bottom) / 2;
+            int radius = (Math.min(clipWidth, clipHeight)) / 2;
             canvas.drawCircle(centerX, centerY, radius, paint);
             canvas.drawCircle(centerX, centerY, radius, borderPaint);
         }
@@ -149,11 +149,11 @@ public class ClipView extends View {
      */
     public void setClipViewParams(@NonNull ImageSelectConfig imageSelectConfig) {
         this.maskColor = imageSelectConfig.getMaskColorColor();
-        this.cropWidth = dp2Px(imageSelectConfig.getWidth());
-        this.cropHeight = dp2Px(imageSelectConfig.getHeight());
+        this.clipWidth = dp2Px(imageSelectConfig.getWidth());
+        this.clipHeight = dp2Px(imageSelectConfig.getHeight());
         this.borderColor = imageSelectConfig.getClipLineColor();
         this.borderWidth = dp2Px(imageSelectConfig.getClipLineWidth());
-        this.cropShape = imageSelectConfig.isCircleClip() ? CropShape.CROP_CIRCLE : CropShape.CROP_RECT;
+        this.clipShape = imageSelectConfig.isCircleClip() ? ClipShape.CLIP_CIRCLE : ClipShape.CLIP_RECT;
 
         postInvalidate();
     }
@@ -162,8 +162,8 @@ public class ClipView extends View {
      * 检查配置的数据
      */
     private void checkConfigValue() {
-        if(this.cropWidth > getMeasuredWidth()) this.cropWidth = getMeasuredWidth();
-        if(this.cropHeight > getMeasuredHeight()) this.cropHeight = getMeasuredHeight();
+        if(this.clipWidth > getMeasuredWidth()) this.clipWidth = getMeasuredWidth();
+        if(this.clipHeight > getMeasuredHeight()) this.clipHeight = getMeasuredHeight();
         if(this.borderWidth < 0) this.borderWidth = 0;
     }
 
@@ -180,21 +180,21 @@ public class ClipView extends View {
     /**
      * 裁剪形状枚举
      */
-    public enum CropShape {
+    public enum ClipShape {
         /**
          * 矩形
          */
-        CROP_RECT,
+        CLIP_RECT,
         /**
          * 圆形
          */
-        CROP_CIRCLE
+        CLIP_CIRCLE
     }
 
     /**
      * 裁剪监听
      */
-    public interface OnCropRangeListener {
-        void cropRange(CropShape cropShape, RectF cropRectF);
+    public interface OnClipRangeListener {
+        void clipRange(ClipShape clipShape, RectF clipRectF);
     }
 }

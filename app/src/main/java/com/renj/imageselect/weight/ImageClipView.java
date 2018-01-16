@@ -87,10 +87,10 @@ public class ImageClipView extends RelativeLayout {
      * @return {@link ImageModel} 对象
      */
     public ImageModel cut() {
-        clipView.confirmCrop(new ClipView.OnCropRangeListener() {
+        clipView.confirmClip(new ClipView.OnClipRangeListener() {
             @Override
-            public void cropRange(ClipView.CropShape cropShape, RectF cropRectF) {
-                imageModel = photoView.clipBitmap(cropShape, cropRectF);
+            public void clipRange(ClipView.ClipShape clipShape, RectF clipRectF) {
+                imageModel = photoView.clipBitmap(clipShape, clipRectF);
             }
         });
         return imageModel;

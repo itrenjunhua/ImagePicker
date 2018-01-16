@@ -51,7 +51,7 @@ public class ImageSelectConfig implements Parcelable {
         return this.configModel.maxScale;
     }
 
-    public int getClipLineWidth() {
+    public float getClipLineWidth() {
         return this.configModel.clipLineWidth;
     }
 
@@ -94,17 +94,17 @@ public class ImageSelectConfig implements Parcelable {
     };
 
     private static class ConfigModel implements Parcelable {
-        int width; // 裁剪宽度
-        int height; // 裁剪高度
-        int selectCount; // 选择图片张数
-        boolean isClip; // 是否裁剪
-        boolean isCircleClip; // 是否裁剪成圆形图片
-        float minScale; // 图片最小缩放倍数
-        float maxScale; // 图片最大缩放倍数
-        int clipLineWidth; // 裁剪线条宽度
-        int clipLineColor; // 裁剪线条颜色
-        int maskColorColor; // 遮罩层颜色
-        boolean isContinuityEnlarge; // 是否双击连续放大
+        int width = 200; // 裁剪宽度
+        int height = 200; // 裁剪高度
+        int selectCount = 1; // 选择图片张数
+        boolean isClip = false; // 是否裁剪
+        boolean isCircleClip = false; // 是否裁剪成圆形图片
+        float minScale = 0.8f; // 图片最小缩放倍数
+        float maxScale = 4f; // 图片最大缩放倍数
+        float clipLineWidth = 1; // 裁剪线条宽度
+        int clipLineColor = 0xFFFFFFFF; // 裁剪线条颜色
+        int maskColorColor = 0xAA000000; // 遮罩层颜色
+        boolean isContinuityEnlarge = false; // 是否双击连续放大
 
         public ConfigModel() {
 
@@ -150,7 +150,7 @@ public class ImageSelectConfig implements Parcelable {
             dest.writeByte((byte) (isCircleClip ? 1 : 0));
             dest.writeFloat(minScale);
             dest.writeFloat(maxScale);
-            dest.writeInt(clipLineWidth);
+            dest.writeFloat(clipLineWidth);
             dest.writeInt(clipLineColor);
             dest.writeInt(maskColorColor);
             dest.writeByte((byte) (isContinuityEnlarge ? 1 : 0));
@@ -198,12 +198,12 @@ public class ImageSelectConfig implements Parcelable {
             return this;
         }
 
-        public Builder clipLineWidth(int clipLineWidth) {
+        public Builder clipBorderWidth(float clipLineWidth) {
             configModel.clipLineWidth = clipLineWidth;
             return this;
         }
 
-        public Builder clipLineColor(int clipLineColor) {
+        public Builder clipBorderColor(int clipLineColor) {
             configModel.clipLineColor = clipLineColor;
             return this;
         }
