@@ -3,6 +3,8 @@ package com.renj.imageselect.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.renj.imageselect.utils.OnResultCallBack;
+
 /**
  * ======================================================================
  * <p>
@@ -163,61 +165,138 @@ public class ImageSelectConfig implements Parcelable {
         public Builder() {
         }
 
+        /**
+         * 设置裁剪宽度，单位 dp；默认 200dp
+         *
+         * @param width 裁剪宽
+         * @return
+         */
         public Builder width(int width) {
             configModel.width = width;
             return this;
         }
 
+        /**
+         * 设置裁剪高度，单位 dp；默认 200dp
+         *
+         * @param height 裁剪高度
+         * @return
+         */
         public Builder height(int height) {
             configModel.height = height;
             return this;
         }
 
+        /**
+         * 设置图片选择张数，默认1张
+         *
+         * @param selectCount 需要选择的图片张数<br/>
+         *                    <b>注意：该值与结果监听 {@link OnResultCallBack} 对象的泛型相关：</b>
+         *                    <br/>&nbsp;&nbsp;&nbsp;&nbsp;
+         *                    <b>1.当选择或裁剪的只是单张图片(selectCount = 1)时，泛型应该为 {@link com.renj.imageselect.model.ImageModel}</b>
+         *                    <br/>&nbsp;&nbsp;&nbsp;&nbsp;
+         *                    <b>2.当选择或裁剪的只是多张图片(selectCount > 1)时，泛型应该为 List<{@link com.renj.imageselect.model.ImageModel}></{@link></b>
+         * @return
+         */
         public Builder selectCount(int selectCount) {
             configModel.selectCount = selectCount;
             return this;
         }
 
+        /**
+         * 设置是否需要裁剪
+         *
+         * @param isClip true：需要；false：不需要
+         * @return
+         */
         public Builder isClip(boolean isClip) {
             configModel.isClip = isClip;
             return this;
         }
 
+        /**
+         * 设置是否需要裁剪成圆形<br/>
+         * <b>注意：圆形的半径为裁剪宽度、裁剪高度较小值得一半</b>
+         *
+         * @param isCircleClip true：需要；false：不需要
+         * @return
+         */
         public Builder isCircleClip(boolean isCircleClip) {
             configModel.isCircleClip = isCircleClip;
             return this;
         }
 
+        /**
+         * 设置图片的最小缩放比例
+         *
+         * @param minScale 最小缩放比例
+         * @return
+         */
         public Builder minScale(float minScale) {
             configModel.minScale = minScale;
             return this;
         }
 
+        /**
+         * 设置图片的最大缩放比例
+         *
+         * @param maxScale 最大缩放比例
+         * @return
+         */
         public Builder maxScale(float maxScale) {
             configModel.maxScale = maxScale;
             return this;
         }
 
-        public Builder clipBorderWidth(float clipLineWidth) {
-            configModel.clipLineWidth = clipLineWidth;
+        /**
+         * 设置裁剪边框宽度
+         *
+         * @param clipBorderWidth 裁剪边框宽度
+         * @return
+         */
+        public Builder clipBorderWidth(float clipBorderWidth) {
+            configModel.clipLineWidth = clipBorderWidth;
             return this;
         }
 
-        public Builder clipBorderColor(int clipLineColor) {
-            configModel.clipLineColor = clipLineColor;
+        /**
+         * 设置裁剪边框颜色
+         *
+         * @param clipBorderColor 裁剪边框颜色
+         * @return
+         */
+        public Builder clipBorderColor(int clipBorderColor) {
+            configModel.clipLineColor = clipBorderColor;
             return this;
         }
 
+        /**
+         * 设置遮罩层颜色
+         *
+         * @param maskColorColor 遮罩层颜色
+         * @return
+         */
         public Builder maskColorColor(int maskColorColor) {
             configModel.maskColorColor = maskColorColor;
             return this;
         }
 
+        /**
+         * 设置是否双击连续放大
+         *
+         * @param isContinuityEnlarge true：是；false：否  当设置为 true 时，双击时若图片的缩放小于2时变为2，当图片的缩放倍数在[2,4)时变为4
+         * @return
+         */
         public Builder isContinuityEnlarge(boolean isContinuityEnlarge) {
             configModel.isContinuityEnlarge = isContinuityEnlarge;
             return this;
         }
 
+        /**
+         * 构建 {@link ImageSelectConfig} 对象
+         *
+         * @return {@link ImageSelectConfig} 对象
+         */
         public ImageSelectConfig build() {
             return new ImageSelectConfig(configModel);
         }

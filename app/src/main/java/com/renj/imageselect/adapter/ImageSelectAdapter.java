@@ -34,6 +34,7 @@ public class ImageSelectAdapter extends BaseAdapter {
     private Context context;
     private List<ImageModel> imageModels;
     private int maxCount = 1;
+    // 被选择的多张图片
     private List<ImageModel> checkImages = new ArrayList<>();
 
     public ImageSelectAdapter(Context context) {
@@ -45,15 +46,31 @@ public class ImageSelectAdapter extends BaseAdapter {
         this.imageModels = imageModels;
     }
 
+    /**
+     * 设置所有图片数据
+     *
+     * @param imageModels
+     */
     public void setImageModels(@NonNull List<ImageModel> imageModels) {
         this.imageModels = imageModels;
         notifyDataSetChanged();
     }
 
+    /**
+     * 设置最大张数
+     *
+     * @param maxCount
+     */
     public void setMaxCount(int maxCount) {
         this.maxCount = maxCount;
     }
 
+    /**
+     * 多选时增加或移除图片到选中集合
+     *
+     * @param position 选中的位置
+     * @return 增加或移除图片  true：增加；false：移除
+     */
     public boolean addOrClearCheckedPosition(int position) {
         if (checkImages.size() >= maxCount && !checkImages.contains(imageModels.get(position))) {
             Toast.makeText(context, "最多选择" + maxCount + "张图片", Toast.LENGTH_SHORT).show();
@@ -72,7 +89,12 @@ public class ImageSelectAdapter extends BaseAdapter {
         return result;
     }
 
-    public List<ImageModel> getCheckImages(){
+    /**
+     * 获取选中的图片
+     *
+     * @return 选中的图片集合
+     */
+    public List<ImageModel> getCheckImages() {
         return checkImages;
     }
 
@@ -102,10 +124,15 @@ public class ImageSelectAdapter extends BaseAdapter {
         }
         viewHolder.setData(imageModels.get(position));
 
-        if (checkImages.contains(imageModels.get(position)))
-            viewHolder.checkBox.setChecked(true);
-        else
-            viewHolder.checkBox.setChecked(false);
+        if (maxCount > 1) {
+            viewHolder.checkBox.setVisibility(View.VISIBLE);
+            if (checkImages.contains(imageModels.get(position)))
+                viewHolder.checkBox.setChecked(true);
+            else
+                viewHolder.checkBox.setChecked(false);
+        } else {
+            viewHolder.checkBox.setVisibility(View.GONE);
+        }
         return convertView;
     }
 

@@ -163,6 +163,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             tvCancelSelect = findViewById(R.id.tv_cancel_select);
             tvConfirmSelect = findViewById(R.id.tv_confirm_select);
 
+            tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
+
             tvCancelSelect.setOnClickListener(this);
             tvConfirmSelect.setOnClickListener(this);
         } else {
