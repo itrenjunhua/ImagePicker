@@ -32,7 +32,7 @@ import static android.graphics.Canvas.ALL_SAVE_FLAG;
  */
 public class ClipView extends View {
     // 默认遮罩层颜色
-    private final int DEFAULT_MASK_COLOR = 0xAA000000;
+    private final int DEFAULT_MASK_COLOR = 0x80000000;
     // 默认边框颜色
     private final int DEFAULT_BORDER_COLOR = 0xFFFFFFFF;
     // 默认边框宽度 1dp
@@ -151,8 +151,8 @@ public class ClipView extends View {
         this.maskColor = imageSelectConfig.getMaskColorColor();
         this.clipWidth = dp2Px(imageSelectConfig.getWidth());
         this.clipHeight = dp2Px(imageSelectConfig.getHeight());
-        this.borderColor = imageSelectConfig.getClipLineColor();
-        this.borderWidth = dp2Px(imageSelectConfig.getClipLineWidth());
+        this.borderColor = imageSelectConfig.getClipBorderColor();
+        this.borderWidth = dp2Px(imageSelectConfig.getClipBorderWidth());
         this.clipShape = imageSelectConfig.isCircleClip() ? ClipShape.CLIP_CIRCLE : ClipShape.CLIP_RECT;
 
         postInvalidate();

@@ -53,12 +53,12 @@ public class ImageSelectConfig implements Parcelable {
         return this.configModel.maxScale;
     }
 
-    public float getClipLineWidth() {
-        return this.configModel.clipLineWidth;
+    public float getClipBorderWidth() {
+        return this.configModel.clipBorderWidth;
     }
 
-    public int getClipLineColor() {
-        return this.configModel.clipLineColor;
+    public int getClipBorderColor() {
+        return this.configModel.clipBorderColor;
     }
 
     public int getMaskColorColor() {
@@ -103,9 +103,9 @@ public class ImageSelectConfig implements Parcelable {
         boolean isCircleClip = false; // 是否裁剪成圆形图片
         float minScale = 0.8f; // 图片最小缩放倍数
         float maxScale = 4f; // 图片最大缩放倍数
-        float clipLineWidth = 1; // 裁剪线条宽度
-        int clipLineColor = 0xFFFFFFFF; // 裁剪线条颜色
-        int maskColorColor = 0xAA000000; // 遮罩层颜色
+        float clipBorderWidth = 1; // 裁剪线条宽度
+        int clipBorderColor = 0xFFFFFFFF; // 裁剪线条颜色
+        int maskColorColor = 0x80000000; // 遮罩层颜色
         boolean isContinuityEnlarge = false; // 是否双击连续放大
 
         public ConfigModel() {
@@ -120,8 +120,8 @@ public class ImageSelectConfig implements Parcelable {
             isCircleClip = in.readByte() != 0;
             minScale = in.readFloat();
             maxScale = in.readFloat();
-            clipLineWidth = in.readInt();
-            clipLineColor = in.readInt();
+            clipBorderWidth = in.readFloat();
+            clipBorderColor = in.readInt();
             maskColorColor = in.readInt();
             isContinuityEnlarge = in.readByte() != 0;
         }
@@ -152,8 +152,8 @@ public class ImageSelectConfig implements Parcelable {
             dest.writeByte((byte) (isCircleClip ? 1 : 0));
             dest.writeFloat(minScale);
             dest.writeFloat(maxScale);
-            dest.writeFloat(clipLineWidth);
-            dest.writeInt(clipLineColor);
+            dest.writeFloat(clipBorderWidth);
+            dest.writeInt(clipBorderColor);
             dest.writeInt(maskColorColor);
             dest.writeByte((byte) (isContinuityEnlarge ? 1 : 0));
         }
@@ -255,7 +255,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder clipBorderWidth(float clipBorderWidth) {
-            configModel.clipLineWidth = clipBorderWidth;
+            configModel.clipBorderWidth = clipBorderWidth;
             return this;
         }
 
@@ -266,7 +266,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder clipBorderColor(int clipBorderColor) {
-            configModel.clipLineColor = clipBorderColor;
+            configModel.clipBorderColor = clipBorderColor;
             return this;
         }
 
