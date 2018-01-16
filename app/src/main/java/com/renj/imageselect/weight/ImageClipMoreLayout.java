@@ -83,6 +83,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
 
     public void setImageData(List<ImageModel> srcImages) {
         this.srcImages = srcImages;
+        tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
         clipMorePagerAdapter.notifyDataSetChanged();
     }
 
