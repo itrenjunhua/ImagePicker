@@ -69,6 +69,10 @@ public class ImageSelectConfig implements Parcelable {
         return this.configModel.isContinuityEnlarge;
     }
 
+    public boolean isShowCamare() {
+        return this.configModel.isShowCamare;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -107,6 +111,7 @@ public class ImageSelectConfig implements Parcelable {
         int clipBorderColor = 0xFFFFFFFF; // 裁剪线条颜色
         int maskColorColor = 0x80000000; // 遮罩层颜色
         boolean isContinuityEnlarge = false; // 是否双击连续放大
+        boolean isShowCamare = true; // 是否显示打开相机按钮
 
         public ConfigModel() {
 
@@ -124,6 +129,7 @@ public class ImageSelectConfig implements Parcelable {
             clipBorderColor = in.readInt();
             maskColorColor = in.readInt();
             isContinuityEnlarge = in.readByte() != 0;
+            isShowCamare = in.readByte() != 0;
         }
 
         public static final Creator<ConfigModel> CREATOR = new Creator<ConfigModel>() {
@@ -156,6 +162,7 @@ public class ImageSelectConfig implements Parcelable {
             dest.writeInt(clipBorderColor);
             dest.writeInt(maskColorColor);
             dest.writeByte((byte) (isContinuityEnlarge ? 1 : 0));
+            dest.writeByte((byte) (isShowCamare ? 1 : 0));
         }
     }
 
@@ -289,6 +296,17 @@ public class ImageSelectConfig implements Parcelable {
          */
         public Builder isContinuityEnlarge(boolean isContinuityEnlarge) {
             configModel.isContinuityEnlarge = isContinuityEnlarge;
+            return this;
+        }
+
+        /**
+         * 设置是否显示打开相机图片，默认显示
+         *
+         * @param isShowCamare true：显示 false：不显示
+         * @return
+         */
+        public Builder isShowCamare(boolean isShowCamare) {
+            configModel.isShowCamare = isShowCamare;
             return this;
         }
 

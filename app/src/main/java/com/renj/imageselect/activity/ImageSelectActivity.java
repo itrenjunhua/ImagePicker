@@ -1,11 +1,14 @@
 package com.renj.imageselect.activity;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -29,10 +32,13 @@ import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
+import com.renj.imageselect.utils.Logger;
 import com.renj.imageselect.utils.OnResultCallBack;
+import com.renj.imageselect.utils.Utils;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
 import com.renj.imageselect.weight.ImageClipView;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -55,6 +61,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private final int STATU_CLIP_SINGLE_PAGE = 0x02;
     // 裁剪多个图片页面
     private final int STATU_CLIP_MORE_PAGE = 0x03;
+    // 打开相机请求码
+    private final int REQUEST_CAMERA = 0x04;
+
     // 当前页面
     private int currentStatu;
 
@@ -81,6 +90,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private ImageSelectAdapter imageSelectAdapter; // 图片展示的适配器
     private ImageMenuAdapter imageMenuAdapter;     // 目录的适配器
     private ImageSelectConfig imageSelectConfig;   // 保存图片选择配置信息的对象
+    private File cameraSavePath; // 相机照片保存路径
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -221,6 +231,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if(imageSelectConfig.isShowCamare() && position == 0){
+//                    openCamera();
+//                    return;
+//                }
+
                 Object itemData = parent.getItemAtPosition(position);
                 if (itemData instanceof ImageModel) {
                     // 判断是否选择单张还是多张
@@ -233,6 +248,40 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 }
             }
         });
+    }
+
+    /**
+     * 打开相机
+     */
+    private void openCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); // 启动系统相机
+        cameraSavePath = Utils.getCameraSavePath();
+        Uri photoUri;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            ContentValues contentValues = new ContentValues(1);
+            contentValues.put(MediaStore.Images.Media.DATA, cameraSavePath.getAbsolutePath());
+            photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+        } else {
+            photoUri = Uri.fromFile(cameraSavePath); // 传递路径
+        }
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri); // 更改系统默认存储路径
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CAMERA) { // 如果返回数据
+            Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri uri = Uri.fromFile(cameraSavePath);
+            intent1.setData(uri);
+            sendBroadcast(intent1);//这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了
+            imageSelectAdapter.notifyDataSetChanged();
+            ImageModel imageModel = new ImageModel(cameraSavePath.getAbsolutePath(),cameraSavePath.getName(),cameraSavePath.lastModified());
+            Logger.i(imageModel.path);
+        }
     }
 
     /**

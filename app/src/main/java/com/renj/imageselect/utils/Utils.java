@@ -72,4 +72,14 @@ public class Utils {
         }
         return null;
     }
+
+    /**
+     * 获取使用相机时保存的照片路径
+     *
+     * @return
+     */
+    public static File getCameraSavePath() {
+        String name = "camera_" + System.currentTimeMillis() + ".png";
+        return new File(getSaveDir(), name);
+    }
 }
