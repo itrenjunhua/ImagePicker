@@ -31,11 +31,14 @@ import java.util.List;
  * ======================================================================
  */
 public class ImageSelectAdapter extends BaseAdapter {
+    private final int ITEM_VIEW = 0;
+    private final int CAMERA_VIEW = 1;
     private Context context;
     private List<ImageModel> imageModels;
     private int maxCount = 1;
     // 被选择的多张图片
     private List<ImageModel> checkImages = new ArrayList<>();
+    private boolean showCamera;
 
     public ImageSelectAdapter(Context context) {
         this.context = context;
@@ -72,17 +75,18 @@ public class ImageSelectAdapter extends BaseAdapter {
      * @return 增加或移除图片  true：增加；false：移除
      */
     public boolean addOrClearCheckedPosition(int position) {
-        if (checkImages.size() >= maxCount && !checkImages.contains(imageModels.get(position))) {
+        int index = showCamera ? position - 1 : position;
+        if (checkImages.size() >= maxCount && !checkImages.contains(imageModels.get(index))) {
             Toast.makeText(context, "最多选择" + maxCount + "张图片", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         boolean result;
-        if (checkImages.contains(imageModels.get(position))) {
-            checkImages.remove(imageModels.get(position));
+        if (checkImages.contains(imageModels.get(index))) {
+            checkImages.remove(imageModels.get(index));
             result = false;
         } else {
-            checkImages.add(imageModels.get(position));
+            checkImages.add(imageModels.get(index));
             result = true;
         }
         notifyDataSetChanged();
@@ -98,14 +102,24 @@ public class ImageSelectAdapter extends BaseAdapter {
         return checkImages;
     }
 
+    /**
+     * 是否需要显示相机
+     *
+     * @param showCamera
+     */
+    public void isOpenCamera(boolean showCamera) {
+        this.showCamera = showCamera;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
-        return imageModels == null ? 0 : imageModels.size();
+        return imageModels == null ? (showCamera ? 1 : 0) : (showCamera ? (imageModels.size() + 1) : imageModels.size());
     }
 
     @Override
     public Object getItem(int position) {
-        return imageModels.get(position);
+        return imageModels.get(showCamera ? position - 1 : position);
     }
 
     @Override
@@ -114,26 +128,38 @@ public class ImageSelectAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.image_select_item, null);
-            viewHolder = new ViewHolder(convertView);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-        viewHolder.setData(imageModels.get(position));
+    public int getItemViewType(int position) {
+        if (showCamera && position == 0)
+            return CAMERA_VIEW;
+        return ITEM_VIEW;
+    }
 
-        if (maxCount > 1) {
-            viewHolder.checkBox.setVisibility(View.VISIBLE);
-            if (checkImages.contains(imageModels.get(position)))
-                viewHolder.checkBox.setChecked(true);
-            else
-                viewHolder.checkBox.setChecked(false);
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (CAMERA_VIEW == getItemViewType(position)) {
+            ImageView imageView = (ImageView) LayoutInflater.from(context).inflate(R.layout.image_select_camera_item, parent,false);
+            return imageView;
         } else {
-            viewHolder.checkBox.setVisibility(View.GONE);
+            ViewHolder viewHolder;
+            if (convertView == null || convertView instanceof ImageView) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.image_select_item, null);
+                viewHolder = new ViewHolder(convertView);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.setData(imageModels.get(showCamera ? position - 1 : position));
+
+            if (maxCount > 1) {
+                viewHolder.checkBox.setVisibility(View.VISIBLE);
+                if (checkImages.contains(imageModels.get(showCamera ? position - 1 : position)))
+                    viewHolder.checkBox.setChecked(true);
+                else
+                    viewHolder.checkBox.setChecked(false);
+            } else {
+                viewHolder.checkBox.setVisibility(View.GONE);
+            }
+            return convertView;
         }
-        return convertView;
     }
 
     class ViewHolder {

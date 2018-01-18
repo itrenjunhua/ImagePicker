@@ -139,6 +139,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         }
 
         isSelectMore(imageSelectConfig.getSelectCount() > 1);
+        imageSelectAdapter.isOpenCamera(imageSelectConfig.isShowCamera());
 
         if (imageSelectConfig.isClip()) {
             if (imageSelectConfig.getSelectCount() > 1) {
@@ -231,10 +232,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if(imageSelectConfig.isShowCamare() && position == 0){
-//                    openCamera();
-//                    return;
-//                }
+                if(imageSelectConfig.isShowCamera() && position == 0){
+                    openCamera();
+                    return;
+                }
 
                 Object itemData = parent.getItemAtPosition(position);
                 if (itemData instanceof ImageModel) {
