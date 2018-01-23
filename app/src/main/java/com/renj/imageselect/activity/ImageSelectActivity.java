@@ -232,7 +232,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(imageSelectConfig.isShowCamera() && position == 0){
+                if (imageSelectConfig.isShowCamera() && position == 0) {
                     openCamera();
                     return;
                 }
@@ -262,7 +262,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             ContentValues contentValues = new ContentValues(1);
             contentValues.put(MediaStore.Images.Media.DATA, cameraSavePath.getAbsolutePath());
-            photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+            photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
         } else {
             photoUri = Uri.fromFile(cameraSavePath); // 传递路径
         }
@@ -279,9 +279,26 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             Uri uri = Uri.fromFile(cameraSavePath);
             intent1.setData(uri);
             sendBroadcast(intent1);//这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了
+
             imageSelectAdapter.notifyDataSetChanged();
-            ImageModel imageModel = new ImageModel(cameraSavePath.getAbsolutePath(),cameraSavePath.getName(),cameraSavePath.lastModified());
+            ImageModel imageModel = new ImageModel(cameraSavePath.getAbsolutePath(), cameraSavePath.getName(), cameraSavePath.lastModified());
             Logger.i(imageModel.path);
+
+            handlerCameraResult(imageModel);
+        }
+    }
+
+    /**
+     * 处理相机照完之后的结果
+     *
+     * @param imageModel
+     */
+    private void handlerCameraResult(@NonNull ImageModel imageModel) {
+        if (imageSelectConfig.getSelectCount() == 1) {
+            // 如果是单张，判断是否需要裁剪或直接返回结果
+            selectSingle(imageModel);
+        } else {
+            // 多张时，带处理(增加到相册或者也直接返回)
         }
     }
 
