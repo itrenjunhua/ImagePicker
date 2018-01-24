@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 .height(800)
                 .clipBorderWidth(0.5f)
                 .selectCount(imageNumInt)
-                .isShowCamera(false)
+                .isShowCamera(true)
                 .maskColorColor(Color.parseColor("#80000000"))
                 .clipBorderColor(Color.parseColor("#ffffff"))
                 .isClip(true)

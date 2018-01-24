@@ -232,15 +232,20 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int selectCount = imageSelectConfig.getSelectCount();
                 if (imageSelectConfig.isShowCamera() && position == 0) {
-                    openCamera();
+                    if (imageSelectAdapter.getCheckImages().size() >= selectCount) {
+                        Toast.makeText(ImageSelectActivity.this, "最多选择" + selectCount + "张图片", Toast.LENGTH_SHORT).show();
+                    }else {
+                        openCamera();
+                    }
                     return;
                 }
 
                 Object itemData = parent.getItemAtPosition(position);
                 if (itemData instanceof ImageModel) {
                     // 判断是否选择单张还是多张
-                    if (imageSelectConfig.getSelectCount() > 1) {
+                    if (selectCount > 1) {
                         selectMore(position);
                     } else {
                         ImageModel imageModel = (ImageModel) itemData;
@@ -298,7 +303,16 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             // 如果是单张，判断是否需要裁剪或直接返回结果
             selectSingle(imageModel);
         } else {
-            // 多张时，带处理(增加到相册或者也直接返回)
+            // 多张时，也直接判断是否需要裁剪然后返回
+            List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
+            checkImages.add(imageModel);
+            if (imageSelectConfig.isClip()) {
+                pageStatuChange(STATU_CLIP_MORE_PAGE);
+            } else {
+                if (create().onResultCallBack != null)
+                    create().onResultCallBack.onResult(checkImages);
+                finish();
+            }
         }
     }
 
