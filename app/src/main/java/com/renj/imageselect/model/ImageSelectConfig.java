@@ -61,8 +61,8 @@ public class ImageSelectConfig implements Parcelable {
         return this.configModel.clipBorderColor;
     }
 
-    public int getMaskColorColor() {
-        return this.configModel.maskColorColor;
+    public int getMaskColor() {
+        return this.configModel.maskColor;
     }
 
     public boolean isContinuityEnlarge() {
@@ -100,18 +100,18 @@ public class ImageSelectConfig implements Parcelable {
     };
 
     private static class ConfigModel implements Parcelable {
-        int width = 200; // 裁剪宽度
-        int height = 200; // 裁剪高度
-        int selectCount = 1; // 选择图片张数
-        boolean isClip = false; // 是否裁剪
-        boolean isCircleClip = false; // 是否裁剪成圆形图片
-        float minScale = 0.8f; // 图片最小缩放倍数
-        float maxScale = 4f; // 图片最大缩放倍数
-        float clipBorderWidth = 1; // 裁剪线条宽度
-        int clipBorderColor = 0xFFFFFFFF; // 裁剪线条颜色
-        int maskColorColor = 0x80000000; // 遮罩层颜色
-        boolean isContinuityEnlarge = false; // 是否双击连续放大
-        boolean isShowCamera = true; // 是否显示打开相机按钮
+        int width = DefaultConfigData.WIDTH; // 裁剪宽度
+        int height = DefaultConfigData.HEIGHT; // 裁剪高度
+        int selectCount = DefaultConfigData.SELECT_COUNT; // 选择图片张数
+        boolean isClip = DefaultConfigData.IS_CLIP; // 是否裁剪
+        boolean isCircleClip = DefaultConfigData.IS_CIRCLE_CLIP; // 是否裁剪成圆形图片
+        float minScale = DefaultConfigData.MIN_SCALE; // 图片最小缩放倍数
+        float maxScale = DefaultConfigData.MAX_SCALE; // 图片最大缩放倍数
+        float clipBorderWidth = DefaultConfigData.CLIP_BORDER_WIDTH; // 裁剪线条宽度
+        int clipBorderColor = DefaultConfigData.CLIP_BORDER_COLOR; // 裁剪线条颜色
+        int maskColor = DefaultConfigData.MASK_COLOR; // 遮罩层颜色
+        boolean isContinuityEnlarge = DefaultConfigData.IS_CONTINUITY_ENLARGE; // 是否双击连续放大
+        boolean isShowCamera = DefaultConfigData.IS_SHOW_CAMERA; // 是否显示打开相机按钮
 
         public ConfigModel() {
 
@@ -127,7 +127,7 @@ public class ImageSelectConfig implements Parcelable {
             maxScale = in.readFloat();
             clipBorderWidth = in.readFloat();
             clipBorderColor = in.readInt();
-            maskColorColor = in.readInt();
+            maskColor = in.readInt();
             isContinuityEnlarge = in.readByte() != 0;
             isShowCamera = in.readByte() != 0;
         }
@@ -160,7 +160,7 @@ public class ImageSelectConfig implements Parcelable {
             dest.writeFloat(maxScale);
             dest.writeFloat(clipBorderWidth);
             dest.writeInt(clipBorderColor);
-            dest.writeInt(maskColorColor);
+            dest.writeInt(maskColor);
             dest.writeByte((byte) (isContinuityEnlarge ? 1 : 0));
             dest.writeByte((byte) (isShowCamera ? 1 : 0));
         }
@@ -280,11 +280,11 @@ public class ImageSelectConfig implements Parcelable {
         /**
          * 设置遮罩层颜色
          *
-         * @param maskColorColor 遮罩层颜色
+         * @param maskColor 遮罩层颜色
          * @return
          */
-        public Builder maskColorColor(int maskColorColor) {
-            configModel.maskColorColor = maskColorColor;
+        public Builder maskColorColor(int maskColor) {
+            configModel.maskColor = maskColor;
             return this;
         }
 

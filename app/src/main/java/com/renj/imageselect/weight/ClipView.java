@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.renj.imageselect.model.DefaultConfigData;
 import com.renj.imageselect.model.ImageSelectConfig;
 
 import static android.graphics.Canvas.ALL_SAVE_FLAG;
@@ -32,15 +33,15 @@ import static android.graphics.Canvas.ALL_SAVE_FLAG;
  */
 public class ClipView extends View {
     // 默认遮罩层颜色
-    private final int DEFAULT_MASK_COLOR = 0x80000000;
+    private final int DEFAULT_MASK_COLOR = DefaultConfigData.MASK_COLOR;
     // 默认边框颜色
-    private final int DEFAULT_BORDER_COLOR = 0xFFFFFFFF;
+    private final int DEFAULT_BORDER_COLOR = DefaultConfigData.CLIP_BORDER_COLOR;
     // 默认边框宽度 1dp
-    private final int DEFAULT_BORDER_WIDTH = 1;
+    private final float DEFAULT_BORDER_WIDTH = DefaultConfigData.CLIP_BORDER_WIDTH;
     // 默认裁剪宽高相等，都为 200dp，默认矩形
-    private final int DEFAULT_SIZE = 200;
+    private final int DEFAULT_SIZE = DefaultConfigData.WIDTH;
     // 默认裁剪形状 矩形
-    private ClipShape DEFAULT_CLIP_SHAPE = ClipShape.CLIP_RECT;
+    private ClipShape DEFAULT_CLIP_SHAPE = DefaultConfigData.IS_CIRCLE_CLIP ? ClipShape.CLIP_CIRCLE : ClipShape.CLIP_RECT;
 
     // 用户绘制背景的画笔
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -148,7 +149,7 @@ public class ClipView extends View {
      * @param imageSelectConfig
      */
     public void setClipViewParams(@NonNull ImageSelectConfig imageSelectConfig) {
-        this.maskColor = imageSelectConfig.getMaskColorColor();
+        this.maskColor = imageSelectConfig.getMaskColor();
         this.clipWidth = dp2Px(imageSelectConfig.getWidth());
         this.clipHeight = dp2Px(imageSelectConfig.getHeight());
         this.borderColor = imageSelectConfig.getClipBorderColor();
@@ -162,9 +163,9 @@ public class ClipView extends View {
      * 检查配置的数据
      */
     private void checkConfigValue() {
-        if(this.clipWidth > getMeasuredWidth()) this.clipWidth = getMeasuredWidth();
-        if(this.clipHeight > getMeasuredHeight()) this.clipHeight = getMeasuredHeight();
-        if(this.borderWidth < 0) this.borderWidth = 0;
+        if (this.clipWidth > getMeasuredWidth()) this.clipWidth = getMeasuredWidth();
+        if (this.clipHeight > getMeasuredHeight()) this.clipHeight = getMeasuredHeight();
+        if (this.borderWidth < 0) this.borderWidth = 0;
     }
 
     /**

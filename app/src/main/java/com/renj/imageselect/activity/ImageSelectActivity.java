@@ -133,10 +133,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 解析配置数据
      */
     private void configDataParse() {
-        if (imageSelectConfig == null) {
+        if (imageSelectConfig == null)
             defaultConfig();
-            return;
-        }
 
         isSelectMore(imageSelectConfig.getSelectCount() > 1);
         imageSelectAdapter.isOpenCamera(imageSelectConfig.isShowCamera());
@@ -156,7 +154,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 没有配置信息时，使用默认的配置信息
      */
     private void defaultConfig() {
-
+        imageSelectConfig = new ImageSelectConfig
+                .Builder()
+                .build();
     }
 
     /**
@@ -236,7 +236,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 if (imageSelectConfig.isShowCamera() && position == 0) {
                     if (imageSelectAdapter.getCheckImages().size() >= selectCount) {
                         Toast.makeText(ImageSelectActivity.this, "最多选择" + selectCount + "张图片", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         openCamera();
                     }
                     return;
@@ -488,7 +488,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         /**
          * 设置选择和裁剪配置参数<br/>
-         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #clipConfig(ImageSelectConfig)} 方法，在调用 {@link #openImageSelectPage(Context)} 方法</b>
+         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #clipConfig(ImageSelectConfig)} 方法，
+         * 在调用 {@link #openImageSelectPage(Context)} 方法。
+         * 如果不调用，将使用 {@link com.renj.imageselect.model.DefaultConfigData} 中的数据。
+         * 默认选择的张数为1，如果用List集合接收将抛出 {@link ClassCastException} 异常。</b>
          *
          * @param imageSelectConfig {@link ImageSelectConfig} 对象
          * @return {@link ImageSelectObservable} 对象
@@ -500,7 +503,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         /**
          * 打开图片选择界面<br/>
-         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #clipConfig(ImageSelectConfig)} 方法，在调用 {@link #openImageSelectPage(Context)} 方法</b>
+         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #clipConfig(ImageSelectConfig)} 方法，
+         * 在调用 {@link #openImageSelectPage(Context)} 方法。
+         * 如果不调用，将使用 {@link com.renj.imageselect.model.DefaultConfigData} 中的数据。
+         * 默认选择的张数为1，如果用List集合接收将抛出 {@link ClassCastException} 异常。</b>
          *
          * @param context 上下文
          * @return {@link ImageSelectObservable} 对象
