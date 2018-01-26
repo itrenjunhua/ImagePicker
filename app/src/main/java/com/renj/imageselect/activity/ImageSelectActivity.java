@@ -165,21 +165,24 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * @param selectMore true：是 false：不是
      */
     private void isSelectMore(boolean selectMore) {
+        // 选择图片页面取消按钮
+        tvCancelSelect = findViewById(R.id.tv_cancel_select);
+        tvCancelSelect.setOnClickListener(this);
+
+        // 多选图片时的确认控件
+        tvConfirmSelect = findViewById(R.id.tv_confirm_select);
+
+        // 判断是否多选
         if (selectMore) {
             // 告诉Adapter最多选择的图片
             imageSelectAdapter.setMaxCount(imageSelectConfig.getSelectCount());
 
-            selectMoreTitle.setVisibility(View.VISIBLE);
-            /***** 多选图片时的取消、确认(已选张数)等控件 *****/
-            tvCancelSelect = findViewById(R.id.tv_cancel_select);
-            tvConfirmSelect = findViewById(R.id.tv_confirm_select);
-
             tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
 
-            tvCancelSelect.setOnClickListener(this);
+            tvConfirmSelect.setVisibility(View.VISIBLE);
             tvConfirmSelect.setOnClickListener(this);
         } else {
-            selectMoreTitle.setVisibility(View.GONE);
+            tvConfirmSelect.setVisibility(View.GONE);
         }
     }
 

@@ -283,7 +283,7 @@ public class ImageSelectConfig implements Parcelable {
          * @param maskColor 遮罩层颜色
          * @return
          */
-        public Builder maskColorColor(int maskColor) {
+        public Builder maskColor(int maskColor) {
             configModel.maskColor = maskColor;
             return this;
         }
