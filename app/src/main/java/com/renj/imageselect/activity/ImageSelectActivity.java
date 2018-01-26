@@ -69,6 +69,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
     /***** 页面基本控件 *****/
     private GridView gvImages;
+    private TextView tvSelectMenu;
     private ListView lvMenu;
     private RelativeLayout selectMoreTitle;
     private DrawerLayout drawerLayout;
@@ -102,12 +103,15 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         /***** 页面基本控件 *****/
         gvImages = findViewById(R.id.gv_images);
+        tvSelectMenu = findViewById(R.id.tv_select_menu);
         lvMenu = findViewById(R.id.lv_menu);
         selectMoreTitle = findViewById(R.id.rl_select_more);
         drawerLayout = findViewById(R.id.drawer_layout);
         vsClipSingle = findViewById(R.id.vs_clip_single);
         vsClipMore = findViewById(R.id.vs_clip_more);
         llSelectView = findViewById(R.id.ll_select_view);
+
+        tvSelectMenu.setOnClickListener(this);
 
         imageSelectAdapter = new ImageSelectAdapter(this);
         imageMenuAdapter = new ImageMenuAdapter(this);
@@ -442,6 +446,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         int vId = v.getId();
         switch (vId) {
+            case R.id.tv_select_menu:
+                Toast.makeText(ImageSelectActivity.this, "显示图片目录", Toast.LENGTH_SHORT).show();
+                break;
             case R.id.tv_cancel:
             case R.id.tv_cancel_select:
                 finish();
