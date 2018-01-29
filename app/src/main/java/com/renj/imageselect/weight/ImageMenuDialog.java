@@ -36,6 +36,11 @@ public class ImageMenuDialog extends Dialog {
     private ImageMenuAdapter imageMenuAdapter;
 
     private List<FolderModel> folderModels;
+    private MenuClickListener menuClickListener;
+
+    public void setMenuClickListener(MenuClickListener menuClickListener) {
+        this.menuClickListener = menuClickListener;
+    }
 
     public ImageMenuDialog(@NonNull Context context) {
         super(context, R.style.alert_dialog);
@@ -67,7 +72,8 @@ public class ImageMenuDialog extends Dialog {
                 Object itemData = parent.getItemAtPosition(position);
                 if (itemData instanceof FolderModel) {
                     FolderModel folderModel = (FolderModel) itemData;
-                    //imageSelectAdapter.setImageModels(folderModel.folders);
+                    if (menuClickListener != null)
+                        menuClickListener.menuClick(folderModel);
                     dismiss();
                 }
             }
@@ -81,5 +87,12 @@ public class ImageMenuDialog extends Dialog {
         this.folderModels = folderModels;
         if (imageMenuAdapter != null)
             imageMenuAdapter.setFolderModels(folderModels);
+    }
+
+    /**
+     * 目录条目点击监听
+     */
+    public interface MenuClickListener {
+        void menuClick(FolderModel folderModel);
     }
 }

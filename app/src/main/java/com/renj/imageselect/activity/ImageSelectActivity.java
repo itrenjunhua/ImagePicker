@@ -213,6 +213,15 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 设置条目相关监听
      */
     private void setItemListener() {
+        // 目录监听
+        imageMenuDialog.setMenuClickListener(new ImageMenuDialog.MenuClickListener() {
+            @Override
+            public void menuClick(FolderModel folderModel) {
+                tvSelectMenu.setText(folderModel.name);
+                imageSelectAdapter.setImageModels(folderModel.folders);
+            }
+        });
+
         // 图片点击监听
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

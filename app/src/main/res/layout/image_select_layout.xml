@@ -52,12 +52,13 @@
         <TextView
             android:id="@+id/tv_select_menu"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:background="@drawable/shape_text_border"
             android:drawablePadding="18dp"
             android:drawableRight="@mipmap/ic_select_menu"
             android:gravity="center_vertical"
-            android:padding="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="全部图片"
             android:textColor="#FFFFFF"
             android:textSize="18sp" />
