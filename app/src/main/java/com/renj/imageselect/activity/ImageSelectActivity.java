@@ -13,20 +13,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.renj.imageselect.R;
-import com.renj.imageselect.adapter.ImageMenuAdapter;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
@@ -37,6 +33,7 @@ import com.renj.imageselect.utils.OnResultCallBack;
 import com.renj.imageselect.utils.Utils;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
 import com.renj.imageselect.weight.ImageClipView;
+import com.renj.imageselect.weight.ImageMenuDialog;
 
 import java.io.File;
 import java.util.List;
@@ -70,9 +67,6 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     /***** 页面基本控件 *****/
     private GridView gvImages;
     private TextView tvSelectMenu;
-    private ListView lvMenu;
-    private RelativeLayout selectMoreTitle;
-    private DrawerLayout drawerLayout;
     private ViewStub vsClipSingle; // 裁剪单张图片时加载
     private ViewStub vsClipMore; // 裁剪多张图片时加载
     private LinearLayout llSelectView;
@@ -89,9 +83,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private ImageClipMoreLayout clipMoreLayout;
 
     private ImageSelectAdapter imageSelectAdapter; // 图片展示的适配器
-    private ImageMenuAdapter imageMenuAdapter;     // 目录的适配器
     private ImageSelectConfig imageSelectConfig;   // 保存图片选择配置信息的对象
     private File cameraSavePath; // 相机照片保存路径
+    private ImageMenuDialog imageMenuDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,19 +98,16 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         /***** 页面基本控件 *****/
         gvImages = findViewById(R.id.gv_images);
         tvSelectMenu = findViewById(R.id.tv_select_menu);
-        lvMenu = findViewById(R.id.lv_menu);
-        selectMoreTitle = findViewById(R.id.rl_select_more);
-        drawerLayout = findViewById(R.id.drawer_layout);
         vsClipSingle = findViewById(R.id.vs_clip_single);
         vsClipMore = findViewById(R.id.vs_clip_more);
         llSelectView = findViewById(R.id.ll_select_view);
 
         tvSelectMenu.setOnClickListener(this);
 
+        imageMenuDialog = new ImageMenuDialog(this);
+
         imageSelectAdapter = new ImageSelectAdapter(this);
-        imageMenuAdapter = new ImageMenuAdapter(this);
         gvImages.setAdapter(imageSelectAdapter);
-        lvMenu.setAdapter(imageMenuAdapter);
 
         // 配置数据解析
         configDataParse();
@@ -222,19 +213,6 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 设置条目相关监听
      */
     private void setItemListener() {
-        // 目录条目监听
-        lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object itemData = parent.getItemAtPosition(position);
-                if (itemData instanceof FolderModel) {
-                    FolderModel folderModel = (FolderModel) itemData;
-                    imageSelectAdapter.setImageModels(folderModel.folders);
-                }
-                drawerLayout.closeDrawers();
-            }
-        });
-
         // 图片点击监听
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -357,7 +335,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void finish(List<ImageModel> imageModels, List<FolderModel> folderModels) {
                 imageSelectAdapter.setImageModels(imageModels);
-                imageMenuAdapter.setFolderModels(folderModels);
+                imageMenuDialog.setMenuData(folderModels);
             }
         });
     }
@@ -447,7 +425,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         int vId = v.getId();
         switch (vId) {
             case R.id.tv_select_menu:
-                Toast.makeText(ImageSelectActivity.this, "显示图片目录", Toast.LENGTH_SHORT).show();
+                imageMenuDialog.show();
                 break;
             case R.id.tv_cancel:
             case R.id.tv_cancel_select:
