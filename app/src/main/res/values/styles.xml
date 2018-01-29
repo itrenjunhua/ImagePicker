@@ -19,4 +19,9 @@
         <item name="android:backgroundDimAmount">0.7</item>
     </style>
 
+    <style name="dialog_anim">
+        <item name="android:windowEnterAnimation">@anim/bottom_dialog_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/bottom_dialog_anim_out</item>
+    </style>
+
 </resources>

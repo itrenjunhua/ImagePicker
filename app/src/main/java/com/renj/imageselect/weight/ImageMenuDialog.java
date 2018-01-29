@@ -57,6 +57,7 @@ public class ImageMenuDialog extends Dialog {
         WindowManager.LayoutParams attributes = window.getAttributes();
         attributes.gravity = Gravity.BOTTOM;
         window.setAttributes(attributes);
+        window.setWindowAnimations(R.style.dialog_anim);
         window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT
                 , LinearLayout.LayoutParams.WRAP_CONTENT);
 
