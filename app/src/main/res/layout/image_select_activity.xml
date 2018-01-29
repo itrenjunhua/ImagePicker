@@ -1,38 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?><!--图片选择、裁剪页面顶层布局-->
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <FrameLayout
+    <!--裁剪单张图布局-->
+    <!--<include layout="@layout/image_clip_single_layout />-->
+    <ViewStub
+        android:id="@+id/vs_clip_single"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent" />
 
-        <!--裁剪单张图布局-->
-        <!--<include layout="@layout/image_clip_single_layout />-->
-        <ViewStub
-            android:id="@+id/vs_clip_single"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <!--裁剪多张图布局-->
+    <!--<include layout="@layout/image_single_clip_more_layout" />-->
+    <ViewStub
+        android:id="@+id/vs_clip_more"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-        <!--裁剪多张图布局-->
-        <!--<include layout="@layout/image_single_clip_more_layout" />-->
-        <ViewStub
-            android:id="@+id/vs_clip_more"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <!--图片选择布局-->
+    <include layout="@layout/image_select_layout" />
 
-        <!--图片选择布局-->
-        <include layout="@layout/image_select_layout" />
-
-    </FrameLayout>
-
-    <ListView
-        android:id="@+id/lv_menu"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:background="@android:color/white" />
-
-</android.support.v4.widget.DrawerLayout>
+</FrameLayout>

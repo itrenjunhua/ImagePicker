@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +31,7 @@ import java.util.List;
 public class ImageMenuAdapter extends BaseAdapter {
     private Context context;
     private List<FolderModel> folderModels;
+    private int selectPosition = 0;
 
     public ImageMenuAdapter(Context context) {
         this.context = context;
@@ -40,8 +42,19 @@ public class ImageMenuAdapter extends BaseAdapter {
         this.folderModels = folderModels;
     }
 
+    /**
+     * 设置数据
+     */
     public void setFolderModels(List<FolderModel> folderModels) {
         this.folderModels = folderModels;
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 设置选中位置
+     */
+    public void setSelectPosition(int selectPosition) {
+        this.selectPosition = selectPosition;
         notifyDataSetChanged();
     }
 
@@ -69,7 +82,7 @@ public class ImageMenuAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.setData(folderModels.get(position));
+        viewHolder.setData(folderModels.get(position), position);
         return convertView;
     }
 
@@ -77,17 +90,24 @@ public class ImageMenuAdapter extends BaseAdapter {
     class ViewHolder {
         private ImageView imageView;
         private TextView textView;
+        private RadioButton rbMenu;
 
         public ViewHolder(View view) {
             view.setTag(this);
 
             imageView = view.findViewById(R.id.iv_enum_show);
             textView = view.findViewById(R.id.tv_enmu_name);
+            rbMenu = view.findViewById(R.id.rb_menu);
         }
 
-        public void setData(FolderModel folderModel) {
-            textView.setText(folderModel.name);
+        public void setData(FolderModel folderModel, int position) {
+            textView.setText(folderModel.name + "(" + folderModel.totalCount + ")");
             Glide.with(context).load(folderModel.folders.get(0).path).into(imageView);
+
+            if (position == selectPosition)
+                rbMenu.setChecked(true);
+            else
+                rbMenu.setChecked(false);
         }
     }
 }

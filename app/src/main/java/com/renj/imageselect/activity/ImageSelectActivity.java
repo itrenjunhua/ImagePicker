@@ -85,7 +85,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private ImageSelectAdapter imageSelectAdapter; // 图片展示的适配器
     private ImageSelectConfig imageSelectConfig;   // 保存图片选择配置信息的对象
     private File cameraSavePath; // 相机照片保存路径
-    private ImageMenuDialog imageMenuDialog;
+    private ImageMenuDialog imageMenuDialog; // 图片目录选择Dialog
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

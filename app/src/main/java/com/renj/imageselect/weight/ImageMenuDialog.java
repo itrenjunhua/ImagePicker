@@ -72,6 +72,7 @@ public class ImageMenuDialog extends Dialog {
                 Object itemData = parent.getItemAtPosition(position);
                 if (itemData instanceof FolderModel) {
                     FolderModel folderModel = (FolderModel) itemData;
+                    imageMenuAdapter.setSelectPosition(position);
                     if (menuClickListener != null)
                         menuClickListener.menuClick(folderModel);
                     dismiss();

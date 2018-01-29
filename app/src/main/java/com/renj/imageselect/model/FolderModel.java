@@ -1,5 +1,7 @@
 package com.renj.imageselect.model;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,19 +23,23 @@ public class FolderModel {
     public String name;
     // 文件夹下的所有图片集合
     public List<ImageModel> folders;
+    // 当前文件夹下图片的个数
+    public int totalCount;
 
-    public FolderModel(String name) {
+    public FolderModel(@NonNull String name) {
         this.name = name;
     }
 
-    public FolderModel(String name, List<ImageModel> folders) {
+    public FolderModel(@NonNull String name, @NonNull List<ImageModel> folders) {
         this.name = name;
         this.folders = folders;
+        this.totalCount = folders == null ? 0 : folders.size();
     }
 
-    public void addImageModel(ImageModel imageModel) {
+    public void addImageModel(@NonNull ImageModel imageModel) {
         if (folders == null) folders = new ArrayList<>();
 
         folders.add(imageModel);
+        this.totalCount = folders.size();
     }
 }
