@@ -17,7 +17,7 @@
             android:layout_centerVertical="true"
             android:padding="12dp"
             android:text="取消"
-            android:textColor="#333333"
+            android:textColor="@color/color_main_text"
             android:textSize="14sp" />
 
         <TextView
@@ -28,7 +28,7 @@
             android:layout_centerVertical="true"
             android:padding="12dp"
             android:text="(0 / 9)确定"
-            android:textColor="#333333"
+            android:textColor="@color/color_main_text"
             android:textSize="14sp" />
 
     </RelativeLayout>
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/colorPrimary"
+        android:background="@color/color_black"
         android:horizontalSpacing="2dp"
         android:numColumns="3"
         android:verticalSpacing="2dp" />
@@ -46,7 +46,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#60000000"
+        android:background="@color/color_select_bottom"
         android:orientation="horizontal">
 
         <TextView
@@ -60,7 +60,7 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:text="全部图片"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/color_white"
             android:textSize="18sp" />
 
     </LinearLayout>

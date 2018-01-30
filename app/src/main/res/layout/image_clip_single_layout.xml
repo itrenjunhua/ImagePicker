@@ -16,7 +16,7 @@
             android:layout_centerVertical="true"
             android:padding="12dp"
             android:text="取消"
-            android:textColor="#333333"
+            android:textColor="@color/color_main_text"
             android:textSize="14sp" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:padding="12dp"
             android:text="裁剪"
-            android:textColor="#333333"
+            android:textColor="@color/color_main_text"
             android:textSize="14sp" />
 
     </RelativeLayout>

@@ -104,10 +104,12 @@ public class ImageMenuAdapter extends BaseAdapter {
             textView.setText(folderModel.name + "(" + folderModel.totalCount + ")");
             Glide.with(context).load(folderModel.folders.get(0).path).into(imageView);
 
-            if (position == selectPosition)
+            if (position == selectPosition) {
                 rbMenu.setChecked(true);
-            else
-                rbMenu.setChecked(false);
+                rbMenu.setVisibility(View.VISIBLE);
+            } else {
+                rbMenu.setVisibility(View.GONE);
+            }
         }
     }
 }

@@ -23,7 +23,7 @@
         android:maxLines="1"
         android:singleLine="true"
         android:text="全部图片(100)"
-        android:textColor="#333333"
+        android:textColor="@color/color_main_text"
         android:textSize="18sp" />
 
     <RadioButton
