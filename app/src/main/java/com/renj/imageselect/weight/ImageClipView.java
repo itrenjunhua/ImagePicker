@@ -79,21 +79,24 @@ public class ImageClipView extends RelativeLayout {
         photoView.setImageBitmap(bitmap);
     }
 
-    ImageModel imageModel;
-
     /**
      * 裁剪图片返回 {@link ImageModel} 对象
      *
      * @return {@link ImageModel} 对象
      */
-    public ImageModel cut() {
-        clipView.confirmClip(new ClipView.OnClipRangeListener() {
+    public void cut(@NonNull final CutListener cutListener) {
+        new Thread(){
             @Override
-            public void clipRange(ClipView.ClipShape clipShape, RectF clipRectF) {
-                imageModel = photoView.clipBitmap(clipShape, clipRectF);
+            public void run() {
+                clipView.confirmClip(new ClipView.OnClipRangeListener() {
+                    @Override
+                    public void clipRange(ClipView.ClipShape clipShape, RectF clipRectF) {
+                        ImageModel imageModel = photoView.clipBitmap(clipShape, clipRectF);
+                        cutListener.cutFinish(imageModel);
+                    }
+                });
             }
-        });
-        return imageModel;
+        }.start();
     }
 
     /**
@@ -104,5 +107,9 @@ public class ImageClipView extends RelativeLayout {
     public void setClipViewParams(@NonNull ImageSelectConfig imageSelectConfig) {
         clipView.setClipViewParams(imageSelectConfig);
         photoView.setClipViewParams(imageSelectConfig);
+    }
+
+    public interface CutListener{
+        void cutFinish(ImageModel imageModel);
     }
 }

@@ -2,6 +2,8 @@ package com.renj.imageselect.weight;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -106,14 +108,30 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
                     onImageClipMoreListener.cancel();
                 break;
             case R.id.tv_clip_more:
-                ImageClipView focusedChild = clipMorePagerAdapter.getPrimaryItem();
-                ImageModel imageModel = focusedChild.cut();
-                resoutImages.add(imageModel);
-
                 currentIndex += 1;
+
+                ImageClipView focusedChild = clipMorePagerAdapter.getPrimaryItem();
+                focusedChild.cut(new ImageClipView.CutListener() {
+                    @Override
+                    public void cutFinish(ImageModel imageModel) {
+                        resoutImages.add(imageModel);
+                        if (currentIndex <= resoutImages.size()) {
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (onImageClipMoreListener != null)
+                                        onImageClipMoreListener.finish(resoutImages);
+                                }
+                            });
+                        }
+                    }
+                });
+
                 if (currentIndex >= srcImages.size()) {
-                    if (onImageClipMoreListener != null)
-                        onImageClipMoreListener.finish(resoutImages);
+                    tvClip.setEnabled(false);
+//                    if (onImageClipMoreListener != null)
+//                        onImageClipMoreListener.finish(resoutImages);
                     return;
                 }
                 vpClipMore.setCurrentItem(currentIndex);

@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -455,10 +457,20 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case R.id.tv_clip:
-                ImageModel imageModel = imageClipView.cut();
-                if (create().onResultCallBack != null)
-                    create().onResultCallBack.onResult(imageModel);
-                finish();
+                imageClipView.cut(new ImageClipView.CutListener() {
+                    @Override
+                    public void cutFinish(final ImageModel imageModel) {
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (create().onResultCallBack != null)
+                                    create().onResultCallBack.onResult(imageModel);
+                                finish();
+                            }
+                        });
+                    }
+                });
                 break;
             default:
                 break;
