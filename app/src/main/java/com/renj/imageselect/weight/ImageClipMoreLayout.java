@@ -46,6 +46,8 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
     private ClipMorePagerAdapter clipMorePagerAdapter;
     private ImageSelectConfig imageSelectConfig;
 
+    private LoadingDialog loadingDialog;
+
     public ImageClipMoreLayout(Context context) {
         this(context, null);
     }
@@ -76,6 +78,8 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
 
         clipMorePagerAdapter = new ClipMorePagerAdapter();
         vpClipMore.setAdapter(clipMorePagerAdapter);
+
+        loadingDialog = new LoadingDialog(context);
     }
 
     private void setListener() {
@@ -115,11 +119,12 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
                     @Override
                     public void cutFinish(ImageModel imageModel) {
                         resoutImages.add(imageModel);
-                        if (currentIndex <= resoutImages.size()) {
+                        if (srcImages.size() <= resoutImages.size()) {
                             Handler handler = new Handler(Looper.getMainLooper());
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
+                                    loadingDialog.dismiss();
                                     if (onImageClipMoreListener != null)
                                         onImageClipMoreListener.finish(resoutImages);
                                 }
@@ -129,6 +134,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
                 });
 
                 if (currentIndex >= srcImages.size()) {
+                    loadingDialog.show();
                     tvClip.setEnabled(false);
 //                    if (onImageClipMoreListener != null)
 //                        onImageClipMoreListener.finish(resoutImages);

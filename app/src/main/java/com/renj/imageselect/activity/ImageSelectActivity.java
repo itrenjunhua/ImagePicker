@@ -36,6 +36,7 @@ import com.renj.imageselect.utils.Utils;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
 import com.renj.imageselect.weight.ImageClipView;
 import com.renj.imageselect.weight.ImageMenuDialog;
+import com.renj.imageselect.weight.LoadingDialog;
 
 import java.io.File;
 import java.util.List;
@@ -88,6 +89,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private ImageSelectConfig imageSelectConfig;   // 保存图片选择配置信息的对象
     private File cameraSavePath; // 相机照片保存路径
     private ImageMenuDialog imageMenuDialog; // 图片目录选择Dialog
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,6 +126,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         } else {
             startLoadImage();
         }
+
+        loadingDialog = new LoadingDialog(this);
     }
 
     /**
@@ -457,6 +461,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case R.id.tv_clip:
+                loadingDialog.show();
                 imageClipView.cut(new ImageClipView.CutListener() {
                     @Override
                     public void cutFinish(final ImageModel imageModel) {
@@ -466,6 +471,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                             public void run() {
                                 if (create().onResultCallBack != null)
                                     create().onResultCallBack.onResult(imageModel);
+                                loadingDialog.dismiss();
                                 finish();
                             }
                         });
