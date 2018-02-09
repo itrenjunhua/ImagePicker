@@ -11,4 +11,5 @@
     <color name="color_main_text">#333333</color>
     <!--选择图片界面底部栏颜色-->
     <color name="color_select_bottom">#60000000</color>
+    <color name="dialog_window_bg">#80000000</color>
 </resources>
