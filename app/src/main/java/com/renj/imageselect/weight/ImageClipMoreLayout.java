@@ -8,10 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +49,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
     private ClipMorePagerAdapter clipMorePagerAdapter;
     private ImageSelectConfig imageSelectConfig;
 
+    private FixedSpeedScroller mScroller;
     private LoadingDialog loadingDialog;
 
     public ImageClipMoreLayout(Context context) {
@@ -79,6 +83,15 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
         clipMorePagerAdapter = new ClipMorePagerAdapter();
         vpClipMore.setAdapter(clipMorePagerAdapter);
 
+        try {
+            // 通过class文件获取mScroller属性
+            Field mField = ViewPager.class.getDeclaredField("mScroller");
+            mField.setAccessible(true);
+            mScroller = new FixedSpeedScroller(vpClipMore.getContext(),new AccelerateInterpolator());
+            mField.set(vpClipMore, mScroller);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         loadingDialog = new LoadingDialog(context);
     }
 
@@ -140,6 +153,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
 //                        onImageClipMoreListener.finish(resoutImages);
                     return;
                 }
+                mScroller.setmDuration(500);// 切换时间，毫秒值
                 vpClipMore.setCurrentItem(currentIndex);
                 tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
                 break;
