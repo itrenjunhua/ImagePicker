@@ -20,10 +20,6 @@ import android.widget.Scroller;
 public class FixedSpeedScroller extends Scroller {
     private int mDuration = 1000;
 
-    public FixedSpeedScroller(Context context) {
-        super(context);
-    }
-
     public FixedSpeedScroller(Context context, Interpolator interpolator) {
         super(context, interpolator);
     }
@@ -43,14 +39,7 @@ public class FixedSpeedScroller extends Scroller {
     /**
      * 设置切换时间
      */
-    public void setmDuration(int time) {
+    public void setDuration(int time) {
         mDuration = time;
-    }
-
-    /**
-     * 获取切换时间
-     */
-    public int getmDuration() {
-        return mDuration;
     }
 }

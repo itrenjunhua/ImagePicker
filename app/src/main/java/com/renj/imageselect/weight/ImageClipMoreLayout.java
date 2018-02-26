@@ -153,7 +153,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
 //                        onImageClipMoreListener.finish(resoutImages);
                     return;
                 }
-                mScroller.setmDuration(500);// 切换时间，毫秒值
+                mScroller.setDuration(500);// 切换时间，毫秒值
                 vpClipMore.setCurrentItem(currentIndex);
                 tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
                 break;
