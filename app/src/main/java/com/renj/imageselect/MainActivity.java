@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 .maskColor(Color.parseColor("#88000000"))
                 .clipBorderColor(Color.parseColor("#ff0000"))
                 .isClip(true)
-                .isCircleClip(true)
+                .isCircleClip(false)
                 .build();
         ImageSelectUtil.create()
                 .clipConfig(imageSelectConfig)

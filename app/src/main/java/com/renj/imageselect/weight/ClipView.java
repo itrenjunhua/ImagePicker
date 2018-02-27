@@ -47,6 +47,8 @@ public class ClipView extends View {
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     // 用于绘制边框的画笔
     private Paint borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    // 用于绘制单元格的画笔
+    private Paint cellPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     // 遮罩层颜色
     private int maskColor = DEFAULT_MASK_COLOR;
     // 边框颜色
@@ -96,6 +98,7 @@ public class ClipView extends View {
         paint.setStyle(Paint.Style.FILL);
 
         borderPaint.setStyle(Paint.Style.STROKE);
+        cellPaint.setStyle(Paint.Style.STROKE);
 
         clipShape = ClipShape.CLIP_RECT;
     }
@@ -119,6 +122,8 @@ public class ClipView extends View {
 
         borderPaint.setColor(borderColor);
         borderPaint.setStrokeWidth(borderWidth);
+        cellPaint.setColor(borderColor);
+        cellPaint.setStrokeWidth(borderWidth / 2);
 
         int saveLayer = canvas.saveLayer(rectF, null, ALL_SAVE_FLAG);
 
@@ -131,12 +136,32 @@ public class ClipView extends View {
         if (ClipShape.CLIP_RECT == clipShape) { // 矩形
             canvas.drawRect(clipRect, paint);
             canvas.drawRect(clipRect, borderPaint);
+
+            float vHeight = clipHeight / 6;
+            float vWidth = clipWidth / 6;
+            for (int i = 1; i < 6; i++) {
+                float stopY = clipRect.top + vHeight * i;
+                float stopX = clipRect.left + vWidth * i;
+                canvas.drawLine(clipRect.left, stopY, clipRect.right, stopY, cellPaint);
+                canvas.drawLine(stopX, clipRect.top, stopX, clipRect.bottom, cellPaint);
+            }
         } else { // 圆形
             float centerX = (clipRect.left + clipRect.right) / 2;
             float centerY = (clipRect.top + clipRect.bottom) / 2;
             int radius = (Math.min(clipWidth, clipHeight)) / 2;
             canvas.drawCircle(centerX, centerY, radius, paint);
             canvas.drawCircle(centerX, centerY, radius, borderPaint);
+
+            float vHeight = Math.min(clipWidth, clipHeight) / 6;
+            float vWidth = Math.min(clipWidth, clipHeight) / 6;
+            float tTop = centerY - radius;
+            float tLeft = centerX - radius;
+            for (int i = 1; i < 6; i++) {
+                float stopY = tTop + vHeight * i;
+                float stopX = tLeft + vWidth * i;
+                canvas.drawLine(tLeft, stopY, tLeft + 2 * radius, stopY, cellPaint);
+                canvas.drawLine(stopX, tTop, stopX, tTop + 2 * radius, cellPaint);
+            }
         }
         paint.setXfermode(null);
 
