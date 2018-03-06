@@ -438,48 +438,40 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         int vId = v.getId();
-        switch (vId) {
-            case R.id.tv_select_menu:
-                imageMenuDialog.show();
-                break;
-            case R.id.tv_cancel:
-            case R.id.tv_cancel_select:
+        if (R.id.tv_select_menu == vId) {
+            imageMenuDialog.show();
+        } else if (R.id.tv_cancel == vId || R.id.tv_cancel_select == vId) {
+            finish();
+        } else if (R.id.tv_confirm_select == vId) {
+            List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
+            if (checkImages.size() <= 0) {
+                Toast.makeText(ImageSelectActivity.this, "没有选择图片", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (imageSelectConfig.isClip()) {
+                pageStatuChange(STATU_CLIP_MORE_PAGE);
+            } else {
+                if (create().onResultCallBack != null)
+                    create().onResultCallBack.onResult(checkImages);
                 finish();
-                break;
-            case R.id.tv_confirm_select:
-                List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
-                if (checkImages.size() <= 0) {
-                    Toast.makeText(ImageSelectActivity.this, "没有选择图片", Toast.LENGTH_SHORT).show();
-                    return;
+            }
+        } else if (R.id.tv_clip == vId) {
+            loadingDialog.show();
+            imageClipView.cut(new ImageClipView.CutListener() {
+                @Override
+                public void cutFinish(final ImageModel imageModel) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (create().onResultCallBack != null)
+                                create().onResultCallBack.onResult(imageModel);
+                            loadingDialog.dismiss();
+                            finish();
+                        }
+                    });
                 }
-                if (imageSelectConfig.isClip()) {
-                    pageStatuChange(STATU_CLIP_MORE_PAGE);
-                } else {
-                    if (create().onResultCallBack != null)
-                        create().onResultCallBack.onResult(checkImages);
-                    finish();
-                }
-                break;
-            case R.id.tv_clip:
-                loadingDialog.show();
-                imageClipView.cut(new ImageClipView.CutListener() {
-                    @Override
-                    public void cutFinish(final ImageModel imageModel) {
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (create().onResultCallBack != null)
-                                    create().onResultCallBack.onResult(imageModel);
-                                loadingDialog.dismiss();
-                                finish();
-                            }
-                        });
-                    }
-                });
-                break;
-            default:
-                break;
+            });
         }
     }
 

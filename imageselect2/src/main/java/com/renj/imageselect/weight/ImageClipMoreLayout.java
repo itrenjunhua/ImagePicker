@@ -87,7 +87,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
             // 通过class文件获取mScroller属性
             Field mField = ViewPager.class.getDeclaredField("mScroller");
             mField.setAccessible(true);
-            mScroller = new FixedSpeedScroller(vpClipMore.getContext(),new AccelerateInterpolator());
+            mScroller = new FixedSpeedScroller(vpClipMore.getContext(), new AccelerateInterpolator());
             mField.set(vpClipMore, mScroller);
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,46 +119,41 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
     @Override
     public void onClick(View v) {
         int vId = v.getId();
-        switch (vId) {
-            case R.id.tv_cancel_more:
-                if (onImageClipMoreListener != null)
-                    onImageClipMoreListener.cancel();
-                break;
-            case R.id.tv_clip_more:
-                currentIndex += 1;
+        if (R.id.tv_cancel_more == vId) {
+            if (onImageClipMoreListener != null)
+                onImageClipMoreListener.cancel();
+        } else if (R.id.tv_clip_more == vId) {
+            currentIndex += 1;
 
-                ImageClipView focusedChild = clipMorePagerAdapter.getPrimaryItem();
-                focusedChild.cut(new ImageClipView.CutListener() {
-                    @Override
-                    public void cutFinish(ImageModel imageModel) {
-                        resoutImages.add(imageModel);
-                        if (srcImages.size() <= resoutImages.size()) {
-                            Handler handler = new Handler(Looper.getMainLooper());
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    loadingDialog.dismiss();
-                                    if (onImageClipMoreListener != null)
-                                        onImageClipMoreListener.finish(resoutImages);
-                                }
-                            });
-                        }
+            ImageClipView focusedChild = clipMorePagerAdapter.getPrimaryItem();
+            focusedChild.cut(new ImageClipView.CutListener() {
+                @Override
+                public void cutFinish(ImageModel imageModel) {
+                    resoutImages.add(imageModel);
+                    if (srcImages.size() <= resoutImages.size()) {
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                loadingDialog.dismiss();
+                                if (onImageClipMoreListener != null)
+                                    onImageClipMoreListener.finish(resoutImages);
+                            }
+                        });
                     }
-                });
+                }
+            });
 
-                if (currentIndex >= srcImages.size()) {
-                    loadingDialog.show();
-                    tvClip.setEnabled(false);
+            if (currentIndex >= srcImages.size()) {
+                loadingDialog.show();
+                tvClip.setEnabled(false);
 //                    if (onImageClipMoreListener != null)
 //                        onImageClipMoreListener.finish(resoutImages);
-                    return;
-                }
-                mScroller.setDuration(500);// 切换时间，毫秒值
-                vpClipMore.setCurrentItem(currentIndex);
-                tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
-                break;
-            default:
-                break;
+                return;
+            }
+            mScroller.setDuration(500);// 切换时间，毫秒值
+            vpClipMore.setCurrentItem(currentIndex);
+            tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
         }
     }
 

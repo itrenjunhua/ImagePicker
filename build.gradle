@@ -25,3 +25,18 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    COMPILE_SDK_VERSION = 27
+    MIN_SDK_VERSION = 17
+    TARGET_SDK_VERSION = 27
+
+    ANDROID_SUPPORT_V7 = "27.0.2"
+    CONSTRAINT_LAYOUT = "1.0.2"
+    JUNIT_SUPPORT = "4.12"
+    TEST_RUNNER = "1.0.1"
+    ESPRESSO_CORE = "3.0.1"
+
+    GLIDE = "4.4.0"
+    GLIDE_COMPILER = "4.4.0"
+}
