@@ -32,4 +32,5 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:' + GLIDE
     annotationProcessor 'com.github.bumptech.glide:compiler:' + GLIDE_COMPILER
+    compile 'org.jetbrains:annotations-java5:' + ORG_JETBRAINS
 }

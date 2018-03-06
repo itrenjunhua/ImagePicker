@@ -2,6 +2,9 @@ package com.renj.imageselect.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
+import org.jetbrains.annotations.Contract;
 
 /**
  * ======================================================================
@@ -54,11 +57,14 @@ public class ImageModel implements Parcelable {
     }
 
     public static final Creator<ImageModel> CREATOR = new Creator<ImageModel>() {
+        @NonNull
         @Override
         public ImageModel createFromParcel(Parcel source) {
             return new ImageModel(source);
         }
 
+        @NonNull
+        @Contract(pure = true)
         @Override
         public ImageModel[] newArray(int size) {
             return new ImageModel[size];

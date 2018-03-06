@@ -3,6 +3,7 @@ package com.renj.imageselect.utils;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.renj.imageselect.model.ImageModel;
 
@@ -32,6 +33,7 @@ public class Utils {
      * @param bitmap 需要保存的图片
      * @return ImageModel 对象
      */
+    @Nullable
     public static ImageModel saveBitmap2File(@NonNull String name, @NonNull Bitmap bitmap) {
         File saveDir = getSaveDir();
         if (saveDir == null || bitmap == null) return null;
@@ -54,6 +56,7 @@ public class Utils {
      *
      * @return
      */
+    @NonNull
     public static String getName() {
         return "clip_" + System.currentTimeMillis() + ".png";
     }
@@ -63,6 +66,7 @@ public class Utils {
      *
      * @return
      */
+    @Nullable
     private static File getSaveDir() {
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             File file = new File(Environment.getExternalStorageDirectory(), "image_select");
@@ -78,6 +82,7 @@ public class Utils {
      *
      * @return
      */
+    @NonNull
     public static File getCameraSavePath() {
         String name = "camera_" + System.currentTimeMillis() + ".png";
         return new File(getSaveDir(), name);

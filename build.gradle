@@ -39,4 +39,5 @@ ext {
 
     GLIDE = "4.4.0"
     GLIDE_COMPILER = "4.4.0"
+    ORG_JETBRAINS = "15.0"
 }

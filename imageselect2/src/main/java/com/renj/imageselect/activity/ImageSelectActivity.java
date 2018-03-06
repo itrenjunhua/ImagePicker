@@ -30,7 +30,6 @@ import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
-import com.renj.imageselect.utils.Logger;
 import com.renj.imageselect.utils.OnResultCallBack;
 import com.renj.imageselect.utils.Utils;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
@@ -287,7 +286,6 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
             imageSelectAdapter.notifyDataSetChanged();
             ImageModel imageModel = new ImageModel(cameraSavePath.getAbsolutePath(), cameraSavePath.getName(), cameraSavePath.lastModified());
-            Logger.i(imageModel.path);
 
             handlerCameraResult(imageModel);
         }
