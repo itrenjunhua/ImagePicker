@@ -29,5 +29,5 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:' + GLIDE
     annotationProcessor 'com.github.bumptech.glide:compiler:' + GLIDE_COMPILER
-    implementation project(':imageselect2')
+    implementation project(':imageselectLibrary')
 }
