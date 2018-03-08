@@ -20,90 +20,84 @@ import com.renj.imageselect.utils.OnResultCallBack;
  * ======================================================================
  */
 public class ImageSelectConfig implements Parcelable {
-    private ConfigModel configModel = new ConfigModel();
+    int width; // 裁剪宽度
+    int height; // 裁剪高度
+    int selectCount; // 选择图片张数
+    boolean isClip; // 是否裁剪
+    boolean isCircleClip; // 是否裁剪成圆形图片
+    float minScale; // 图片最小缩放倍数
+    float maxScale; // 图片最大缩放倍数
+    float clipBorderWidth; // 裁剪线条宽度
+    int clipBorderColor; // 裁剪线条颜色
+    int maskColor; // 遮罩层颜色
+    boolean isContinuityEnlarge; // 是否双击连续放大
+    boolean isShowCamera; // 是否显示打开相机按钮
 
-    private ImageSelectConfig(ConfigModel configModel) {
-        this.configModel = configModel;
+    private ImageSelectConfig(Builder builder) {
+        this.width = builder.width;
+        this.height = builder.height;
+        this.selectCount = builder.selectCount;
+        this.isClip = builder.isClip;
+        this.isCircleClip = builder.isCircleClip;
+        this.minScale = builder.minScale;
+        this.maxScale = builder.maxScale;
+        this.clipBorderWidth = builder.clipBorderWidth;
+        this.clipBorderColor = builder.clipBorderColor;
+        this.maskColor = builder.maskColor;
+        this.isContinuityEnlarge = builder.isContinuityEnlarge;
+        this.isShowCamera = builder.isShowCamera;
     }
 
     public int getWidth() {
-        return this.configModel.width;
+        return this.width;
     }
 
     public int getHeight() {
-        return this.configModel.height;
+        return this.height;
     }
 
     public int getSelectCount() {
-        return this.configModel.selectCount;
+        return this.selectCount;
     }
 
     public boolean isClip() {
-        return this.configModel.isClip;
+        return this.isClip;
     }
 
     public boolean isCircleClip() {
-        return this.configModel.isCircleClip;
+        return this.isCircleClip;
     }
 
     public float getMinScale() {
-        return this.configModel.minScale;
+        return this.minScale;
     }
 
     public float getMaxScale() {
-        return this.configModel.maxScale;
+        return this.maxScale;
     }
 
     public float getClipBorderWidth() {
-        return this.configModel.clipBorderWidth;
+        return this.clipBorderWidth;
     }
 
     public int getClipBorderColor() {
-        return this.configModel.clipBorderColor;
+        return this.clipBorderColor;
     }
 
     public int getMaskColor() {
-        return this.configModel.maskColor;
+        return this.maskColor;
     }
 
     public boolean isContinuityEnlarge() {
-        return this.configModel.isContinuityEnlarge;
+        return this.isContinuityEnlarge;
     }
 
     public boolean isShowCamera() {
-        return this.configModel.isShowCamera;
+        return this.isShowCamera;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(this.configModel, flags);
-    }
-
-    protected ImageSelectConfig(Parcel in) {
-        this.configModel = in.readParcelable(ConfigModel.class.getClassLoader());
-    }
-
-    public static final Creator<ImageSelectConfig> CREATOR = new Creator<ImageSelectConfig>() {
-        @NonNull
-        @Override
-        public ImageSelectConfig createFromParcel(Parcel source) {
-            return new ImageSelectConfig(source);
-        }
-
-        @NonNull
-        @org.jetbrains.annotations.Contract(pure = true)
-        @Override
-        public ImageSelectConfig[] newArray(int size) {
-            return new ImageSelectConfig[size];
-        }
-    };
-
-    private static class ConfigModel implements Parcelable {
+    public static class Builder {
         int width = DefaultConfigData.WIDTH; // 裁剪宽度
         int height = DefaultConfigData.HEIGHT; // 裁剪高度
         int selectCount = DefaultConfigData.SELECT_COUNT; // 选择图片张数
@@ -117,62 +111,6 @@ public class ImageSelectConfig implements Parcelable {
         boolean isContinuityEnlarge = DefaultConfigData.IS_CONTINUITY_ENLARGE; // 是否双击连续放大
         boolean isShowCamera = DefaultConfigData.IS_SHOW_CAMERA; // 是否显示打开相机按钮
 
-        public ConfigModel() {
-
-        }
-
-        protected ConfigModel(Parcel in) {
-            width = in.readInt();
-            height = in.readInt();
-            selectCount = in.readInt();
-            isClip = in.readByte() != 0;
-            isCircleClip = in.readByte() != 0;
-            minScale = in.readFloat();
-            maxScale = in.readFloat();
-            clipBorderWidth = in.readFloat();
-            clipBorderColor = in.readInt();
-            maskColor = in.readInt();
-            isContinuityEnlarge = in.readByte() != 0;
-            isShowCamera = in.readByte() != 0;
-        }
-
-        public static final Creator<ConfigModel> CREATOR = new Creator<ConfigModel>() {
-            @Override
-            public ConfigModel createFromParcel(Parcel in) {
-                return new ConfigModel(in);
-            }
-
-            @Override
-            public ConfigModel[] newArray(int size) {
-                return new ConfigModel[size];
-            }
-        };
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(width);
-            dest.writeInt(height);
-            dest.writeInt(selectCount);
-            dest.writeByte((byte) (isClip ? 1 : 0));
-            dest.writeByte((byte) (isCircleClip ? 1 : 0));
-            dest.writeFloat(minScale);
-            dest.writeFloat(maxScale);
-            dest.writeFloat(clipBorderWidth);
-            dest.writeInt(clipBorderColor);
-            dest.writeInt(maskColor);
-            dest.writeByte((byte) (isContinuityEnlarge ? 1 : 0));
-            dest.writeByte((byte) (isShowCamera ? 1 : 0));
-        }
-    }
-
-    public static class Builder {
-        ConfigModel configModel = new ConfigModel();
-
         public Builder() {
         }
 
@@ -183,7 +121,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder width(int width) {
-            configModel.width = width;
+            this.width = width;
             return this;
         }
 
@@ -194,7 +132,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder height(int height) {
-            configModel.height = height;
+            this.height = height;
             return this;
         }
 
@@ -210,7 +148,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder selectCount(int selectCount) {
-            configModel.selectCount = selectCount;
+            this.selectCount = selectCount;
             return this;
         }
 
@@ -221,7 +159,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder isClip(boolean isClip) {
-            configModel.isClip = isClip;
+            this.isClip = isClip;
             return this;
         }
 
@@ -233,7 +171,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder isCircleClip(boolean isCircleClip) {
-            configModel.isCircleClip = isCircleClip;
+            this.isCircleClip = isCircleClip;
             return this;
         }
 
@@ -244,7 +182,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder minScale(float minScale) {
-            configModel.minScale = minScale;
+            this.minScale = minScale;
             return this;
         }
 
@@ -255,7 +193,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder maxScale(float maxScale) {
-            configModel.maxScale = maxScale;
+            this.maxScale = maxScale;
             return this;
         }
 
@@ -266,7 +204,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder clipBorderWidth(float clipBorderWidth) {
-            configModel.clipBorderWidth = clipBorderWidth;
+            this.clipBorderWidth = clipBorderWidth;
             return this;
         }
 
@@ -277,7 +215,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder clipBorderColor(int clipBorderColor) {
-            configModel.clipBorderColor = clipBorderColor;
+            this.clipBorderColor = clipBorderColor;
             return this;
         }
 
@@ -288,7 +226,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder maskColor(int maskColor) {
-            configModel.maskColor = maskColor;
+            this.maskColor = maskColor;
             return this;
         }
 
@@ -299,7 +237,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder isContinuityEnlarge(boolean isContinuityEnlarge) {
-            configModel.isContinuityEnlarge = isContinuityEnlarge;
+            this.isContinuityEnlarge = isContinuityEnlarge;
             return this;
         }
 
@@ -310,7 +248,7 @@ public class ImageSelectConfig implements Parcelable {
          * @return
          */
         public Builder isShowCamera(boolean isShowCamera) {
-            configModel.isShowCamera = isShowCamera;
+            this.isShowCamera = isShowCamera;
             return this;
         }
 
@@ -320,7 +258,58 @@ public class ImageSelectConfig implements Parcelable {
          * @return {@link ImageSelectConfig} 对象
          */
         public ImageSelectConfig build() {
-            return new ImageSelectConfig(configModel);
+            return new ImageSelectConfig(this);
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.width);
+        dest.writeInt(this.height);
+        dest.writeInt(this.selectCount);
+        dest.writeByte(this.isClip ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isCircleClip ? (byte) 1 : (byte) 0);
+        dest.writeFloat(this.minScale);
+        dest.writeFloat(this.maxScale);
+        dest.writeFloat(this.clipBorderWidth);
+        dest.writeInt(this.clipBorderColor);
+        dest.writeInt(this.maskColor);
+        dest.writeByte(this.isContinuityEnlarge ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isShowCamera ? (byte) 1 : (byte) 0);
+    }
+
+    protected ImageSelectConfig(Parcel in) {
+        this.width = in.readInt();
+        this.height = in.readInt();
+        this.selectCount = in.readInt();
+        this.isClip = in.readByte() != 0;
+        this.isCircleClip = in.readByte() != 0;
+        this.minScale = in.readFloat();
+        this.maxScale = in.readFloat();
+        this.clipBorderWidth = in.readFloat();
+        this.clipBorderColor = in.readInt();
+        this.maskColor = in.readInt();
+        this.isContinuityEnlarge = in.readByte() != 0;
+        this.isShowCamera = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<ImageSelectConfig> CREATOR = new Parcelable.Creator<ImageSelectConfig>() {
+        @NonNull
+        @Override
+        public ImageSelectConfig createFromParcel(Parcel source) {
+            return new ImageSelectConfig(source);
+        }
+
+        @NonNull
+        @org.jetbrains.annotations.Contract(pure = true)
+        @Override
+        public ImageSelectConfig[] newArray(int size) {
+            return new ImageSelectConfig[size];
+        }
+    };
 }
