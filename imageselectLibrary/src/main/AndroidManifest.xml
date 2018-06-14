@@ -8,6 +8,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.ImageSelectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 </manifest>

@@ -1,15 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion COMPILE_SDK_VERSION
+
+    compileSdkVersion rootProject.ext.android.compileSdk
+
+    // 默认配置
     defaultConfig {
-        applicationId "com.renj.imageselect"
-        minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion TARGET_SDK_VERSION
-        versionCode 1
-        versionName "1.0"
+        applicationId rootProject.ext.android.applicationId
+        minSdkVersion rootProject.ext.android.minSdk
+        targetSdkVersion rootProject.ext.android.targetSdk
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -20,14 +25,16 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // support
+    implementation rootProject.ext.dependencies["androidSupportV7"]
+    implementation rootProject.ext.dependencies["androidSupportConstraint"]
+    // test
+    testImplementation rootProject.ext.dependencies["junitSupport"]
+    androidTestImplementation rootProject.ext.dependencies["supportTestRunner"]
+    androidTestImplementation rootProject.ext.dependencies["supportTestEspresso"]
 
-    implementation 'com.android.support:appcompat-v7:' + ANDROID_SUPPORT_V7
-    implementation 'com.android.support.constraint:constraint-layout:' + CONSTRAINT_LAYOUT
-    testImplementation 'junit:junit:' + JUNIT_SUPPORT
-    androidTestImplementation 'com.android.support.test:runner:' + TEST_RUNNER
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:' + ESPRESSO_CORE
-
-    implementation 'com.github.bumptech.glide:glide:' + GLIDE
-    annotationProcessor 'com.github.bumptech.glide:compiler:' + GLIDE_COMPILER
+    // Glide 图片加载库
+    implementation rootProject.ext.dependencies["glide"]
+    annotationProcessor rootProject.ext.dependencies["glideCompiler"]
     implementation project(':imageselectLibrary')
 }
