@@ -5,17 +5,17 @@ Android 图片选择、裁剪代码库
 1.选择裁剪单张图片
 
     ImageSelectConfig imageSelectConfig = new ImageSelectConfig
-                    .Builder()
-                    .width(200)  // 裁剪宽度
-                    .height(300) // 裁剪高度
-                    .clipBorderWidth(3) // 裁剪边框宽度
-                    .selectCount(1) // 选择和裁剪的图片数量
-                    .isShowCamera(true) // 是否能调用相机拍照
-                    .maskColor(Color.parseColor("#88000000")) // 裁剪遮罩层颜色
-                    .clipBorderColor(Color.parseColor("#ff0000")) // 裁剪框颜色
-                    .isClip(true) // 是否裁剪
-                    .isCircleClip(false) // 是否圆形裁剪
-                    .build();
+            .Builder()
+            .width(200)  // 裁剪宽度
+            .height(300) // 裁剪高度
+            .clipBorderWidth(3) // 裁剪边框宽度
+            .selectCount(1) // 选择和裁剪的图片数量
+            .isShowCamera(true) // 是否能调用相机拍照
+            .maskColor(Color.parseColor("#88000000")) // 裁剪遮罩层颜色
+            .clipBorderColor(Color.parseColor("#ff0000")) // 裁剪框颜色
+            .isClip(true) // 是否裁剪
+            .isCircleClip(false) // 是否圆形裁剪
+            .build();
     ImageSelectUtil.create()
             .clipConfig(imageSelectConfig) // 配置信息，必须
             .openImageSelectPage(MainActivity.this)
