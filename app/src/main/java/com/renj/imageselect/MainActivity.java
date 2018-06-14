@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         ImageSelectUtil.create()
                 .clipConfig(imageSelectConfig1)
                 .openImageSelectPage(MainActivity.this)
-                .onResult(new OnResultCallBack<List<ImageModel>>() {
+                .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> selectResults) {
                         Toast.makeText(MainActivity.this, "一共选择了" + selectResults.size() + "张图片", Toast.LENGTH_SHORT).show();
@@ -97,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
         ImageSelectUtil.create()
                 .clipConfig(imageSelectConfig)
                 .openImageSelectPage(MainActivity.this)
-                .onResult(new OnResultCallBack<ImageModel>() {
+                .onResult(new OnResultCallBack() {
                     @Override
-                    public void onResult(ImageModel selectResult) {
-                        Glide.with(MainActivity.this).load(selectResult.path).into(imageView);
+                    public void onResult(List<ImageModel> selectResults) {
+                        Glide.with(MainActivity.this).load(selectResults.get(0).path).into(imageView);
                     }
                 });
     }

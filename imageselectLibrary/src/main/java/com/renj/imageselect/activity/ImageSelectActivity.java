@@ -38,6 +38,7 @@ import com.renj.imageselect.weight.ImageMenuDialog;
 import com.renj.imageselect.weight.LoadingDialog;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -324,8 +325,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             imageClipView.setImage(imageModel.path);
             pageStatuChange(STATU_CLIP_SINGLE_PAGE);
         } else {
-            if (create().onResultCallBack != null)
-                create().onResultCallBack.onResult(imageModel);
+            if (create().onResultCallBack != null) {
+                ArrayList<ImageModel> selectResults = new ArrayList<>();
+                selectResults.add(imageModel);
+                create().onResultCallBack.onResult(selectResults);
+            }
             ImageSelectActivity.this.finish();
         }
     }
@@ -462,8 +466,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (create().onResultCallBack != null)
-                                create().onResultCallBack.onResult(imageModel);
+                            if (create().onResultCallBack != null) {
+                                ArrayList<ImageModel> selectResults = new ArrayList<>();
+                                selectResults.add(imageModel);
+                                create().onResultCallBack.onResult(selectResults);
+                            }
                             loadingDialog.dismiss();
                             finish();
                         }
@@ -525,11 +532,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         /**
          * 获取返回结果的回调<br/>
-         * <b>{@link OnResultCallBack} 注意泛型：</b>
-         * <br/>&nbsp;&nbsp;&nbsp;&nbsp;
-         * <b>1.当需要选择或裁剪的只是单张图片时，泛型应该为 {@link ImageModel}</b>
-         * <br/>&nbsp;&nbsp;&nbsp;&nbsp;
-         * <b>2.当需要选择或裁剪的只是多张图片时，泛型应该为 List<{@link ImageModel}></{@link></b>
+         * <b>{@link OnResultCallBack} 注意：当选择一张图片时，集合的大小为1</b>
          *
          * @param onResultCallBack 结果回调
          */
