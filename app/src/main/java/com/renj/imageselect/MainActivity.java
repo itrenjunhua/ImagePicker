@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
-import com.renj.imageselect.utils.ImageSelectUtil;
+import com.renj.imageselect.utils.ImageSelectUtils;
 import com.renj.imageselect.utils.OnResultCallBack;
 
 import java.util.List;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 .minScale(0.8f)
                 .isContinuityEnlarge(false)
                 .build();
-        ImageSelectUtil.create()
+        ImageSelectUtils.create()
                 .clipConfig(imageSelectConfig1)
                 .openImageSelectPage(MainActivity.this)
                 .onResult(new OnResultCallBack() {
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 .isClip(true)
                 .isCircleClip(false)
                 .build();
-        ImageSelectUtil.create()
+        ImageSelectUtils.create()
                 .clipConfig(imageSelectConfig)
                 .openImageSelectPage(MainActivity.this)
                 .onResult(new OnResultCallBack() {
