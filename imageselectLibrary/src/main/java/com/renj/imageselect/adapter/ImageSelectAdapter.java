@@ -10,9 +10,9 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.utils.ImageLoaderUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,7 +137,7 @@ public class ImageSelectAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (CAMERA_VIEW == getItemViewType(position)) {
-            ImageView imageView = (ImageView) LayoutInflater.from(context).inflate(R.layout.image_select_camera_item, parent,false);
+            ImageView imageView = (ImageView) LayoutInflater.from(context).inflate(R.layout.image_select_camera_item, parent, false);
             return imageView;
         } else {
             ViewHolder viewHolder;
@@ -173,7 +173,7 @@ public class ImageSelectAdapter extends BaseAdapter {
         }
 
         public void setData(@NonNull ImageModel imageModel) {
-            Glide.with(context).load(imageModel.path).into(imageView);
+            ImageLoaderUtils.newInstance().loadImage(imageModel.path, imageView);
         }
     }
 }

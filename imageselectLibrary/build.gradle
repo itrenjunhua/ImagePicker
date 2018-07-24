@@ -30,10 +30,8 @@ dependencies {
     testImplementation rootProject.ext.dependencies["junitSupport"]
     androidTestImplementation rootProject.ext.dependencies["supportTestRunner"]
     androidTestImplementation rootProject.ext.dependencies["supportTestEspresso"]
-
-    // Glide 图片加载库
-    implementation rootProject.ext.dependencies["glide"]
-    annotationProcessor rootProject.ext.dependencies["glideCompiler"]
+    // 图片加载库
+    implementation project(rootProject.ext.dependencies["imageloaderlibrary"])
     // jetbrains 注解
     implementation rootProject.ext.dependencies["jetbrainsAnnotations"]
 }

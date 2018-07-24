@@ -15,8 +15,8 @@ import com.renj.imageselect.activity.ImageSelectActivity;
  * <p>
  * ======================================================================
  */
-public class ImageSelectUtil {
-    private ImageSelectUtil() {
+public class ImageSelectUtils {
+    private ImageSelectUtils() {
     }
 
     public static ImageSelectActivity.ImageSelectObservable create() {
