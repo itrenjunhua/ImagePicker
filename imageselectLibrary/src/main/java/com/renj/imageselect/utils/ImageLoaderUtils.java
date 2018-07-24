@@ -22,7 +22,6 @@ public class ImageLoaderUtils {
     private volatile static ImageLoaderUtils instance = new ImageLoaderUtils();
 
     private ImageLoaderUtils() {
-
     }
 
     @Contract(pure = true)
@@ -30,7 +29,35 @@ public class ImageLoaderUtils {
         return instance;
     }
 
-    public void loadImage(String path, ImageView imageView){
+    /**
+     * 加载图片方法
+     *
+     * @param path      图片路径
+     * @param imageView {@link ImageView} 控件
+     */
+    public void loadImage(String path, ImageView imageView) {
+        if (imageLoaderModule != null)
+            imageLoaderModule.loadImage(path, imageView);
+    }
 
+    /*********************************************/
+
+    private ImageLoaderModule imageLoaderModule;
+
+    void setImageLoaderModule(ImageLoaderModule imageLoaderModule) {
+        this.imageLoaderModule = imageLoaderModule;
+    }
+
+    /**
+     * 配置图片加载方法回调
+     */
+    public interface ImageLoaderModule {
+        /**
+         * 图片加载方法
+         *
+         * @param path      图片路径
+         * @param imageView {@link ImageView} 控件
+         */
+        void loadImage(String path, ImageView imageView);
     }
 }

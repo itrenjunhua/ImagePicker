@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.FolderModel;
+import com.renj.imageselect.utils.ImageLoaderUtils;
 
 import java.util.List;
 
@@ -102,7 +102,7 @@ public class ImageMenuAdapter extends BaseAdapter {
 
         public void setData(FolderModel folderModel, int position) {
             textView.setText(folderModel.name + "(" + folderModel.totalCount + ")");
-            Glide.with(context).load(folderModel.folders.get(0).path).into(imageView);
+            ImageLoaderUtils.newInstance().loadImage(folderModel.folders.get(0).path, imageView);
 
             if (position == selectPosition) {
                 rbMenu.setChecked(true);

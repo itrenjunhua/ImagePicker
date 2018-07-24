@@ -10,9 +10,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.renj.imageloaderlibrary.loader.ImageInfoConfig;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
+import com.renj.imageselect.utils.ImageLoaderManager;
 import com.renj.imageselect.utils.ImageSelectUtils;
 import com.renj.imageselect.utils.OnResultCallBack;
 
@@ -68,14 +69,19 @@ public class MainActivity extends AppCompatActivity {
                 .minScale(0.8f)
                 .isContinuityEnlarge(false)
                 .build();
-        ImageSelectUtils.create()
+        ImageSelectUtils.newInstance().create()
                 .clipConfig(imageSelectConfig1)
                 .openImageSelectPage(MainActivity.this)
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> selectResults) {
                         Toast.makeText(MainActivity.this, "一共选择了" + selectResults.size() + "张图片", Toast.LENGTH_SHORT).show();
-                        Glide.with(MainActivity.this).load(selectResults.get(0).path).into(imageView);
+                        ImageInfoConfig imageInfoConfig = new ImageInfoConfig.Builder()
+                                .activity(MainActivity.this)
+                                .filePath(selectResults.get(0).path)
+                                .target(imageView)
+                                .build();
+                        ImageLoaderManager.getImageLoader().loadImage(imageInfoConfig);
                     }
                 });
     }
@@ -94,13 +100,18 @@ public class MainActivity extends AppCompatActivity {
                 .isClip(true)
                 .isCircleClip(false)
                 .build();
-        ImageSelectUtils.create()
+        ImageSelectUtils.newInstance().create()
                 .clipConfig(imageSelectConfig)
                 .openImageSelectPage(MainActivity.this)
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> selectResults) {
-                        Glide.with(MainActivity.this).load(selectResults.get(0).path).into(imageView);
+                        ImageInfoConfig imageInfoConfig = new ImageInfoConfig.Builder()
+                                .activity(MainActivity.this)
+                                .filePath(selectResults.get(0).path)
+                                .target(imageView)
+                                .build();
+                        ImageLoaderManager.getImageLoader().loadImage(imageInfoConfig);
                     }
                 });
     }

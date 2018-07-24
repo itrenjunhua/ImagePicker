@@ -34,7 +34,9 @@ ext {
             // Glide 图片加载库
             "glide"                   : "com.github.bumptech.glide:glide:${dependVersion.imageGlide}",
             "glideCompiler"           : "com.github.bumptech.glide:compiler:${dependVersion.imageGlide}",
-
-            "imageloaderlibrary"      : ":imageloaderlibrary"
+            // 图片加载库封装
+            "imageloaderlibrary"      : ":imageloaderlibrary",
+            // 图片选择库封装
+            "imageselectLibrary"      : ":imageselectLibrary"
     ]
 }

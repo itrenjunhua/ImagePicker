@@ -11,10 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
+import com.renj.imageselect.utils.ImageLoaderUtils;
 
 /**
  * ======================================================================
@@ -67,7 +67,7 @@ public class ImageClipView extends RelativeLayout {
      * @param path 图片路径
      */
     public void setImage(@NonNull String path) {
-        Glide.with(getContext()).load(path).into(photoView);
+        ImageLoaderUtils.newInstance().loadImage(path, photoView);
     }
 
     /**

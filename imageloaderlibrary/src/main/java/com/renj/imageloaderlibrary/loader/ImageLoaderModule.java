@@ -42,7 +42,7 @@ import android.support.annotation.NonNull;
  * ======================================================================
  */
 public class ImageLoaderModule {
-    public static ImageLoaderHelper imageLoaderHelper;
+    static ImageLoaderHelper imageLoaderHelper;
 
     private ImageLoaderModule() {
     }
