@@ -2,6 +2,23 @@
 Android 图片选择、裁剪代码库
 
 ## 使用
+### 配置加载框架
+注意：在使用选择和裁剪图片之前，必须先配置用于图片加载的框架，否则不能加载图片。  
+目的：在选择裁剪框架中不另外导入图片加载的框架，在主项目中进行配置，这样就可以使用和主项目中相同的图片加载框架，避免使用的不同的框架造成不必要的空间占用
+
+    ImageSelectUtils.newInstance().configImageLoaderModule(new ImageLoaderUtils.ImageLoaderModule() {
+        @Override
+        public void loadImage(String path, ImageView imageView) {
+            // 使用图片加载框架加载图片
+            ImageInfoConfig imageInfoConfig = new ImageInfoConfig.Builder()
+                    .filePath(path)
+                    .target(imageView)
+                    .build();
+            ImageLoaderManager.getImageLoader().loadImage(imageInfoConfig);
+        }
+    });
+
+### 选择裁剪图片
 1.选择裁剪单张图片
 
     ImageSelectConfig imageSelectConfig = new ImageSelectConfig
@@ -16,7 +33,7 @@ Android 图片选择、裁剪代码库
             .isClip(true) // 是否裁剪
             .isCircleClip(false) // 是否圆形裁剪
             .build();
-    ImageSelectUtil.create()
+    ImageSelectUtils.newInstance().create()
             .clipConfig(imageSelectConfig) // 配置信息，必须
             .openImageSelectPage(MainActivity.this)
             .onResult(new OnResultCallBack() {  // 结果回调，单张图片集合大小为1
@@ -43,7 +60,7 @@ Android 图片选择、裁剪代码库
             .minScale(0.8f) // 图片最小缩放倍数
             .isContinuityEnlarge(false) // 是否双击连续放大
             .build();
-    ImageSelectUtil.create()
+    ImageSelectUtils.newInstance().create()
             .clipConfig(imageSelectConfig1)  // 配置信息，必须
             .openImageSelectPage(MainActivity.this)
             .onResult(new OnResultCallBack() {  // 结果回调

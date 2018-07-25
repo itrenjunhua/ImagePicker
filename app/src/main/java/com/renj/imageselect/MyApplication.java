@@ -32,6 +32,7 @@ public class MyApplication extends Application {
         ImageSelectUtils.newInstance().configImageLoaderModule(new ImageLoaderUtils.ImageLoaderModule() {
             @Override
             public void loadImage(String path, ImageView imageView) {
+                // 使用图片加载框架加载图片
                 ImageInfoConfig imageInfoConfig = new ImageInfoConfig.Builder()
                         .filePath(path)
                         .target(imageView)
