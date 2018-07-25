@@ -56,16 +56,16 @@ import java.util.List;
  */
 public class ImageSelectActivity extends AppCompatActivity implements View.OnClickListener {
     // 图片选择页面
-    private final int STATU_IMAGE_SELECT_PAGE = 0x01;
+    private final int STATUS_IMAGE_SELECT_PAGE = 0x01;
     // 裁剪单个图片页面
-    private final int STATU_CLIP_SINGLE_PAGE = 0x02;
+    private final int STATUS_CLIP_SINGLE_PAGE = 0x02;
     // 裁剪多个图片页面
-    private final int STATU_CLIP_MORE_PAGE = 0x03;
+    private final int STATUS_CLIP_MORE_PAGE = 0x03;
     // 打开相机请求码
     private final int REQUEST_CAMERA = 0x04;
 
     // 当前页面
-    private int currentStatu;
+    private int currentStatus;
 
     /***** 页面基本控件 *****/
     private GridView gvImages;
@@ -116,7 +116,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         // 配置数据解析
         configDataParse();
         // 显示图片选择界面
-        pageStatuChange(STATU_IMAGE_SELECT_PAGE);
+        pageStatuChange(STATUS_IMAGE_SELECT_PAGE);
         // 设置各个条目监听
         setItemListener();
 
@@ -306,7 +306,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
             checkImages.add(imageModel);
             if (imageSelectConfig.isClip()) {
-                pageStatuChange(STATU_CLIP_MORE_PAGE);
+                pageStatuChange(STATUS_CLIP_MORE_PAGE);
             } else {
                 if (create().onResultCallBack != null)
                     create().onResultCallBack.onResult(checkImages);
@@ -323,7 +323,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private void selectSingle(@NonNull ImageModel imageModel) {
         if (imageSelectConfig.isClip()) {
             imageClipView.setImage(imageModel.path);
-            pageStatuChange(STATU_CLIP_SINGLE_PAGE);
+            pageStatuChange(STATUS_CLIP_SINGLE_PAGE);
         } else {
             if (create().onResultCallBack != null) {
                 ArrayList<ImageModel> selectResults = new ArrayList<>();
@@ -364,14 +364,14 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void pageStatuChange(int page) {
         if (clipLayout == null && clipMoreLayout == null) return;
-        if (currentStatu != page) {
-            if (STATU_IMAGE_SELECT_PAGE == page) {
+        if (currentStatus != page) {
+            if (STATUS_IMAGE_SELECT_PAGE == page) {
                 if (clipLayout != null)
                     clipLayout.setVisibility(View.GONE);
                 if (clipMoreLayout != null)
                     clipMoreLayout.setVisibility(View.GONE);
                 llSelectView.setVisibility(View.VISIBLE);
-            } else if (STATU_CLIP_SINGLE_PAGE == page) {
+            } else if (STATUS_CLIP_SINGLE_PAGE == page) {
                 llSelectView.setVisibility(View.GONE);
                 if (clipMoreLayout != null)
                     clipMoreLayout.setVisibility(View.GONE);
@@ -401,7 +401,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 }
             }
         }
-        currentStatu = page;
+        currentStatus = page;
     }
 
     /**
@@ -451,7 +451,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 return;
             }
             if (imageSelectConfig.isClip()) {
-                pageStatuChange(STATU_CLIP_MORE_PAGE);
+                pageStatuChange(STATUS_CLIP_MORE_PAGE);
             } else {
                 if (create().onResultCallBack != null)
                     create().onResultCallBack.onResult(checkImages);

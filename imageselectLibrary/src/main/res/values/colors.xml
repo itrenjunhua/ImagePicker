@@ -6,10 +6,19 @@
 
     <color name="color_white">#FFFFFF</color>
     <color name="color_black">#000000</color>
+    <color name="main_bg">#FFBBBBBB</color>
     <color name="color_list_pressed">#CCCCCC</color>
     <color name="color_slip_line">#DEDEDE</color>
     <color name="color_main_text">#333333</color>
     <!--选择图片界面底部栏颜色-->
     <color name="color_select_bottom">#60000000</color>
     <color name="dialog_window_bg">#80000000</color>
+
+    <color name="title_color">#FF222222</color>
+
+    <!--按钮颜色-->
+    <color name="main_bt_press">#88449941</color>
+    <color name="main_bt_normal">#FF449941</color>
+    <!--按钮文字颜色-->
+    <color name="main_bt_color">#FFFFFF</color>
 </resources>
