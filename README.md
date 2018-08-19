@@ -70,3 +70,11 @@ Android 图片选择、裁剪代码库
                     Glide.with(MainActivity.this).load(selectResults.get(0).path).into(imageView);
                 }
             });
+
+## 附录
+相关页面布局文件名称：
+* image_select_layout.xml：图片选择布局文件
+* image_clip_single_layout.xml：裁剪单张图片布局文件
+* image_clip_more_layout.xml：裁剪多张图片布局文件
+
+**注意：修改样式时，不要删除控件或者修改控件的id**
