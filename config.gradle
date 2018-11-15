@@ -17,7 +17,7 @@ ext {
             supportTestRunner       : "1.0.1",
             supportTestEspresso     : "3.0.1",
 
-            jetbrainsAnnotations    : "15.0",
+            jetbrainsAnnotations    : "13.0",
             imageGlide              : "4.6.1",
     ]
 
@@ -30,7 +30,7 @@ ext {
             "supportTestRunner"       : "com.android.support.test:runner:${dependVersion.supportTestRunner}",
             "supportTestEspresso"     : "com.android.support.test.espresso:espresso-core:${dependVersion.supportTestEspresso}",
             // jetbrains 注解
-            "jetbrainsAnnotations"    : "org.jetbrains:annotations-java5:${dependVersion.jetbrainsAnnotations}",
+            "jetbrainsAnnotations"    : "org.jetbrains:annotations:${dependVersion.jetbrainsAnnotations}",
             // Glide 图片加载库
             "glide"                   : "com.github.bumptech.glide:glide:${dependVersion.imageGlide}",
             "glideCompiler"           : "com.github.bumptech.glide:compiler:${dependVersion.imageGlide}",
