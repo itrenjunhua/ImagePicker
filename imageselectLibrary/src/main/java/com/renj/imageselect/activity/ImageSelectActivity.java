@@ -116,7 +116,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         // 配置数据解析
         configDataParse();
         // 显示图片选择界面
-        pageStatuChange(STATUS_IMAGE_SELECT_PAGE);
+        pageStatusChange(STATUS_IMAGE_SELECT_PAGE);
         // 设置各个条目监听
         setItemListener();
 
@@ -209,10 +209,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void initClipMorePage() {
         vsClipMore.setLayoutResource(R.layout.image_single_clip_more_layout);
-        View clipMoreleView = vsClipMore.inflate();
+        View clipMoreView = vsClipMore.inflate();
 
         /***** 裁剪多张图片时使用到的控件 *****/
-        clipMoreLayout = clipMoreleView.findViewById(R.id.image_clip_more);
+        clipMoreLayout = clipMoreView.findViewById(R.id.image_clip_more);
     }
 
     /**
@@ -306,7 +306,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
             checkImages.add(imageModel);
             if (imageSelectConfig.isClip()) {
-                pageStatuChange(STATUS_CLIP_MORE_PAGE);
+                pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
                 if (create().onResultCallBack != null)
                     create().onResultCallBack.onResult(checkImages);
@@ -323,7 +323,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private void selectSingle(@NonNull ImageModel imageModel) {
         if (imageSelectConfig.isClip()) {
             imageClipView.setImage(imageModel.path);
-            pageStatuChange(STATUS_CLIP_SINGLE_PAGE);
+            pageStatusChange(STATUS_CLIP_SINGLE_PAGE);
         } else {
             if (create().onResultCallBack != null) {
                 ArrayList<ImageModel> selectResults = new ArrayList<>();
@@ -362,7 +362,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      *
      * @param page
      */
-    private void pageStatuChange(int page) {
+    private void pageStatusChange(int page) {
         if (clipLayout == null && clipMoreLayout == null) return;
         if (currentStatus != page) {
             if (STATUS_IMAGE_SELECT_PAGE == page) {
@@ -451,7 +451,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 return;
             }
             if (imageSelectConfig.isClip()) {
-                pageStatuChange(STATUS_CLIP_MORE_PAGE);
+                pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
                 if (create().onResultCallBack != null)
                     create().onResultCallBack.onResult(checkImages);

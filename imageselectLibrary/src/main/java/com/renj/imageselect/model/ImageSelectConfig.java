@@ -2,6 +2,7 @@ package com.renj.imageselect.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 
 import com.renj.imageselect.utils.OnResultCallBack;
@@ -27,6 +28,8 @@ public class ImageSelectConfig implements Parcelable {
     boolean isCircleClip; // 是否裁剪成圆形图片
     float minScale; // 图片最小缩放倍数
     float maxScale; // 图片最大缩放倍数
+    @FloatRange(from = 0, to = 1)
+    float boundaryResistance; // 边界滑动阻力系数
     float clipBorderWidth; // 裁剪线条宽度
     int clipBorderColor; // 裁剪线条颜色
     int maskColor; // 遮罩层颜色
@@ -41,6 +44,7 @@ public class ImageSelectConfig implements Parcelable {
         this.isCircleClip = builder.isCircleClip;
         this.minScale = builder.minScale;
         this.maxScale = builder.maxScale;
+        this.boundaryResistance = builder.boundaryResistance;
         this.clipBorderWidth = builder.clipBorderWidth;
         this.clipBorderColor = builder.clipBorderColor;
         this.maskColor = builder.maskColor;
@@ -76,6 +80,10 @@ public class ImageSelectConfig implements Parcelable {
         return this.maxScale;
     }
 
+    public float getBoundaryResistance(){
+        return this.boundaryResistance;
+    }
+
     public float getClipBorderWidth() {
         return this.clipBorderWidth;
     }
@@ -105,6 +113,8 @@ public class ImageSelectConfig implements Parcelable {
         boolean isCircleClip = DefaultConfigData.IS_CIRCLE_CLIP; // 是否裁剪成圆形图片
         float minScale = DefaultConfigData.MIN_SCALE; // 图片最小缩放倍数
         float maxScale = DefaultConfigData.MAX_SCALE; // 图片最大缩放倍数
+        @FloatRange(from = 0, to = 1)
+        float boundaryResistance = DefaultConfigData.BOUNDARY_RESISTANCE; // 边界滑动阻力系数
         float clipBorderWidth = DefaultConfigData.CLIP_BORDER_WIDTH; // 裁剪线条宽度
         int clipBorderColor = DefaultConfigData.CLIP_BORDER_COLOR; // 裁剪线条颜色
         int maskColor = DefaultConfigData.MASK_COLOR; // 遮罩层颜色
@@ -198,6 +208,17 @@ public class ImageSelectConfig implements Parcelable {
         }
 
         /**
+         * 设置边界滑动阻力系数，(达到边界时增加滑动阻力，图片实际移动距离和手指移动距离的比值[0-1]，值越大，图片实际移动距离和手指移动距离差值越小; 默认0.25)
+         *
+         * @param boundaryResistance 边界滑动阻力系数
+         * @return
+         */
+        public Builder boundaryResistance(@FloatRange(from = 0, to = 1) float boundaryResistance) {
+            this.boundaryResistance = boundaryResistance;
+            return this;
+        }
+
+        /**
          * 设置裁剪边框宽度
          *
          * @param clipBorderWidth 裁剪边框宽度
@@ -276,6 +297,7 @@ public class ImageSelectConfig implements Parcelable {
         dest.writeByte(this.isCircleClip ? (byte) 1 : (byte) 0);
         dest.writeFloat(this.minScale);
         dest.writeFloat(this.maxScale);
+        dest.writeFloat(this.boundaryResistance);
         dest.writeFloat(this.clipBorderWidth);
         dest.writeInt(this.clipBorderColor);
         dest.writeInt(this.maskColor);
@@ -291,6 +313,7 @@ public class ImageSelectConfig implements Parcelable {
         this.isCircleClip = in.readByte() != 0;
         this.minScale = in.readFloat();
         this.maxScale = in.readFloat();
+        this.boundaryResistance = in.readFloat();
         this.clipBorderWidth = in.readFloat();
         this.clipBorderColor = in.readInt();
         this.maskColor = in.readInt();

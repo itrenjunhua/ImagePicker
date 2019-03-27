@@ -32,4 +32,6 @@ dependencies {
     androidTestImplementation rootProject.ext.dependencies["supportTestEspresso"]
     // jetbrains 注解
     implementation rootProject.ext.dependencies["jetbrainsAnnotations"]
+    // 防止 Android Studio 升级之后出现 Cannot access android.arch.lifecycle.ViewModelStoreOwner 错误
+    implementation 'android.arch.lifecycle:extensions:1.1.0'
 }

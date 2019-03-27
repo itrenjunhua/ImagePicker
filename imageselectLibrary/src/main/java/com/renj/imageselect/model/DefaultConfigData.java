@@ -1,5 +1,7 @@
 package com.renj.imageselect.model;
 
+import android.support.annotation.FloatRange;
+
 /**
  * ======================================================================
  * <p>
@@ -49,6 +51,12 @@ public interface DefaultConfigData {
      * 图片最大缩放倍数
      */
     float MAX_SCALE = 4f;
+
+    /**
+     * 边界滑动阻力系数(达到边界时增加滑动阻力，图片实际移动距离和手指移动距离的比值[0-1]，值越大，图片实际移动距离和手指移动距离差值越小; 默认0.25)
+     */
+    @FloatRange(from = 0, to = 1)
+    float BOUNDARY_RESISTANCE = 0.25f;
 
     /**
      * 裁剪线条宽度

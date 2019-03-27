@@ -32,17 +32,6 @@ import static android.graphics.Canvas.ALL_SAVE_FLAG;
  * ======================================================================
  */
 public class ClipView extends View {
-    // 默认遮罩层颜色
-    private final int DEFAULT_MASK_COLOR = DefaultConfigData.MASK_COLOR;
-    // 默认边框颜色
-    private final int DEFAULT_BORDER_COLOR = DefaultConfigData.CLIP_BORDER_COLOR;
-    // 默认边框宽度 1dp
-    private final float DEFAULT_BORDER_WIDTH = DefaultConfigData.CLIP_BORDER_WIDTH;
-    // 默认裁剪宽高相等，都为 200dp，默认矩形
-    private final int DEFAULT_SIZE = DefaultConfigData.WIDTH;
-    // 默认裁剪形状 矩形
-    private ClipShape DEFAULT_CLIP_SHAPE = DefaultConfigData.IS_CIRCLE_CLIP ? ClipShape.CLIP_CIRCLE : ClipShape.CLIP_RECT;
-
     // 用户绘制背景的画笔
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     // 用于绘制边框的画笔
@@ -50,19 +39,19 @@ public class ClipView extends View {
     // 用于绘制单元格的画笔
     private Paint cellPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     // 遮罩层颜色
-    private int maskColor = DEFAULT_MASK_COLOR;
+    private int maskColor = DefaultConfigData.MASK_COLOR;
     // 边框颜色
-    private int borderColor = DEFAULT_BORDER_COLOR;
+    private int borderColor = DefaultConfigData.CLIP_BORDER_COLOR;
     // 边框宽度
-    private float borderWidth = dp2Px(DEFAULT_BORDER_WIDTH);
+    private float borderWidth = dp2Px(DefaultConfigData.CLIP_BORDER_WIDTH);
     // 裁剪宽度
-    private int clipWidth = dp2Px(DEFAULT_SIZE);
+    private int clipWidth = dp2Px(DefaultConfigData.WIDTH);
     // 裁剪高度
-    private int clipHeight = dp2Px(DEFAULT_SIZE);
+    private int clipHeight = dp2Px(DefaultConfigData.WIDTH);
     // 裁剪范围
     private RectF clipRect = new RectF();
     // 裁剪形状
-    private ClipShape clipShape = DEFAULT_CLIP_SHAPE;
+    private ClipShape clipShape = DefaultConfigData.IS_CIRCLE_CLIP ? ClipShape.CLIP_CIRCLE : ClipShape.CLIP_RECT;
     // 控件的宽、高
     private int width, height;
     // 控件的范围

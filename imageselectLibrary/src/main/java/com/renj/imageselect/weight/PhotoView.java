@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
@@ -20,6 +21,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import com.renj.imageselect.model.DefaultConfigData;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.Utils;
@@ -40,24 +42,24 @@ import static android.graphics.Canvas.ALL_SAVE_FLAG;
  * ======================================================================
  */
 public class PhotoView extends AppCompatImageView implements View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
-    // 最小缩放比例
-    private final static float DEFAULT_MIN_SCALE = 0.25f;
-    // 最大缩放比例
-    private final static float DEFAULT_MAX_SCALE = 4f;
+
     // 用于进行变换的 Matrix
     private Matrix imageMatrix = new Matrix();
     // 最小、最大缩放比例
-    private float minScale = DEFAULT_MIN_SCALE, maxScale = DEFAULT_MAX_SCALE;
+    private float minScale = DefaultConfigData.MIN_SCALE, maxScale = DefaultConfigData.MAX_SCALE;
+    // 边界滑动阻力系数
+    @FloatRange(from = 0, to = 1)
+    private float boundaryResistance = DefaultConfigData.BOUNDARY_RESISTANCE;
     // 增加一个变量减少重复的调用布局完成监听方法
     private boolean isOnce = true;
     // 移动临界值
     private int touchSlop;
     // 初始时的缩放比例，在自动缩放时使用到的
-    private float initScal = 1.0f;
+    private float initScale = 1.0f;
     // 是否双击连续放大
     private boolean isContinuityEnlarge = false;
     // 是否正在自动缩放
-    private boolean isAutoScal = false;
+    private boolean isAutoScale = false;
 
     public PhotoView(Context context) {
         this(context, null);
@@ -104,21 +106,21 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
             if (getDrawable() == null)
                 return false;
 
-            if (isAutoScal) return false;
+            if (isAutoScale) return false;
 
             float currentScale = getCurrentScale();
             if (currentScale < 2) {
-                isAutoScal = true;
-                AutoScalTask autoScalTask = new AutoScalTask(2, (int) e.getX(), (int) e.getY());
-                post(autoScalTask);
+                isAutoScale = true;
+                AutoScaleTask autoScaleTask = new AutoScaleTask(2, (int) e.getX(), (int) e.getY());
+                post(autoScaleTask);
             } else if (currentScale >= 2 && currentScale < maxScale && isContinuityEnlarge) {
-                isAutoScal = true;
-                AutoScalTask autoScalTask = new AutoScalTask(4, (int) e.getX(), (int) e.getY());
-                post(autoScalTask);
+                isAutoScale = true;
+                AutoScaleTask autoScaleTask = new AutoScaleTask(4, (int) e.getX(), (int) e.getY());
+                post(autoScaleTask);
             } else {
-                isAutoScal = true;
-                AutoScalTask autoScalTask = new AutoScalTask(initScal, (int) e.getX(), (int) e.getY());
-                post(autoScalTask);
+                isAutoScale = true;
+                AutoScaleTask autoScaleTask = new AutoScaleTask(initScale, (int) e.getX(), (int) e.getY());
+                post(autoScaleTask);
             }
             return true;
         }
@@ -152,13 +154,17 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
 
         lastPointerCount = pointerCount;
         RectF imageRect = getImageRect();
+        int width = getWidth();
+        int height = getHeight();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (imageRect.width() > getWidth() || imageRect.height() > getHeight())
+                if (imageRect.width() > width || imageRect.height() > height)
                     getParent().requestDisallowInterceptTouchEvent(true);
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (imageRect.width() > getWidth() || imageRect.height() > getHeight())
+
+
+                if (imageRect.width() > width || imageRect.height() > height)
                     getParent().requestDisallowInterceptTouchEvent(true);
 
                 int dx = downX - lastX;
@@ -182,18 +188,31 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
                         isCheckLeftRight = true;
 
                         // 图片宽度 <= 控件宽度
-                        if (imageRect.width() <= getWidth()) {
+                        if (imageRect.width() <= width) {
                             isCheckLeftRight = false;
                             dx = 0;
                         }
                         // 图片高度 <= 控件高度
-                        if (imageRect.height() <= getHeight()) {
+                        if (imageRect.height() <= height) {
                             isCheckTopBottom = false;
                             dy = 0;
                         }
 
+                        // 达到边界时增加滑动阻力，图片实际移动距离和手指一动距离的比值[0-1]
+                        // 如果 左边界 > 0
+                        if (imageRect.left > 0 && isCheckLeftRight)
+                            dx = (int) (dx * boundaryResistance);
+                        // 如果 右边界 < 控件宽度
+                        if (imageRect.right < width && isCheckLeftRight)
+                            dx = (int) (dx * boundaryResistance);
+                        // 如果 上边界 > 0
+                        if (imageRect.top > 0 && isCheckTopBottom)
+                            dy = (int) (dy * boundaryResistance);
+                        // 如果 下边界 < 控件高度
+                        if (imageRect.bottom < height && isCheckTopBottom)
+                            dy = (int) (dy * boundaryResistance);
                         imageMatrix.postTranslate(dx, dy);
-                        translateCheck();
+                        // translateCheck();
                         setImageMatrix(imageMatrix);
                     }
                 }
@@ -218,13 +237,13 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
      * 裁剪图片并保存到本地方法
      *
      * @param clipShape 才加形状
-     * @param clipRectf 裁剪范围
+     * @param clipRectF 裁剪范围
      * @return 裁剪后的图片
      */
-    public ImageModel clipBitmap(@NonNull ClipView.ClipShape clipShape, @NonNull RectF clipRectf) {
+    public ImageModel clipBitmap(@NonNull ClipView.ClipShape clipShape, @NonNull RectF clipRectF) {
         setDrawingCacheEnabled(true);
         Bitmap source = getDrawingCache();
-        Bitmap bitmap = clipBitmap(clipShape, clipRectf, source);
+        Bitmap bitmap = clipBitmap(clipShape, clipRectF, source);
         setDrawingCacheEnabled(false);
         return Utils.saveBitmap2File(Utils.getName(), bitmap);
     }
@@ -232,18 +251,18 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     /**
      * 裁剪图片方法
      */
-    private Bitmap clipBitmap(@NonNull ClipView.ClipShape clipShape, @NonNull RectF clipRectf, @NonNull Bitmap source) {
+    private Bitmap clipBitmap(@NonNull ClipView.ClipShape clipShape, @NonNull RectF clipRectF, @NonNull Bitmap source) {
         if (source == null) return null;
         Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(),
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        int saveLayer = canvas.saveLayer(clipRectf, null, ALL_SAVE_FLAG);
+        int saveLayer = canvas.saveLayer(clipRectF, null, ALL_SAVE_FLAG);
         if (ClipView.ClipShape.CLIP_CIRCLE == clipShape) {
-            float centerX = (clipRectf.left + clipRectf.right) / 2;
-            float centerY = (clipRectf.top + clipRectf.bottom) / 2;
-            int radius = (int) ((Math.min(clipRectf.width(), clipRectf.height())) / 2);
+            float centerX = (clipRectF.left + clipRectF.right) / 2;
+            float centerY = (clipRectF.top + clipRectF.bottom) / 2;
+            int radius = (int) ((Math.min(clipRectF.width(), clipRectF.height())) / 2);
 
             paint.setStyle(Paint.Style.FILL);
             canvas.drawCircle(centerX, centerY, radius, paint);
@@ -255,8 +274,8 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
         }
         canvas.restoreToCount(saveLayer);
 
-        bitmap = Bitmap.createBitmap(bitmap, (int) clipRectf.left,
-                (int) clipRectf.top, (int) clipRectf.width(), (int) clipRectf.height());
+        bitmap = Bitmap.createBitmap(bitmap, (int) clipRectF.left,
+                (int) clipRectF.top, (int) clipRectF.width(), (int) clipRectF.height());
         return bitmap;
     }
 
@@ -331,7 +350,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     @Override
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
-        updateScalAndPosstion();
+        updateScaleAndPosition();
     }
 
     /**
@@ -340,7 +359,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     @Override
     public void onGlobalLayout() {
         if (isOnce) {
-            updateScalAndPosstion();
+            updateScaleAndPosition();
             isOnce = false;
         }
     }
@@ -348,7 +367,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     /**
      * 更新图片位置
      */
-    private void updateScalAndPosstion() {
+    private void updateScaleAndPosition() {
         Drawable drawable = getDrawable();
         if (drawable == null) return;
 
@@ -372,7 +391,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
             scal = Math.min(width * 1.0f / intrinsicWidth, height * 1.0f / intrinsicHeight);
         }
 
-        initScal = scal;
+        initScale = scal;
         // 注意先进行平移操作在进行缩放操作，否则可能导致缩放后的图片不能居中显示
         imageMatrix.postTranslate((width - intrinsicWidth) * 0.5f, (height - intrinsicHeight) * 0.5f);
         imageMatrix.postScale(scal, scal, width * 0.5f, height * 0.5f);
@@ -415,46 +434,13 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     public void setClipViewParams(ImageSelectConfig imageSelectConfig) {
         this.minScale = imageSelectConfig.getMinScale();
         this.maxScale = imageSelectConfig.getMaxScale();
+        this.boundaryResistance = imageSelectConfig.getBoundaryResistance();
         this.isContinuityEnlarge = imageSelectConfig.isContinuityEnlarge();
 
-        if (this.minScale < 0) this.minScale = DEFAULT_MIN_SCALE;
-        if (this.maxScale < minScale) this.maxScale = DEFAULT_MAX_SCALE;
-    }
-
-    /**
-     * 获取最小缩放比例
-     *
-     * @return
-     */
-    public float getMinScale() {
-        return minScale;
-    }
-
-    /**
-     * 设置最小缩放比例
-     *
-     * @param minScale
-     */
-    public void setMinScale(float minScale) {
-        this.minScale = minScale;
-    }
-
-    /**
-     * 获取最大缩放比例
-     *
-     * @return
-     */
-    public float getMaxScale() {
-        return maxScale;
-    }
-
-    /**
-     * 设置最大缩放比例
-     *
-     * @param maxScale
-     */
-    public void setMaxScale(float maxScale) {
-        this.maxScale = maxScale;
+        if (this.boundaryResistance < 0 || this.boundaryResistance > 1)
+            this.boundaryResistance = DefaultConfigData.BOUNDARY_RESISTANCE;
+        if (this.minScale < 0) this.minScale = DefaultConfigData.MIN_SCALE;
+        if (this.maxScale < minScale) this.maxScale = DefaultConfigData.MAX_SCALE;
     }
 
     @Override
@@ -472,45 +458,45 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     /**
      * 自动方法和缩小的任务
      */
-    class AutoScalTask implements Runnable {
+    class AutoScaleTask implements Runnable {
         // 每次放大的倍数
         private final float BIGGER = 1.02f;
         // 每次缩小的倍数
         private final float SMALLER = 0.98f;
         private int centerX, centerY;
         // 目标比例
-        private float targetScal;
+        private float targetScale;
         // 自动进行缩放时使用的比例
-        private float tempScal;
+        private float tempScale;
 
-        public AutoScalTask(float targetScal, int centerX, int centerY) {
-            this.targetScal = targetScal;
+        public AutoScaleTask(float targetScale, int centerX, int centerY) {
+            this.targetScale = targetScale;
             this.centerX = centerX;
             this.centerY = centerY;
 
             // 判断是缩小还是放大
             float currentScale = getCurrentScale();
-            if (currentScale > targetScal)
-                tempScal = SMALLER;
-            else tempScal = BIGGER;
+            if (currentScale > targetScale)
+                tempScale = SMALLER;
+            else tempScale = BIGGER;
         }
 
         @Override
         public void run() {
-            imageMatrix.postScale(tempScal, tempScal, centerX, centerY);
+            imageMatrix.postScale(tempScale, tempScale, centerX, centerY);
             scaleCheck();
             setImageMatrix(imageMatrix);
 
             float currentScale = getCurrentScale();
-            if ((tempScal > 1 && currentScale < targetScal) || (tempScal < 1 && currentScale > targetScal)) {
+            if ((tempScale > 1 && currentScale < targetScale) || (tempScale < 1 && currentScale > targetScale)) {
                 PhotoView.this.postDelayed(this, 8);
             } else {
                 // 根据当前比例和目标比例计算出最终的的缩放比例才能到达目标比例
-                float lastScale = targetScal / currentScale;
+                float lastScale = targetScale / currentScale;
                 imageMatrix.postScale(lastScale, lastScale, centerX, centerY);
                 scaleCheck();
                 setImageMatrix(imageMatrix);
-                isAutoScal = false;
+                isAutoScale = false;
             }
         }
     }
