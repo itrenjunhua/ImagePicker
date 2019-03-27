@@ -18,7 +18,7 @@ ext {
             supportTestEspresso     : "3.0.1",
 
             jetbrainsAnnotations    : "13.0",
-            imageGlide              : "4.6.1",
+            imageGlide              : "4.8.0",
     ]
 
     dependencies = [
@@ -34,8 +34,10 @@ ext {
             // Glide 图片加载库
             "glide"                   : "com.github.bumptech.glide:glide:${dependVersion.imageGlide}",
             "glideCompiler"           : "com.github.bumptech.glide:compiler:${dependVersion.imageGlide}",
-            // 图片加载库封装
+            // 图片加载库封装库框架
             "imageloaderlibrary"      : ":imageloaderlibrary",
+            // 图片加载库Glide具体实现库
+            "glidelibrary"            : ":glidelibrary",
             // 图片选择库封装
             "imageselectLibrary"      : ":imageselectLibrary"
     ]

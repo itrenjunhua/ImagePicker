@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.renj.imageloaderlibrary.loader.ImageInfoConfig;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.ImageLoaderManager;
@@ -76,12 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResult(List<ImageModel> selectResults) {
                         Toast.makeText(MainActivity.this, "一共选择了" + selectResults.size() + "张图片", Toast.LENGTH_SHORT).show();
-                        ImageInfoConfig imageInfoConfig = new ImageInfoConfig.Builder()
-                                .activity(MainActivity.this)
-                                .filePath(selectResults.get(0).path)
-                                .target(imageView)
-                                .build();
-                        ImageLoaderManager.getImageLoader().loadImage(imageInfoConfig);
+                        ImageLoaderManager.loadImageForFile(MainActivity.this, selectResults.get(0).path, imageView);
                     }
                 });
     }
@@ -106,12 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> selectResults) {
-                        ImageInfoConfig imageInfoConfig = new ImageInfoConfig.Builder()
-                                .activity(MainActivity.this)
-                                .filePath(selectResults.get(0).path)
-                                .target(imageView)
-                                .build();
-                        ImageLoaderManager.getImageLoader().loadImage(imageInfoConfig);
+                        ImageLoaderManager.loadImageForFile(MainActivity.this, selectResults.get(0).path, imageView);
                     }
                 });
     }

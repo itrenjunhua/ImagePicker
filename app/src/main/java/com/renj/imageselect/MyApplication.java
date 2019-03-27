@@ -3,7 +3,6 @@ package com.renj.imageselect;
 import android.app.Application;
 import android.widget.ImageView;
 
-import com.renj.imageloaderlibrary.loader.ImageInfoConfig;
 import com.renj.imageselect.utils.ImageLoaderManager;
 import com.renj.imageselect.utils.ImageLoaderUtils;
 import com.renj.imageselect.utils.ImageSelectUtils;
@@ -33,11 +32,7 @@ public class MyApplication extends Application {
             @Override
             public void loadImage(String path, ImageView imageView) {
                 // 使用图片加载框架加载图片
-                ImageInfoConfig imageInfoConfig = new ImageInfoConfig.Builder()
-                        .filePath(path)
-                        .target(imageView)
-                        .build();
-                ImageLoaderManager.getImageLoader().loadImage(imageInfoConfig);
+                ImageLoaderManager.loadImageForFile(path, imageView);
             }
         });
     }
@@ -46,12 +41,6 @@ public class MyApplication extends Application {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        ImageLoaderManager.getImageLoader().clearAllMemoryCaches();
-    }
-
-    @Override
-    public void onTrimMemory(int level) {
-        super.onTrimMemory(level);
-        ImageLoaderManager.getImageLoader().trimMemory(level);
+        ImageLoaderManager.getDefaultImageLoaderModule().clearMemoryCache();
     }
 }
