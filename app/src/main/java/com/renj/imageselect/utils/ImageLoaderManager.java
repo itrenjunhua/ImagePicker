@@ -2,7 +2,6 @@ package com.renj.imageselect.utils;
 
 import android.app.Activity;
 import android.app.Application;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
@@ -12,7 +11,6 @@ import com.renj.imageloaderlibrary.config.ImageLoadLibrary;
 import com.renj.imageloaderlibrary.config.ImageModuleConfig;
 import com.renj.imageloaderlibrary.loader.IImageLoaderModule;
 import com.renj.imageloaderlibrary.loader.ImageLoaderModule;
-import com.renj.imageselect.MainActivity;
 import com.renj.imageselect.R;
 
 /**
