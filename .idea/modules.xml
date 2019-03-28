@@ -3,13 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ImageSelect.iml" filepath="$PROJECT_DIR$/ImageSelect.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ImageSelect.iml" filepath="$PROJECT_DIR$/ImageSelect.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/glidelibrary/glidelibrary.iml" filepath="$PROJECT_DIR$/glidelibrary/glidelibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/imageloaderlibrary/imageloaderlibrary.iml" filepath="$PROJECT_DIR$/imageloaderlibrary/imageloaderlibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/imageloaderlibrary/imageloaderlibrary.iml" filepath="$PROJECT_DIR$/imageloaderlibrary/imageloaderlibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/imageselectLibrary/imageselectLibrary.iml" filepath="$PROJECT_DIR$/imageselectLibrary/imageselectLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/imageselectLibrary/imageselectLibrary.iml" filepath="$PROJECT_DIR$/imageselectLibrary/imageselectLibrary.iml" />
     </modules>
   </component>

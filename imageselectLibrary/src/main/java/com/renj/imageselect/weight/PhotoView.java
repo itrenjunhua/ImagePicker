@@ -212,7 +212,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
                         if (imageRect.bottom < height && isCheckTopBottom)
                             dy = (int) (dy * boundaryResistance);
                         imageMatrix.postTranslate(dx, dy);
-                        // translateCheck();
+                        // restoreBounds();
                         setImageMatrix(imageMatrix);
                     }
                 }
@@ -223,8 +223,8 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
             case MotionEvent.ACTION_CANCEL:
                 lastPointerCount = 0;
                 if (isCanMove && getDrawable() != null) {
-                    translateCheck();
-                    setImageMatrix(imageMatrix);
+                    restoreBounds();
+                    // setImageMatrix(imageMatrix);
                 }
                 break;
             default:
@@ -280,9 +280,9 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     }
 
     /**
-     * 平移时检查边界。执行该方法时图片的宽和高一定会大于控件的宽和高
+     * 手指抬起时，将图片超出边界的位置恢复，是图片的边与控件的边对齐
      */
-    private void translateCheck() {
+    private void restoreBounds() {
         float dx = 0, dy = 0;
         int width = getWidth();
         int height = getHeight();
@@ -301,7 +301,10 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
         if (imageRect.bottom < height && isCheckTopBottom)
             dy = height - imageRect.bottom;
 
-        imageMatrix.postTranslate(dx, dy);
+        // imageMatrix.postTranslate(dx, dy);
+
+        RestoreBoundsTask restoreBoundsTask = new RestoreBoundsTask(dx, dy);
+        post(restoreBoundsTask);
     }
 
     /**
@@ -497,6 +500,47 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
                 scaleCheck();
                 setImageMatrix(imageMatrix);
                 isAutoScale = false;
+            }
+        }
+    }
+
+    /**
+     * 手指抬起时，将图片移动超出边界的位置恢复
+     */
+    class RestoreBoundsTask implements Runnable {
+        private int count;
+        private int alreadyMoveCount;
+        private float moveX, moveY;
+
+        public RestoreBoundsTask(float dx, float dy) {
+            alreadyMoveCount = 0;
+            float absX = Math.abs(dx);
+            float absY = Math.abs(dy);
+
+            if (absX > absY) {
+                count = (int) (absX / 10);
+            } else {
+                count = (int) (absY / 10);
+            }
+
+            if (count > 20) count = 20;
+            if (count < 5) count = 5;
+
+            moveX = dx / count;
+            moveY = dy / count;
+        }
+
+        @Override
+        public void run() {
+            imageMatrix.postTranslate(moveX, moveY);
+            setImageMatrix(imageMatrix);
+
+            if (alreadyMoveCount < count) {
+                alreadyMoveCount += 1;
+                PhotoView.this.postDelayed(this, 2);
+            } else {
+                imageMatrix.postTranslate(moveX, moveY);
+                setImageMatrix(imageMatrix);
             }
         }
     }
