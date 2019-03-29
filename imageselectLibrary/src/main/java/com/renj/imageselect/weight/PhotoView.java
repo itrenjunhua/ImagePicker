@@ -57,7 +57,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     // 初始时的缩放比例，在自动缩放时使用到的
     private float initScale = 1.0f;
     // 是否双击连续放大
-    private boolean isContinuityEnlarge = false;
+    private boolean isContinuityEnlarge = DefaultConfigData.IS_CONTINUITY_ENLARGE;
     // 是否正在自动缩放
     private boolean isAutoScale = false;
 

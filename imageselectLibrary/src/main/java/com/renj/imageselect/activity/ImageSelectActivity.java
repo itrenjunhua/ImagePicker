@@ -503,7 +503,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
          * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #clipConfig(ImageSelectConfig)} 方法，
          * 在调用 {@link #openImageSelectPage(Context)} 方法。
          * 如果不调用，将使用 {@link com.renj.imageselect.model.DefaultConfigData} 中的数据。
-         * 默认选择的张数为1，如果用List集合接收将抛出 {@link ClassCastException} 异常。</b>
+         * 默认选择的张数为1。</b>
          *
          * @param imageSelectConfig {@link ImageSelectConfig} 对象
          * @return {@link ImageSelectObservable} 对象
@@ -518,7 +518,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
          * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #clipConfig(ImageSelectConfig)} 方法，
          * 在调用 {@link #openImageSelectPage(Context)} 方法。
          * 如果不调用，将使用 {@link com.renj.imageselect.model.DefaultConfigData} 中的数据。
-         * 默认选择的张数为1，如果用List集合接收将抛出 {@link ClassCastException} 异常。</b>
+         * 默认选择的张数为1。</b>
          *
          * @param context 上下文
          * @return {@link ImageSelectObservable} 对象
