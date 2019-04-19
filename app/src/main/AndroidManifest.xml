@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.renj.imageselect">
+    package="com.renj.selecttest">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".MyApplication"
+        android:name="com.renj.selecttest.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -18,7 +18,7 @@
             android:name="com.renj.imageloaderlibrary.glide.MyGlideModule"
             android:value="AppGlideModule" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.renj.selecttest.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

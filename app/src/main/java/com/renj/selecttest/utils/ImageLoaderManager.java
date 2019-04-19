@@ -1,4 +1,4 @@
-package com.renj.imageselect.utils;
+package com.renj.selecttest.utils;
 
 import android.app.Activity;
 import android.app.Application;
@@ -11,7 +11,7 @@ import com.renj.imageloaderlibrary.config.ImageLoadLibrary;
 import com.renj.imageloaderlibrary.config.ImageModuleConfig;
 import com.renj.imageloaderlibrary.loader.IImageLoaderModule;
 import com.renj.imageloaderlibrary.loader.ImageLoaderModule;
-import com.renj.imageselect.R;
+import com.renj.selecttest.R;
 
 /**
  * ======================================================================

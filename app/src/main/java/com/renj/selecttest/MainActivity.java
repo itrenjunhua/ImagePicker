@@ -1,4 +1,4 @@
-package com.renj.imageselect;
+package com.renj.selecttest;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
-import com.renj.imageselect.utils.ImageLoaderManager;
 import com.renj.imageselect.utils.ImageSelectUtils;
 import com.renj.imageselect.utils.OnResultCallBack;
+import com.renj.selecttest.utils.ImageLoaderManager;
 
 import java.util.List;
 

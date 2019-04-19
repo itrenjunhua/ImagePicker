@@ -1,4 +1,4 @@
-package com.renj.imageselect;
+package com.renj.selecttest;
 
 import org.junit.Test;
 

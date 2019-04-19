@@ -1,11 +1,11 @@
-package com.renj.imageselect;
+package com.renj.selecttest;
 
 import android.app.Application;
 import android.widget.ImageView;
 
-import com.renj.imageselect.utils.ImageLoaderManager;
 import com.renj.imageselect.utils.ImageLoaderUtils;
 import com.renj.imageselect.utils.ImageSelectUtils;
+import com.renj.selecttest.utils.ImageLoaderManager;
 
 /**
  * ======================================================================
