@@ -39,10 +39,10 @@ public class LoadSDImageUtils {
      * @param context                          上下文
      * @param loadImageForSdCardFinishListener 加载完成监听
      */
-    public static void loadImageForSdCaard(@NonNull Activity context, @NonNull LoadImageForSdCardFinishListener loadImageForSdCardFinishListener) {
-        LoadImageForSdCaard loadImageForSdCaard = new LoadImageForSdCaard(context, loadImageForSdCardFinishListener);
+    public static void loadImageForSdCard(@NonNull Activity context, @NonNull LoadImageForSdCardFinishListener loadImageForSdCardFinishListener) {
+        LoadImageForSdCard loadImageForSdCard = new LoadImageForSdCard(context, loadImageForSdCardFinishListener);
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(loadImageForSdCaard);
+        handler.post(loadImageForSdCard);
     }
 
 
@@ -62,11 +62,11 @@ public class LoadSDImageUtils {
     /**
      * 获取SD卡中的所有图片并按所在目录进行分类处理的线程
      */
-    static class LoadImageForSdCaard implements Runnable {
+    static class LoadImageForSdCard implements Runnable {
         private Context context;
         private LoadImageForSdCardFinishListener listener;
 
-        public LoadImageForSdCaard(@NonNull Context context, @NonNull LoadImageForSdCardFinishListener listener) {
+        public LoadImageForSdCard(@NonNull Context context, @NonNull LoadImageForSdCardFinishListener listener) {
             this.context = context;
             this.listener = listener;
         }

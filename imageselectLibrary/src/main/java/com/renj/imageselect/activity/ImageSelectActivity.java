@@ -99,6 +99,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_select_activity);
 
+        loadingDialog = new LoadingDialog(this);
+
         // 获取配置参数
         imageSelectConfig = getIntent().getParcelableExtra("imageSelectConfig");
         // 初始化选择图片界面
@@ -120,8 +122,6 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         } else {
             startLoadImage();
         }
-
-        loadingDialog = new LoadingDialog(this);
     }
 
     /**
@@ -377,11 +377,13 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 开始从SD卡中加载图片
      */
     private void startLoadImage() {
-        LoadSDImageUtils.loadImageForSdCaard(this, new LoadSDImageUtils.LoadImageForSdCardFinishListener() {
+        loadingDialog.show();
+        LoadSDImageUtils.loadImageForSdCard(this, new LoadSDImageUtils.LoadImageForSdCardFinishListener() {
             @Override
             public void finish(List<ImageModel> imageModels, List<FolderModel> folderModels) {
                 imageSelectAdapter.setImageModels(imageModels);
                 imageMenuDialog.setMenuData(folderModels);
+                loadingDialog.dismiss();
             }
         });
     }
