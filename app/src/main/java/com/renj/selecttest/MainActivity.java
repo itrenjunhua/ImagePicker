@@ -2,14 +2,17 @@ package com.renj.selecttest;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
@@ -69,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
                 .isContinuityEnlarge(false)
                 .build();
         ImageSelectUtils.newInstance().create()
+                .selectedLayoutId(R.layout.my_selected_iamge_layout)
+                .onSelectedImageChange(new OnSelectedImageChange() {
+                    @Override
+                    public void onConfirmView(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel,
+                                              @NonNull List<ImageModel> selectedList, boolean isSelected, int selectedCount, int totalCount) {
+                        Toast.makeText(MainActivity.this, isSelected + " : " + selectedCount, Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .clipConfig(imageSelectConfig1)
                 .openImageSelectPage(MainActivity.this)
                 .onResult(new OnResultCallBack() {

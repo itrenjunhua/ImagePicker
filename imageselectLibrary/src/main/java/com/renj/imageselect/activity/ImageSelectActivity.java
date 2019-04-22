@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
+import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
@@ -67,7 +69,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     // 当前页面
     private int currentStatus;
 
-    /***** 页面基本控件 *****/
+    /***** 选择图片控件 *****/
+    private View selectView;
     private GridView gvImages;
     private TextView tvSelectMenu;
     private ViewStub vsClipSingle; // 裁剪单张图片时加载
@@ -126,8 +129,13 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void initSelectedImageView() {
         ViewStub vsSelect = findViewById(R.id.vs_select);
-        vsSelect.setLayoutResource(R.layout.image_select_layout);
-        View selectView = vsSelect.inflate();
+        if (create().selectedLayoutId > 0) {
+            vsSelect.setLayoutResource(create().selectedLayoutId);
+        } else {
+            vsSelect.setLayoutResource(R.layout.image_select_layout);
+        }
+
+        selectView = vsSelect.inflate();
         /***** 页面基本控件 *****/
         gvImages = selectView.findViewById(R.id.gv_images);
         tvSelectMenu = selectView.findViewById(R.id.tv_select_menu);
@@ -178,18 +186,22 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void isSelectMore(boolean selectMore) {
         // 选择图片页面取消按钮
-        tvCancelSelect = findViewById(R.id.tv_cancel_select);
+        tvCancelSelect = selectView.findViewById(R.id.tv_cancel_select);
         tvCancelSelect.setOnClickListener(this);
 
         // 多选图片时的确认控件
-        tvConfirmSelect = findViewById(R.id.tv_confirm_select);
+        tvConfirmSelect = selectView.findViewById(R.id.tv_confirm_select);
 
         // 判断是否多选
         if (selectMore) {
             // 告诉Adapter最多选择的图片
             imageSelectAdapter.setMaxCount(imageSelectConfig.getSelectCount());
 
-            tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
+            if (create().onSelectedImageChange != null) {
+                create().onSelectedImageChange.onDefault(tvConfirmSelect, tvCancelSelect, imageSelectAdapter.getCheckImages().size(), imageSelectConfig.getSelectCount());
+            } else {
+                tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
+            }
 
             tvConfirmSelect.setVisibility(View.VISIBLE);
             tvConfirmSelect.setOnClickListener(this);
@@ -257,7 +269,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 if (itemData instanceof ImageModel) {
                     // 判断是否选择单张还是多张
                     if (selectCount > 1) {
-                        selectMore(position);
+                        selectMore(position, (ImageModel) itemData);
                     } else {
                         ImageModel imageModel = (ImageModel) itemData;
                         selectSingle(imageModel);
@@ -350,9 +362,15 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      *
      * @param position
      */
-    private void selectMore(int position) {
-        imageSelectAdapter.addOrClearCheckedPosition(position);
-        tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
+    private void selectMore(int position, ImageModel imageModel) {
+        boolean isSelected = imageSelectAdapter.addOrClearCheckedPosition(position);
+        if (create().onSelectedImageChange != null) {
+            create().onSelectedImageChange.onConfirmView(tvConfirmSelect, tvCancelSelect,
+                    imageModel, imageSelectAdapter.getCheckImages(), isSelected,
+                    imageSelectAdapter.getCheckImages().size(), imageSelectConfig.getSelectCount());
+        } else {
+            tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
+        }
     }
 
     /**
@@ -504,13 +522,43 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     }
 
     /**
-     * 提供设置配置参数、打开图片选择界面的返回结果回调方法
+     * 提供动态布局配置、选择图片参数配置、打开图片选择界面的返回结果回调方法
      */
     public static class ImageSelectObservable {
         OnResultCallBack onResultCallBack;
         ImageSelectConfig imageSelectConfig;
 
+        /*********** 选择图片页面动态布局和回调 ***********/
+        @LayoutRes
+        int selectedLayoutId; // 选择图片页面布局资源id
+        OnSelectedImageChange onSelectedImageChange;  // 图片选择页面，图片选择发生变化时回调
+
         ImageSelectObservable() {
+        }
+
+        /**
+         * 动态设置图片选择页面的布局。<br/>
+         * <b>注意：请参照 默认布局文件 image_select_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
+         *
+         * @param selectedLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_select_layout.xml)
+         * @return {@link ImageSelectObservable} 对象
+         */
+        public ImageSelectObservable selectedLayoutId(@LayoutRes int selectedLayoutId) {
+            this.selectedLayoutId = selectedLayoutId;
+            return this;
+        }
+
+        /**
+         * 设置图片选择改变监听。<br/>
+         * <b>注意：只有在选择多张图片时才会回调，单张图片并不会回调</b>
+         *
+         * @param onSelectedImageChange 图片选择页面，图片选择发生变化时回调
+         * @return {@link ImageSelectObservable} 对象
+         */
+        public ImageSelectObservable onSelectedImageChange(@Nullable OnSelectedImageChange onSelectedImageChange) {
+            this.onSelectedImageChange = onSelectedImageChange;
+            return this;
         }
 
         /**
