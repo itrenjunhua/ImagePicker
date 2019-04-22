@@ -30,7 +30,7 @@ import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
-import com.renj.imageselect.utils.OnResultCallBack;
+import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.utils.Utils;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
 import com.renj.imageselect.weight.ImageClipView;
@@ -98,20 +98,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         // 获取配置参数
         imageSelectConfig = getIntent().getParcelableExtra("imageSelectConfig");
+        // 初始化选择图片界面
+        initSelectedImageView();
 
-        /***** 页面基本控件 *****/
-        gvImages = findViewById(R.id.gv_images);
-        tvSelectMenu = findViewById(R.id.tv_select_menu);
         vsClipSingle = findViewById(R.id.vs_clip_single);
         vsClipMore = findViewById(R.id.vs_clip_more);
-        llSelectView = findViewById(R.id.ll_select_view);
-
-        tvSelectMenu.setOnClickListener(this);
-
-        imageMenuDialog = new ImageMenuDialog(this);
-
-        imageSelectAdapter = new ImageSelectAdapter(this);
-        gvImages.setAdapter(imageSelectAdapter);
 
         // 配置数据解析
         configDataParse();
@@ -128,6 +119,26 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         }
 
         loadingDialog = new LoadingDialog(this);
+    }
+
+    /**
+     * 初始化选择图片界面
+     */
+    private void initSelectedImageView() {
+        ViewStub vsSelect = findViewById(R.id.vs_select);
+        vsSelect.setLayoutResource(R.layout.image_select_layout);
+        View selectView = vsSelect.inflate();
+        /***** 页面基本控件 *****/
+        gvImages = selectView.findViewById(R.id.gv_images);
+        tvSelectMenu = selectView.findViewById(R.id.tv_select_menu);
+        llSelectView = selectView.findViewById(R.id.ll_select_view);
+
+        tvSelectMenu.setOnClickListener(this);
+
+        imageMenuDialog = new ImageMenuDialog(this);
+
+        imageSelectAdapter = new ImageSelectAdapter(this);
+        gvImages.setAdapter(imageSelectAdapter);
     }
 
     /**
@@ -483,8 +494,12 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private static ImageSelectObservable imageSelectObservable;
 
     public static ImageSelectObservable create() {
-        if (imageSelectObservable == null)
-            imageSelectObservable = new ImageSelectObservable();
+        if (imageSelectObservable == null) {
+            synchronized (ImageSelectObservable.class) {
+                if (imageSelectObservable == null)
+                    imageSelectObservable = new ImageSelectObservable();
+            }
+        }
         return imageSelectObservable;
     }
 

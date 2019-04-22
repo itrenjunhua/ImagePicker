@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.OnResultCallBack;
+import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
 import java.util.List;

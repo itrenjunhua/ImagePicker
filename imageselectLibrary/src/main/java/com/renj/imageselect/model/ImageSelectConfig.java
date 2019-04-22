@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 
-import com.renj.imageselect.utils.OnResultCallBack;
+import com.renj.imageselect.listener.OnResultCallBack;
 
 /**
  * ======================================================================

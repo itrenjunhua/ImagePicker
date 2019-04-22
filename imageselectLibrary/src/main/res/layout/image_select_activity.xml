@@ -19,6 +19,10 @@
         android:layout_height="match_parent" />
 
     <!--图片选择布局-->
-    <include layout="@layout/image_select_layout" />
+    <!--<include layout="@layout/image_select_layout" />-->
+    <ViewStub
+        android:id="@+id/vs_select"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>
