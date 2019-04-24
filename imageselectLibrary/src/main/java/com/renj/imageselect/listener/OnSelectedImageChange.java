@@ -48,8 +48,8 @@ public abstract class OnSelectedImageChange {
      * @param selectedCount 当前已选择的张数
      * @param totalCount    需要选择的张数/预期选择的张数
      */
-    public void onConfirmView(@NonNull TextView confirmView, @NonNull TextView cancelView,
-                              @NonNull ImageModel imageModel, @NonNull List<ImageModel> selectedList,
-                              boolean isSelected, int selectedCount, int totalCount) {
+    public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView,
+                                 @NonNull ImageModel imageModel, @NonNull List<ImageModel> selectedList,
+                                 boolean isSelected, int selectedCount, int totalCount) {
     }
 }

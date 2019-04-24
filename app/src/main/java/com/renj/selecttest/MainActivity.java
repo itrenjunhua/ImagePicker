@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
                 .selectedLayoutId(R.layout.my_selected_iamge_layout)
                 .onSelectedImageChange(new OnSelectedImageChange() {
                     @Override
-                    public void onConfirmView(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel,
-                                              @NonNull List<ImageModel> selectedList, boolean isSelected, int selectedCount, int totalCount) {
+                    public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel,
+                                                 @NonNull List<ImageModel> selectedList, boolean isSelected, int selectedCount, int totalCount) {
                         Toast.makeText(MainActivity.this, isSelected + " : " + selectedCount, Toast.LENGTH_SHORT).show();
                     }
                 })

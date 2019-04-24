@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
+import com.renj.imageselect.listener.OnClipImageChange;
 import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
@@ -214,7 +215,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 初始化裁剪单张图片页面
      */
     private void initClipSinglePage() {
-        vsClipSingle.setLayoutResource(R.layout.image_clip_single_layout);
+        if (create().clipSingleLayoutId > 0) {
+            vsClipSingle.setLayoutResource(create().clipSingleLayoutId);
+        } else {
+            vsClipSingle.setLayoutResource(R.layout.image_clip_single_layout);
+        }
         View clipSingleView = vsClipSingle.inflate();
 
         /***** 裁剪单张图片时使用到的控件 *****/
@@ -222,6 +227,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         tvCancel = clipSingleView.findViewById(R.id.tv_cancel);
         imageClipView = clipSingleView.findViewById(R.id.image_clip_view);
         clipLayout = clipSingleView.findViewById(R.id.clip_layout);
+
+        if (create().onClipImageChange != null) {
+            // 单张裁剪，总数为 1
+            create().onClipImageChange.onDefault(tvClip, tvCancel, 0, 1);
+        }
 
         tvCancel.setOnClickListener(this);
         tvClip.setOnClickListener(this);
@@ -365,7 +375,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private void selectMore(int position, ImageModel imageModel) {
         boolean isSelected = imageSelectAdapter.addOrClearCheckedPosition(position);
         if (create().onSelectedImageChange != null) {
-            create().onSelectedImageChange.onConfirmView(tvConfirmSelect, tvCancelSelect,
+            create().onSelectedImageChange.onSelectedChange(tvConfirmSelect, tvCancelSelect,
                     imageModel, imageSelectAdapter.getCheckImages(), isSelected,
                     imageSelectAdapter.getCheckImages().size(), imageSelectConfig.getSelectCount());
         } else {
@@ -497,9 +507,15 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+                            ArrayList<ImageModel> selectResults = new ArrayList<>();
+                            selectResults.add(imageModel);
+
+                            if (create().onClipImageChange != null) {
+                                // 单张裁剪，总数为 1
+                                create().onClipImageChange.onClipChange(tvClip, tvCancel, imageModel,selectResults,imageSelectConfig.isCircleClip(),0,1);
+                            }
+
                             if (create().onResultCallBack != null) {
-                                ArrayList<ImageModel> selectResults = new ArrayList<>();
-                                selectResults.add(imageModel);
                                 create().onResultCallBack.onResult(selectResults);
                             }
                             loadingDialog.dismiss();
@@ -535,6 +551,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         int selectedLayoutId; // 选择图片页面布局资源id
         OnSelectedImageChange onSelectedImageChange;  // 图片选择页面，图片选择发生变化时回调
 
+        /*********** 裁剪图片页面动态布局和回调 ***********/
+        @LayoutRes
+        int clipSingleLayoutId; // 裁剪单张图片页面布局资源 id
+        OnClipImageChange onClipImageChange; // 图片发生裁剪时回调
+
         ImageSelectObservable() {
         }
 
@@ -560,6 +581,30 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
          */
         public ImageSelectObservable onSelectedImageChange(@Nullable OnSelectedImageChange onSelectedImageChange) {
             this.onSelectedImageChange = onSelectedImageChange;
+            return this;
+        }
+
+        /**
+         * 动态设置单张图片裁剪页面的布局。<br/>
+         * <b>注意：请参照 默认布局文件 image_clip_single_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
+         *
+         * @param clipSingleLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_clip_single_layout.xml)
+         * @return {@link ImageSelectObservable} 对象
+         */
+        public ImageSelectObservable clipSingleLayoutId(@LayoutRes int clipSingleLayoutId) {
+            this.clipSingleLayoutId = clipSingleLayoutId;
+            return this;
+        }
+
+        /**
+         * 设置图片裁剪改变监听。<br/>
+         *
+         * @param onClipImageChange 图片裁剪时回调
+         * @return {@link ImageSelectObservable} 对象
+         */
+        public ImageSelectObservable onClipImageChange(@Nullable OnClipImageChange onClipImageChange) {
+            this.onClipImageChange = onClipImageChange;
             return this;
         }
 
