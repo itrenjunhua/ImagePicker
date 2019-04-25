@@ -43,13 +43,13 @@ public abstract class OnSelectedImageChange {
      * @param confirmView   确认控件
      * @param cancelView    取消控件
      * @param imageModel    当前选中的图片
-     * @param selectedList  所有已选中的图片集合
      * @param isSelected    是否选中，true：选中图片；false：取消选中
+     * @param selectedList  所有已选中的图片集合
      * @param selectedCount 当前已选择的张数
      * @param totalCount    需要选择的张数/预期选择的张数
      */
     public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView,
-                                 @NonNull ImageModel imageModel, @NonNull List<ImageModel> selectedList,
-                                 boolean isSelected, int selectedCount, int totalCount) {
+                                 @NonNull ImageModel imageModel, boolean isSelected,
+                                 @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
     }
 }

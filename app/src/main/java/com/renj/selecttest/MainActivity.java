@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,11 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.renj.imageselect.listener.OnClipImageChange;
+import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
 import java.util.List;
@@ -75,9 +77,23 @@ public class MainActivity extends AppCompatActivity {
                 .selectedLayoutId(R.layout.my_selected_iamge_layout)
                 .onSelectedImageChange(new OnSelectedImageChange() {
                     @Override
-                    public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel,
-                                                 @NonNull List<ImageModel> selectedList, boolean isSelected, int selectedCount, int totalCount) {
+                    public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
+                        confirmView.setText(selectedCount + "/" + totalCount + "确定");
+                    }
+
+                    @Override
+                    public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
+                                                 @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
                         Toast.makeText(MainActivity.this, isSelected + " : " + selectedCount, Toast.LENGTH_SHORT).show();
+                        confirmView.setText(selectedCount + "/" + totalCount + "确定");
+                    }
+                })
+                .onClipImageChange(new OnClipImageChange() {
+                    @Override
+                    public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
+                                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
+                                             boolean isCircleClip, int clipCount, int totalCount) {
+                        Log.i("MainActivity", "clipView = [" + clipView + "], cancelView = [" + cancelView + "], imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
                     }
                 })
                 .clipConfig(imageSelectConfig1)

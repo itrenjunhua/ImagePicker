@@ -27,7 +27,7 @@ public class OnClipImageChange {
      *
      * @param clipView   裁剪按钮控件
      * @param cancelView 取消按钮控件
-     * @param clipCount  当前已裁剪的张数，正常情况下为 0
+     * @param clipCount  当前正在裁剪的张数，正常情况下为 1
      * @param totalCount 需要的裁剪张数
      */
     public void onDefault(@NonNull TextView clipView, @NonNull TextView cancelView, int clipCount, int totalCount) {
@@ -39,14 +39,14 @@ public class OnClipImageChange {
      *
      * @param clipView     裁剪按钮控件
      * @param cancelView   取消按钮控件
-     * @param imageModel   当前裁剪的图片
-     * @param clipList     所有需要裁剪的图片集合
+     * @param imageModel   当前裁剪完成的图片
+     * @param clipResultList     裁剪后的图片集合
      * @param isCircleClip 是否圆形裁剪
      * @param clipCount    当前已裁剪的张数
-     * @param totalCount   需要裁剪的张数
+     * @param totalCount   共需要裁剪的张数
      */
     public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
-                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipList,
+                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
                              boolean isCircleClip, int clipCount, int totalCount) {
     }
 }

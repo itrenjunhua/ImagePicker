@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.renj.imageselect.R;
+import com.renj.imageselect.listener.OnClipImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageSelectConfig;
 
@@ -52,6 +54,8 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
     private FixedSpeedScroller mScroller;
     private LoadingDialog loadingDialog;
 
+    private OnClipImageChange onClipImageChange;
+
     public ImageClipMoreLayout(Context context) {
         this(context, null);
     }
@@ -62,17 +66,16 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
 
     public ImageClipMoreLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public ImageClipMoreLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        initView(context);
     }
 
-    private void initView(Context context) {
-        View clipMoreLayout = LayoutInflater.from(context).inflate(R.layout.image_clip_more_layout, null);
+    public void initView(@LayoutRes int clipMoreLayoutId, OnClipImageChange onClipImageChange) {
+        this.onClipImageChange = onClipImageChange;
+        View clipMoreLayout = LayoutInflater.from(getContext()).inflate(clipMoreLayoutId, null);
         tvCancel = clipMoreLayout.findViewById(R.id.tv_cancel_more);
         tvClip = clipMoreLayout.findViewById(R.id.tv_clip_more);
         vpClipMore = clipMoreLayout.findViewById(R.id.vp_clip_more);
@@ -92,7 +95,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
         } catch (Exception e) {
             e.printStackTrace();
         }
-        loadingDialog = new LoadingDialog(context);
+        loadingDialog = new LoadingDialog(getContext());
     }
 
     private void setListener() {
@@ -103,6 +106,9 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
     public void setImageData(List<ImageModel> srcImages) {
         this.srcImages = srcImages;
         tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
+        if (onClipImageChange != null) {
+            onClipImageChange.onDefault(tvClip, tvCancel, currentIndex + 1, srcImages.size());
+        }
         clipMorePagerAdapter.notifyDataSetChanged();
     }
 
@@ -128,10 +134,19 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
             ImageClipView focusedChild = clipMorePagerAdapter.getPrimaryItem();
             focusedChild.cut(new ImageClipView.CutListener() {
                 @Override
-                public void cutFinish(ImageModel imageModel) {
+                public void cutFinish(final ImageModel imageModel) {
+                    Handler handler = new Handler(Looper.getMainLooper());
                     resultImages.add(imageModel);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
+                            if (onClipImageChange != null) {
+                                onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, resultImages, imageSelectConfig.isCircleClip(), currentIndex + 1, srcImages.size());
+                            }
+                        }
+                    });
                     if (srcImages.size() <= resultImages.size()) {
-                        Handler handler = new Handler(Looper.getMainLooper());
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -153,7 +168,6 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
             }
             mScroller.setDuration(500);// 切换时间，毫秒值
             vpClipMore.setCurrentItem(currentIndex);
-            tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
         }
     }
 

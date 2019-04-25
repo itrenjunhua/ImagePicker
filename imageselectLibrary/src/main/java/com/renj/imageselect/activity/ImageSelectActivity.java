@@ -198,10 +198,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             // 告诉Adapter最多选择的图片
             imageSelectAdapter.setMaxCount(imageSelectConfig.getSelectCount());
 
+            tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
             if (create().onSelectedImageChange != null) {
                 create().onSelectedImageChange.onDefault(tvConfirmSelect, tvCancelSelect, imageSelectAdapter.getCheckImages().size(), imageSelectConfig.getSelectCount());
-            } else {
-                tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
             }
 
             tvConfirmSelect.setVisibility(View.VISIBLE);
@@ -230,7 +229,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         if (create().onClipImageChange != null) {
             // 单张裁剪，总数为 1
-            create().onClipImageChange.onDefault(tvClip, tvCancel, 0, 1);
+            create().onClipImageChange.onDefault(tvClip, tvCancel, 1, 1);
         }
 
         tvCancel.setOnClickListener(this);
@@ -242,10 +241,12 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void initClipMorePage() {
         vsClipMore.setLayoutResource(R.layout.image_single_clip_more_layout);
-        View clipMoreView = vsClipMore.inflate();
-
-        /***** 裁剪多张图片时使用到的控件 *****/
-        clipMoreLayout = clipMoreView.findViewById(R.id.image_clip_more);
+        clipMoreLayout = (ImageClipMoreLayout) vsClipMore.inflate();
+        if (create().clipMoreLayoutId > 0) {
+            clipMoreLayout.initView(create().clipMoreLayoutId, create().onClipImageChange);
+        } else {
+            clipMoreLayout.initView(R.layout.image_clip_more_layout, create().onClipImageChange);
+        }
     }
 
     /**
@@ -374,12 +375,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void selectMore(int position, ImageModel imageModel) {
         boolean isSelected = imageSelectAdapter.addOrClearCheckedPosition(position);
+        tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
         if (create().onSelectedImageChange != null) {
             create().onSelectedImageChange.onSelectedChange(tvConfirmSelect, tvCancelSelect,
-                    imageModel, imageSelectAdapter.getCheckImages(), isSelected,
+                    imageModel, isSelected, imageSelectAdapter.getCheckImages(),
                     imageSelectAdapter.getCheckImages().size(), imageSelectConfig.getSelectCount());
-        } else {
-            tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
         }
     }
 
@@ -512,7 +512,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
                             if (create().onClipImageChange != null) {
                                 // 单张裁剪，总数为 1
-                                create().onClipImageChange.onClipChange(tvClip, tvCancel, imageModel,selectResults,imageSelectConfig.isCircleClip(),0,1);
+                                create().onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageSelectConfig.isCircleClip(), 0, 1);
                             }
 
                             if (create().onResultCallBack != null) {
@@ -554,6 +554,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         /*********** 裁剪图片页面动态布局和回调 ***********/
         @LayoutRes
         int clipSingleLayoutId; // 裁剪单张图片页面布局资源 id
+        @LayoutRes
+        int clipMoreLayoutId; // 裁剪单张图片页面布局资源 id
         OnClipImageChange onClipImageChange; // 图片发生裁剪时回调
 
         ImageSelectObservable() {
@@ -594,6 +596,19 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
          */
         public ImageSelectObservable clipSingleLayoutId(@LayoutRes int clipSingleLayoutId) {
             this.clipSingleLayoutId = clipSingleLayoutId;
+            return this;
+        }
+
+        /**
+         * 动态设置多张图片裁剪页面的布局。<br/>
+         * <b>注意：请参照 默认布局文件 image_clip_more_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
+         *
+         * @param clipMoreLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_clip_more_layout.xml)
+         * @return {@link ImageSelectObservable} 对象
+         */
+        public ImageSelectObservable clipMoreLayoutId(@LayoutRes int clipMoreLayoutId) {
+            this.clipMoreLayoutId = clipMoreLayoutId;
             return this;
         }
 
