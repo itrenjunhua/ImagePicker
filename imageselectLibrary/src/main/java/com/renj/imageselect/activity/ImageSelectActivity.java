@@ -381,6 +381,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         LoadSDImageUtils.loadImageForSdCard(this, new LoadSDImageUtils.LoadImageForSdCardFinishListener() {
             @Override
             public void finish(List<ImageModel> imageModels, List<FolderModel> folderModels) {
+                tvSelectMenu.setText("全部图片");
                 imageSelectAdapter.setImageModels(imageModels);
                 imageMenuDialog.setMenuData(folderModels);
                 loadingDialog.dismiss();
