@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.renj.imageselect.weight.AutoImageView
+        android:id="@+id/iv_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        app:auto_height="1"
+        app:auto_type="type_height"
+        app:auto_width="1">
+
+    </com.renj.imageselect.weight.AutoImageView>
+</FrameLayout>

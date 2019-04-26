@@ -32,6 +32,9 @@ dependencies {
     testImplementation rootProject.ext.dependencies["junitSupport"]
     androidTestImplementation rootProject.ext.dependencies["supportTestRunner"]
     androidTestImplementation rootProject.ext.dependencies["supportTestEspresso"]
+    // butterknife
+    implementation rootProject.ext.dependencies["butterknife"]
+    annotationProcessor rootProject.ext.dependencies["butterknifeCompiler"]
 
     // 图片加载库封装库框架
     implementation project(rootProject.ext.dependencies["imageloaderlibrary"])

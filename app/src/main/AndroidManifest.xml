@@ -18,13 +18,39 @@
             android:name="com.renj.imageloaderlibrary.glide.MyGlideModule"
             android:value="AppGlideModule" />
 
-        <activity android:name="com.renj.selecttest.MainActivity">
+        <activity
+            android:name="com.renj.selecttest.activity.MainActivity"
+            android:label="@string/image_selected_clip">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.SelectedActivity"
+            android:label="@string/image_selected" />
+
+        <activity
+            android:name=".activity.SelectedMyActivity"
+            android:label="@string/image_selected_my" />
+
+        <activity
+            android:name=".activity.ClipSingleActivity"
+            android:label="@string/image_clip_single" />
+
+        <activity
+            android:name=".activity.ClipSingleMyActivity"
+            android:label="@string/image_clip_single_my" />
+
+        <activity
+            android:name=".activity.ClipMoreActivity"
+            android:label="@string/image_clip_more" />
+
+        <activity
+            android:name=".activity.ClipMoreMyActivity"
+            android:label="@string/image_clip_more_my" />
     </application>
 
 </manifest>

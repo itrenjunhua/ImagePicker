@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">ImageSelect</string>
+
+    <string name="image_selected_clip">选择、裁剪图片示例代码</string>
+    <string name="image_selected">选择图片</string>
+    <string name="image_selected_my">使用自定义样式选择图片</string>
+    <string name="image_clip_single">裁剪单张图片</string>
+    <string name="image_clip_single_my">使用自定义样式裁剪单张图片</string>
+    <string name="image_clip_more">裁剪多张图片</string>
+    <string name="image_clip_more_my">使用自定义样式裁剪多张图片</string>
 </resources>

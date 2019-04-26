@@ -1,15 +1,11 @@
-package com.renj.selecttest;
+package com.renj.selecttest.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,48 +13,88 @@ import com.renj.imageselect.listener.OnClipImageChange;
 import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.model.ImageSelectConfig;
+import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.selecttest.utils.ImageLoaderManager;
+import com.renj.selecttest.R;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    private Button clickSelect;
-    private ImageView imageView;
-    private EditText imageNum;
+import butterknife.BindView;
+
+public class MainActivity extends BaseActivity {
+
+    @BindView(R.id.bt_selected)
+    Button btSelected;
+    @BindView(R.id.bt_selected_my)
+    Button btSelectedMy;
+    @BindView(R.id.bt_clip_single)
+    Button btClipSingle;
+    @BindView(R.id.bt_clip_single_my)
+    Button btClipSingleMy;
+    @BindView(R.id.bt_clip_more)
+    Button btClipMore;
+    @BindView(R.id.bt_clip_more_my)
+    Button btClipMoreMy;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
 
-        clickSelect = findViewById(R.id.click_select);
-        imageView = findViewById(R.id.imageview);
-        imageNum = findViewById(R.id.et_image_num);
-
-        clickSelect.setOnClickListener(new View.OnClickListener() {
+    @Override
+    protected void initView() {
+        btSelected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectImage();
+                Intent intent = new Intent(MainActivity.this, SelectedActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btSelectedMy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SelectedMyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btClipSingle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ClipSingleActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btClipSingleMy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ClipSingleMyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btClipMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ClipMoreActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btClipMoreMy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ClipMoreMyActivity.class);
+                startActivity(intent);
             }
         });
     }
 
-    private void selectImage() {
-        String imageNum = this.imageNum.getText().toString().trim();
-        if (TextUtils.isEmpty(imageNum)) {
-            Toast.makeText(MainActivity.this, "输入选择的图片张数", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        int imageNumInt = Integer.parseInt(imageNum);
-        if (imageNumInt > 1) moreImages(imageNumInt);
-        else singleImage();
-    }
-
     // 多张图片
     private void moreImages(int imageNumInt) {
-        ImageSelectConfig imageSelectConfig1 = new ImageSelectConfig
+        ImageParamsConfig imageParamsConfig1 = new ImageParamsConfig
                 .Builder()
                 .width(600)
                 .height(800)
@@ -96,20 +132,18 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("MainActivity", "clipView = [" + clipView + "], cancelView = [" + cancelView + "], imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
                     }
                 })
-                .clipConfig(imageSelectConfig1)
+                .imageParamsConfig(imageParamsConfig1)
                 .openImageSelectPage(MainActivity.this)
                 .onResult(new OnResultCallBack() {
                     @Override
-                    public void onResult(List<ImageModel> selectResults) {
-                        Toast.makeText(MainActivity.this, "一共选择了" + selectResults.size() + "张图片", Toast.LENGTH_SHORT).show();
-                        ImageLoaderManager.loadImageForFile(MainActivity.this, selectResults.get(0).path, imageView);
+                    public void onResult(List<ImageModel> resultList) {
                     }
                 });
     }
 
     // 单张图片
     private void singleImage() {
-        ImageSelectConfig imageSelectConfig = new ImageSelectConfig
+        ImageParamsConfig imageParamsConfig = new ImageParamsConfig
                 .Builder()
                 .width(200)
                 .height(300)
@@ -122,12 +156,11 @@ public class MainActivity extends AppCompatActivity {
                 .isCircleClip(false)
                 .build();
         ImageSelectUtils.newInstance().create()
-                .clipConfig(imageSelectConfig)
+                .imageParamsConfig(imageParamsConfig)
                 .openImageSelectPage(MainActivity.this)
                 .onResult(new OnResultCallBack() {
                     @Override
-                    public void onResult(List<ImageModel> selectResults) {
-                        ImageLoaderManager.loadImageForFile(MainActivity.this, selectResults.get(0).path, imageView);
+                    public void onResult(List<ImageModel> resultList) {
                     }
                 });
     }
