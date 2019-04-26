@@ -24,7 +24,7 @@ public interface OnResultCallBack {
     /**
      * 选择或裁剪之后的回调函数
      *
-     * @param selectResults 当选择一张图片时，集合的大小为1
+     * @param resultList 当选择一张图片时，集合的大小为1
      */
-    void onResult(List<ImageModel> selectResults);
+    void onResult(List<ImageModel> resultList);
 }

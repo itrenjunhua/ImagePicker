@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.model.ImageSelectConfig;
+import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageLoaderUtils;
 
 /**
@@ -102,11 +102,11 @@ public class ImageClipView extends RelativeLayout {
     /**
      * 设置裁剪控件参数
      *
-     * @param imageSelectConfig
+     * @param imageParamsConfig
      */
-    public void setClipViewParams(@NonNull ImageSelectConfig imageSelectConfig) {
-        clipView.setClipViewParams(imageSelectConfig);
-        photoView.setClipViewParams(imageSelectConfig);
+    public void setClipViewParams(@NonNull ImageParamsConfig imageParamsConfig) {
+        clipView.setClipViewParams(imageParamsConfig);
+        photoView.setClipViewParams(imageParamsConfig);
     }
 
     public interface CutListener{

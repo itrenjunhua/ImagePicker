@@ -31,7 +31,7 @@ import com.renj.imageselect.listener.OnClipImageChange;
 import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.model.ImageSelectConfig;
+import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
 import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.utils.Utils;
@@ -90,7 +90,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private ImageClipMoreLayout clipMoreLayout;
 
     private ImageSelectAdapter imageSelectAdapter; // 图片展示的适配器
-    private ImageSelectConfig imageSelectConfig;   // 保存图片选择配置信息的对象
+    private ImageParamsConfig imageParamsConfig;   // 保存图片选择配置信息的对象
     private File cameraSavePath; // 相机照片保存路径
     private ImageMenuDialog imageMenuDialog; // 图片目录选择Dialog
     private LoadingDialog loadingDialog;
@@ -103,7 +103,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         loadingDialog = new LoadingDialog(this);
 
         // 获取配置参数
-        imageSelectConfig = getIntent().getParcelableExtra("imageSelectConfig");
+        imageParamsConfig = getIntent().getParcelableExtra("imageParamsConfig");
         // 初始化选择图片界面
         initSelectedImageView();
 
@@ -154,19 +154,19 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 解析配置数据
      */
     private void configDataParse() {
-        if (imageSelectConfig == null)
+        if (imageParamsConfig == null)
             defaultConfig();
 
-        isSelectMore(imageSelectConfig.getSelectCount() > 1);
-        imageSelectAdapter.isOpenCamera(imageSelectConfig.isShowCamera());
+        isSelectMore(imageParamsConfig.getSelectCount() > 1);
+        imageSelectAdapter.isOpenCamera(imageParamsConfig.isShowCamera());
 
-        if (imageSelectConfig.isClip()) {
-            if (imageSelectConfig.getSelectCount() > 1) {
+        if (imageParamsConfig.isClip()) {
+            if (imageParamsConfig.getSelectCount() > 1) {
                 initClipMorePage();
-                clipMoreLayout.setClipViewParams(imageSelectConfig);
+                clipMoreLayout.setClipViewParams(imageParamsConfig);
             } else {
                 initClipSinglePage();
-                imageClipView.setClipViewParams(imageSelectConfig);
+                imageClipView.setClipViewParams(imageParamsConfig);
             }
         }
     }
@@ -175,7 +175,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 没有配置信息时，使用默认的配置信息
      */
     private void defaultConfig() {
-        imageSelectConfig = new ImageSelectConfig
+        imageParamsConfig = new ImageParamsConfig
                 .Builder()
                 .build();
     }
@@ -196,11 +196,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         // 判断是否多选
         if (selectMore) {
             // 告诉Adapter最多选择的图片
-            imageSelectAdapter.setMaxCount(imageSelectConfig.getSelectCount());
+            imageSelectAdapter.setMaxCount(imageParamsConfig.getSelectCount());
 
-            tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
+            tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageParamsConfig.getSelectCount() + ") 确定");
             if (create().onSelectedImageChange != null) {
-                create().onSelectedImageChange.onDefault(tvConfirmSelect, tvCancelSelect, imageSelectAdapter.getCheckImages().size(), imageSelectConfig.getSelectCount());
+                create().onSelectedImageChange.onDefault(tvConfirmSelect, tvCancelSelect, imageSelectAdapter.getCheckImages().size(), imageParamsConfig.getSelectCount());
             }
 
             tvConfirmSelect.setVisibility(View.VISIBLE);
@@ -266,8 +266,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int selectCount = imageSelectConfig.getSelectCount();
-                if (imageSelectConfig.isShowCamera() && position == 0) {
+                int selectCount = imageParamsConfig.getSelectCount();
+                if (imageParamsConfig.isShowCamera() && position == 0) {
                     if (imageSelectAdapter.getCheckImages().size() >= selectCount) {
                         Toast.makeText(ImageSelectActivity.this, "最多选择" + selectCount + "张图片", Toast.LENGTH_SHORT).show();
                     } else {
@@ -332,14 +332,14 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * @param imageModel
      */
     private void handlerCameraResult(@NonNull ImageModel imageModel) {
-        if (imageSelectConfig.getSelectCount() == 1) {
+        if (imageParamsConfig.getSelectCount() == 1) {
             // 如果是单张，判断是否需要裁剪或直接返回结果
             selectSingle(imageModel);
         } else {
             // 多张时，也直接判断是否需要裁剪然后返回
             List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
             checkImages.add(imageModel);
-            if (imageSelectConfig.isClip()) {
+            if (imageParamsConfig.isClip()) {
                 pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
                 if (create().onResultCallBack != null)
@@ -355,7 +355,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * @param imageModel
      */
     private void selectSingle(@NonNull ImageModel imageModel) {
-        if (imageSelectConfig.isClip()) {
+        if (imageParamsConfig.isClip()) {
             imageClipView.setImage(imageModel.path);
             pageStatusChange(STATUS_CLIP_SINGLE_PAGE);
         } else {
@@ -375,11 +375,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void selectMore(int position, ImageModel imageModel) {
         boolean isSelected = imageSelectAdapter.addOrClearCheckedPosition(position);
-        tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageSelectConfig.getSelectCount() + ") 确定");
+        tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageParamsConfig.getSelectCount() + ") 确定");
         if (create().onSelectedImageChange != null) {
             create().onSelectedImageChange.onSelectedChange(tvConfirmSelect, tvCancelSelect,
                     imageModel, isSelected, imageSelectAdapter.getCheckImages(),
-                    imageSelectAdapter.getCheckImages().size(), imageSelectConfig.getSelectCount());
+                    imageSelectAdapter.getCheckImages().size(), imageParamsConfig.getSelectCount());
         }
     }
 
@@ -491,7 +491,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 Toast.makeText(ImageSelectActivity.this, "没有选择图片", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (imageSelectConfig.isClip()) {
+            if (imageParamsConfig.isClip()) {
                 pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
                 if (create().onResultCallBack != null)
@@ -512,7 +512,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
                             if (create().onClipImageChange != null) {
                                 // 单张裁剪，总数为 1
-                                create().onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageSelectConfig.isCircleClip(), 0, 1);
+                                create().onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isCircleClip(), 0, 1);
                             }
 
                             if (create().onResultCallBack != null) {
@@ -544,7 +544,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     public static class ImageSelectObservable {
         OnResultCallBack onResultCallBack;
-        ImageSelectConfig imageSelectConfig;
+        ImageParamsConfig imageParamsConfig;
 
         /*********** 选择图片页面动态布局和回调 ***********/
         @LayoutRes
@@ -625,22 +625,22 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         /**
          * 设置选择和裁剪配置参数<br/>
-         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #clipConfig(ImageSelectConfig)} 方法，
+         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #imageParamsConfig(ImageParamsConfig)} 方法，
          * 在调用 {@link #openImageSelectPage(Context)} 方法。
          * 如果不调用，将使用 {@link com.renj.imageselect.model.DefaultConfigData} 中的数据。
          * 默认选择的张数为1。</b>
          *
-         * @param imageSelectConfig {@link ImageSelectConfig} 对象
+         * @param imageParamsConfig {@link ImageParamsConfig} 对象
          * @return {@link ImageSelectObservable} 对象
          */
-        public ImageSelectObservable clipConfig(@NonNull ImageSelectConfig imageSelectConfig) {
-            this.imageSelectConfig = imageSelectConfig;
+        public ImageSelectObservable imageParamsConfig(@NonNull ImageParamsConfig imageParamsConfig) {
+            this.imageParamsConfig = imageParamsConfig;
             return this;
         }
 
         /**
          * 打开图片选择界面<br/>
-         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #clipConfig(ImageSelectConfig)} 方法，
+         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #imageParamsConfig(ImageParamsConfig)} 方法，
          * 在调用 {@link #openImageSelectPage(Context)} 方法。
          * 如果不调用，将使用 {@link com.renj.imageselect.model.DefaultConfigData} 中的数据。
          * 默认选择的张数为1。</b>
@@ -650,7 +650,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
          */
         public ImageSelectObservable openImageSelectPage(@NonNull Context context) {
             Intent intent = new Intent(context, ImageSelectActivity.class);
-            intent.putExtra("imageSelectConfig", imageSelectConfig);
+            intent.putExtra("imageParamsConfig", imageParamsConfig);
             context.startActivity(intent);
             return this;
         }

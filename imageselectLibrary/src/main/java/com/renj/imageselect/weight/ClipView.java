@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.renj.imageselect.model.DefaultConfigData;
-import com.renj.imageselect.model.ImageSelectConfig;
+import com.renj.imageselect.model.ImageParamsConfig;
 
 import static android.graphics.Canvas.ALL_SAVE_FLAG;
 
@@ -140,15 +140,15 @@ public class ClipView extends View {
     /**
      * 设置裁剪控件参数
      *
-     * @param imageSelectConfig
+     * @param imageParamsConfig
      */
-    public void setClipViewParams(@NonNull ImageSelectConfig imageSelectConfig) {
-        this.maskColor = imageSelectConfig.getMaskColor();
-        this.clipWidth = dp2Px(imageSelectConfig.getWidth());
-        this.clipHeight = dp2Px(imageSelectConfig.getHeight());
-        this.borderColor = imageSelectConfig.getClipBorderColor();
-        this.borderWidth = dp2Px(imageSelectConfig.getClipBorderWidth());
-        this.clipShape = imageSelectConfig.isCircleClip() ? ClipShape.CLIP_CIRCLE : ClipShape.CLIP_RECT;
+    public void setClipViewParams(@NonNull ImageParamsConfig imageParamsConfig) {
+        this.maskColor = imageParamsConfig.getMaskColor();
+        this.clipWidth = dp2Px(imageParamsConfig.getWidth());
+        this.clipHeight = dp2Px(imageParamsConfig.getHeight());
+        this.borderColor = imageParamsConfig.getClipBorderColor();
+        this.borderWidth = dp2Px(imageParamsConfig.getClipBorderWidth());
+        this.clipShape = imageParamsConfig.isCircleClip() ? ClipShape.CLIP_CIRCLE : ClipShape.CLIP_RECT;
 
         postInvalidate();
     }

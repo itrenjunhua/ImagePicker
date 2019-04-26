@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.renj.imageselect.R;
 import com.renj.imageselect.listener.OnClipImageChange;
 import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.model.ImageSelectConfig;
+import com.renj.imageselect.model.ImageParamsConfig;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
     private List<ImageModel> srcImages = new ArrayList<>();
     private List<ImageModel> resultImages = new ArrayList<>();
     private ClipMorePagerAdapter clipMorePagerAdapter;
-    private ImageSelectConfig imageSelectConfig;
+    private ImageParamsConfig imageParamsConfig;
 
     private FixedSpeedScroller mScroller;
     private LoadingDialog loadingDialog;
@@ -142,7 +142,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
                         public void run() {
                             tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
                             if (onClipImageChange != null) {
-                                onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, resultImages, imageSelectConfig.isCircleClip(), currentIndex + 1, srcImages.size());
+                                onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, resultImages, imageParamsConfig.isCircleClip(), currentIndex + 1, srcImages.size());
                             }
                         }
                     });
@@ -175,10 +175,10 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
     /**
      * 设置裁剪控件参数
      *
-     * @param imageSelectConfig
+     * @param imageParamsConfig
      */
-    public void setClipViewParams(@NonNull ImageSelectConfig imageSelectConfig) {
-        this.imageSelectConfig = imageSelectConfig;
+    public void setClipViewParams(@NonNull ImageParamsConfig imageParamsConfig) {
+        this.imageParamsConfig = imageParamsConfig;
     }
 
     public interface OnImageClipMoreListener {
@@ -213,7 +213,7 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             ImageClipView imageClipView = new ImageClipView(getContext());
-            imageClipView.setClipViewParams(imageSelectConfig);
+            imageClipView.setClipViewParams(imageParamsConfig);
             imageClipView.setImage(srcImages.get(position).path);
             container.addView(imageClipView);
             return imageClipView;

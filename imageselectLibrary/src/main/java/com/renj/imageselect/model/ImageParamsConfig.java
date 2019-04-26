@@ -20,7 +20,7 @@ import com.renj.imageselect.listener.OnResultCallBack;
  * <p>
  * ======================================================================
  */
-public class ImageSelectConfig implements Parcelable {
+public class ImageParamsConfig implements Parcelable {
     int width; // 裁剪宽度
     int height; // 裁剪高度
     int selectCount; // 选择图片张数
@@ -36,7 +36,7 @@ public class ImageSelectConfig implements Parcelable {
     boolean isContinuityEnlarge; // 是否双击连续放大
     boolean isShowCamera; // 是否显示打开相机按钮
 
-    private ImageSelectConfig(Builder builder) {
+    private ImageParamsConfig(Builder builder) {
         this.width = builder.width;
         this.height = builder.height;
         this.selectCount = builder.selectCount;
@@ -274,12 +274,12 @@ public class ImageSelectConfig implements Parcelable {
         }
 
         /**
-         * 构建 {@link ImageSelectConfig} 对象
+         * 构建 {@link ImageParamsConfig} 对象
          *
-         * @return {@link ImageSelectConfig} 对象
+         * @return {@link ImageParamsConfig} 对象
          */
-        public ImageSelectConfig build() {
-            return new ImageSelectConfig(this);
+        public ImageParamsConfig build() {
+            return new ImageParamsConfig(this);
         }
     }
 
@@ -305,7 +305,7 @@ public class ImageSelectConfig implements Parcelable {
         dest.writeByte(this.isShowCamera ? (byte) 1 : (byte) 0);
     }
 
-    protected ImageSelectConfig(Parcel in) {
+    protected ImageParamsConfig(Parcel in) {
         this.width = in.readInt();
         this.height = in.readInt();
         this.selectCount = in.readInt();
@@ -321,18 +321,18 @@ public class ImageSelectConfig implements Parcelable {
         this.isShowCamera = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<ImageSelectConfig> CREATOR = new Parcelable.Creator<ImageSelectConfig>() {
+    public static final Parcelable.Creator<ImageParamsConfig> CREATOR = new Parcelable.Creator<ImageParamsConfig>() {
         @NonNull
         @Override
-        public ImageSelectConfig createFromParcel(Parcel source) {
-            return new ImageSelectConfig(source);
+        public ImageParamsConfig createFromParcel(Parcel source) {
+            return new ImageParamsConfig(source);
         }
 
         @NonNull
         @org.jetbrains.annotations.Contract(pure = true)
         @Override
-        public ImageSelectConfig[] newArray(int size) {
-            return new ImageSelectConfig[size];
+        public ImageParamsConfig[] newArray(int size) {
+            return new ImageParamsConfig[size];
         }
     };
 }

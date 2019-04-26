@@ -23,7 +23,7 @@ import android.widget.ImageView;
 
 import com.renj.imageselect.model.DefaultConfigData;
 import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.model.ImageSelectConfig;
+import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.Utils;
 
 import static android.graphics.Canvas.ALL_SAVE_FLAG;
@@ -432,13 +432,13 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     /**
      * 设置裁剪控件参数
      *
-     * @param imageSelectConfig
+     * @param imageParamsConfig
      */
-    public void setClipViewParams(ImageSelectConfig imageSelectConfig) {
-        this.minScale = imageSelectConfig.getMinScale();
-        this.maxScale = imageSelectConfig.getMaxScale();
-        this.boundaryResistance = imageSelectConfig.getBoundaryResistance();
-        this.isContinuityEnlarge = imageSelectConfig.isContinuityEnlarge();
+    public void setClipViewParams(ImageParamsConfig imageParamsConfig) {
+        this.minScale = imageParamsConfig.getMinScale();
+        this.maxScale = imageParamsConfig.getMaxScale();
+        this.boundaryResistance = imageParamsConfig.getBoundaryResistance();
+        this.isContinuityEnlarge = imageParamsConfig.isContinuityEnlarge();
 
         if (this.boundaryResistance < 0 || this.boundaryResistance > 1)
             this.boundaryResistance = DefaultConfigData.BOUNDARY_RESISTANCE;
