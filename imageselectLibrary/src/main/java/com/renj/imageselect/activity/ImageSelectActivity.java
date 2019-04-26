@@ -29,6 +29,7 @@ import com.renj.imageselect.R;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
 import com.renj.imageselect.listener.OnClipImageChange;
 import com.renj.imageselect.listener.OnSelectedImageChange;
+import com.renj.imageselect.model.DefaultConfigData;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
@@ -130,11 +131,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void initSelectedImageView() {
         ViewStub vsSelect = findViewById(R.id.vs_select);
-        if (create().selectedLayoutId > 0) {
-            vsSelect.setLayoutResource(create().selectedLayoutId);
-        } else {
-            vsSelect.setLayoutResource(R.layout.image_select_layout);
-        }
+        vsSelect.setLayoutResource(create(false).selectedLayoutId);
 
         selectView = vsSelect.inflate();
         /***** 页面基本控件 *****/
@@ -199,8 +196,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             imageSelectAdapter.setMaxCount(imageParamsConfig.getSelectCount());
 
             tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageParamsConfig.getSelectCount() + ") 确定");
-            if (create().onSelectedImageChange != null) {
-                create().onSelectedImageChange.onDefault(tvConfirmSelect, tvCancelSelect, imageSelectAdapter.getCheckImages().size(), imageParamsConfig.getSelectCount());
+            if (create(false).onSelectedImageChange != null) {
+                create(false).onSelectedImageChange.onDefault(tvConfirmSelect, tvCancelSelect, imageSelectAdapter.getCheckImages().size(), imageParamsConfig.getSelectCount());
             }
 
             tvConfirmSelect.setVisibility(View.VISIBLE);
@@ -214,11 +211,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 初始化裁剪单张图片页面
      */
     private void initClipSinglePage() {
-        if (create().clipSingleLayoutId > 0) {
-            vsClipSingle.setLayoutResource(create().clipSingleLayoutId);
-        } else {
-            vsClipSingle.setLayoutResource(R.layout.image_clip_single_layout);
-        }
+        vsClipSingle.setLayoutResource(create(false).clipSingleLayoutId);
+
         View clipSingleView = vsClipSingle.inflate();
 
         /***** 裁剪单张图片时使用到的控件 *****/
@@ -227,9 +221,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         imageClipView = clipSingleView.findViewById(R.id.image_clip_view);
         clipLayout = clipSingleView.findViewById(R.id.clip_layout);
 
-        if (create().onClipImageChange != null) {
+        if (create(false).onClipImageChange != null) {
             // 单张裁剪，总数为 1
-            create().onClipImageChange.onDefault(tvClip, tvCancel, 1, 1);
+            create(false).onClipImageChange.onDefault(tvClip, tvCancel, 1, 1);
         }
 
         tvCancel.setOnClickListener(this);
@@ -242,11 +236,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private void initClipMorePage() {
         vsClipMore.setLayoutResource(R.layout.image_single_clip_more_layout);
         clipMoreLayout = (ImageClipMoreLayout) vsClipMore.inflate();
-        if (create().clipMoreLayoutId > 0) {
-            clipMoreLayout.initView(create().clipMoreLayoutId, create().onClipImageChange);
-        } else {
-            clipMoreLayout.initView(R.layout.image_clip_more_layout, create().onClipImageChange);
-        }
+        clipMoreLayout.initView(create(false).clipMoreLayoutId, create(false).onClipImageChange);
     }
 
     /**
@@ -342,8 +332,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             if (imageParamsConfig.isClip()) {
                 pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
-                if (create().onResultCallBack != null)
-                    create().onResultCallBack.onResult(checkImages);
+                if (create(false).onResultCallBack != null)
+                    create(false).onResultCallBack.onResult(checkImages);
                 finish();
             }
         }
@@ -359,10 +349,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             imageClipView.setImage(imageModel.path);
             pageStatusChange(STATUS_CLIP_SINGLE_PAGE);
         } else {
-            if (create().onResultCallBack != null) {
+            if (create(false).onResultCallBack != null) {
                 ArrayList<ImageModel> selectResults = new ArrayList<>();
                 selectResults.add(imageModel);
-                create().onResultCallBack.onResult(selectResults);
+                create(false).onResultCallBack.onResult(selectResults);
             }
             ImageSelectActivity.this.finish();
         }
@@ -376,8 +366,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private void selectMore(int position, ImageModel imageModel) {
         boolean isSelected = imageSelectAdapter.addOrClearCheckedPosition(position);
         tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageParamsConfig.getSelectCount() + ") 确定");
-        if (create().onSelectedImageChange != null) {
-            create().onSelectedImageChange.onSelectedChange(tvConfirmSelect, tvCancelSelect,
+        if (create(false).onSelectedImageChange != null) {
+            create(false).onSelectedImageChange.onSelectedChange(tvConfirmSelect, tvCancelSelect,
                     imageModel, isSelected, imageSelectAdapter.getCheckImages(),
                     imageSelectAdapter.getCheckImages().size(), imageParamsConfig.getSelectCount());
         }
@@ -434,8 +424,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
                         @Override
                         public void finish(List<ImageModel> clipResult) {
-                            if (create().onResultCallBack != null)
-                                create().onResultCallBack.onResult(clipResult);
+                            if (create(false).onResultCallBack != null)
+                                create(false).onResultCallBack.onResult(clipResult);
                             ImageSelectActivity.this.finish();
                         }
                     });
@@ -494,8 +484,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             if (imageParamsConfig.isClip()) {
                 pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
-                if (create().onResultCallBack != null)
-                    create().onResultCallBack.onResult(checkImages);
+                if (create(false).onResultCallBack != null)
+                    create(false).onResultCallBack.onResult(checkImages);
                 finish();
             }
         } else if (R.id.tv_clip == vId) {
@@ -510,13 +500,13 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                             ArrayList<ImageModel> selectResults = new ArrayList<>();
                             selectResults.add(imageModel);
 
-                            if (create().onClipImageChange != null) {
+                            if (create(false).onClipImageChange != null) {
                                 // 单张裁剪，总数为 1
-                                create().onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isCircleClip(), 1, 1);
+                                create(false).onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isCircleClip(), 1, 1);
                             }
 
-                            if (create().onResultCallBack != null) {
-                                create().onResultCallBack.onResult(selectResults);
+                            if (create(false).onResultCallBack != null) {
+                                create(false).onResultCallBack.onResult(selectResults);
                             }
                             loadingDialog.dismiss();
                             finish();
@@ -529,13 +519,15 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
     private static ImageSelectObservable imageSelectObservable;
 
-    public static ImageSelectObservable create() {
+    public static ImageSelectObservable create(boolean isInitObservableData) {
         if (imageSelectObservable == null) {
             synchronized (ImageSelectObservable.class) {
                 if (imageSelectObservable == null)
                     imageSelectObservable = new ImageSelectObservable();
             }
         }
+        if (isInitObservableData)
+            imageSelectObservable.init();
         return imageSelectObservable;
     }
 
@@ -559,6 +551,16 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         OnClipImageChange onClipImageChange; // 图片发生裁剪时回调
 
         ImageSelectObservable() {
+        }
+
+        private void init() {
+            onResultCallBack = null;
+            imageParamsConfig = null;
+            selectedLayoutId = DefaultConfigData.SELECTED_IMAGE_LAYOUT;
+            onSelectedImageChange = null;
+            clipSingleLayoutId = DefaultConfigData.CLIP_SINGLE_LAYOUT;
+            clipMoreLayoutId = DefaultConfigData.CLIP_MORE_LAYOUT;
+            onClipImageChange = null;
         }
 
         /**

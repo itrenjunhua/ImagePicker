@@ -44,6 +44,6 @@ public class ImageSelectUtils {
      * @return
      */
     public ImageSelectActivity.ImageSelectObservable create() {
-        return ImageSelectActivity.create();
+        return ImageSelectActivity.create(true);
     }
 }

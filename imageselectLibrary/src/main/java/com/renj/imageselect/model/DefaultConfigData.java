@@ -2,6 +2,8 @@ package com.renj.imageselect.model;
 
 import android.support.annotation.FloatRange;
 
+import com.renj.imageselect.R;
+
 /**
  * ======================================================================
  * <p>
@@ -82,4 +84,16 @@ public interface DefaultConfigData {
      * 是否显示打开相机按钮
      */
     boolean IS_SHOW_CAMERA = true;
+    /**
+     * 默认选择图片布局资源文件
+     */
+    int SELECTED_IMAGE_LAYOUT = R.layout.image_select_layout;
+    /**
+     * 默认裁剪单张图片布局资源文件
+     */
+    int CLIP_SINGLE_LAYOUT = R.layout.image_clip_single_layout;
+    /**
+     * 默认裁剪多张图片布局资源文件
+     */
+    int CLIP_MORE_LAYOUT = R.layout.image_clip_more_layout;
 }
