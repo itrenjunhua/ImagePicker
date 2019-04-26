@@ -46,7 +46,7 @@ public class SelectedActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        imageShowAdapter = new ImageShowAdapter(SelectedActivity.this);
+        imageShowAdapter = new ImageShowAdapter(this);
         gvImages.setAdapter(imageShowAdapter);
 
         tvSelect.setOnClickListener(new View.OnClickListener() {
