@@ -5,8 +5,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -37,12 +35,11 @@ public class LoadSDImageUtils {
      * 从sd卡中加载图片
      *
      * @param context                          上下文
-     * @param loadImageForSdCardFinishListener 加载完成监听
+     * @param loadImageForSdCardFinishListener 加载完成监听，回调在子线程中执行
      */
     public static void loadImageForSdCard(@NonNull Activity context, @NonNull LoadImageForSdCardFinishListener loadImageForSdCardFinishListener) {
         LoadImageForSdCard loadImageForSdCard = new LoadImageForSdCard(context, loadImageForSdCardFinishListener);
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(loadImageForSdCard);
+        Utils.runOnNewThread(loadImageForSdCard);
     }
 
 

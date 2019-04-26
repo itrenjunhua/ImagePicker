@@ -87,4 +87,14 @@ public class Utils {
         String name = "camera_" + System.currentTimeMillis() + ".png";
         return new File(getSaveDir(), name);
     }
+
+    /**
+     * 开启新线程执行任务
+     *
+     * @param runnable
+     */
+    public static void runOnNewThread(Runnable runnable) {
+        Thread thread = new Thread(runnable);
+        thread.start();
+    }
 }

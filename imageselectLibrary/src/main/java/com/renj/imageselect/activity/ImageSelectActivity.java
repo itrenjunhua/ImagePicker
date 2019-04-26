@@ -28,13 +28,14 @@ import android.widget.Toast;
 import com.renj.imageselect.R;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
 import com.renj.imageselect.listener.OnClipImageChange;
+import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.DefaultConfigData;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
-import com.renj.imageselect.listener.OnResultCallBack;
+import com.renj.imageselect.utils.Logger;
 import com.renj.imageselect.utils.Utils;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
 import com.renj.imageselect.weight.ImageClipView;
@@ -380,11 +381,18 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         loadingDialog.show();
         LoadSDImageUtils.loadImageForSdCard(this, new LoadSDImageUtils.LoadImageForSdCardFinishListener() {
             @Override
-            public void finish(List<ImageModel> imageModels, List<FolderModel> folderModels) {
-                tvSelectMenu.setText("全部图片");
-                imageSelectAdapter.setImageModels(imageModels);
-                imageMenuDialog.setMenuData(folderModels);
-                loadingDialog.dismiss();
+            public void finish(final List<ImageModel> imageModels, final List<FolderModel> folderModels) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Logger.i("Thread => " + Thread.currentThread().getName());
+                        tvSelectMenu.setText("全部图片");
+                        imageSelectAdapter.setImageModels(imageModels);
+                        imageMenuDialog.setMenuData(folderModels);
+                        loadingDialog.dismiss();
+                    }
+                });
             }
         });
     }

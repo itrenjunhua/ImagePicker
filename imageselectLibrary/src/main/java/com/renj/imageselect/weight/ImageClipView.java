@@ -15,6 +15,7 @@ import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageLoaderUtils;
+import com.renj.imageselect.utils.Utils;
 
 /**
  * ======================================================================
@@ -85,7 +86,7 @@ public class ImageClipView extends RelativeLayout {
      * @return {@link ImageModel} 对象
      */
     public void cut(@NonNull final CutListener cutListener) {
-        new Thread(){
+        Utils.runOnNewThread(new Runnable() {
             @Override
             public void run() {
                 clipView.confirmClip(new ClipView.OnClipRangeListener() {
@@ -96,7 +97,7 @@ public class ImageClipView extends RelativeLayout {
                     }
                 });
             }
-        }.start();
+        });
     }
 
     /**
