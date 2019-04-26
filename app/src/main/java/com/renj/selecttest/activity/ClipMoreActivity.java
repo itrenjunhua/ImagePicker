@@ -1,7 +1,22 @@
 package com.renj.selecttest.activity;
 
 
+import android.graphics.Color;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.TextView;
+
+import com.renj.imageselect.listener.OnResultCallBack;
+import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.model.ImageParamsConfig;
+import com.renj.imageselect.utils.ImageSelectUtils;
 import com.renj.selecttest.R;
+import com.renj.selecttest.adapter.ImageShowAdapter;
+
+import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * ======================================================================
@@ -18,6 +33,14 @@ import com.renj.selecttest.R;
  * ======================================================================
  */
 public class ClipMoreActivity extends BaseActivity {
+    @BindView(R.id.et_count)
+    EditText etCount;
+    @BindView(R.id.tv_select)
+    TextView tvSelect;
+    @BindView(R.id.gv_images)
+    GridView gvImages;
+    private ImageShowAdapter imageShowAdapter;
+
     @Override
     protected int getLayoutId() {
         return R.layout.clip_more_activity;
@@ -25,6 +48,42 @@ public class ClipMoreActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        imageShowAdapter = new ImageShowAdapter(this);
+        gvImages.setAdapter(imageShowAdapter);
 
+        tvSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moreImages();
+            }
+        });
+    }
+
+    private void moreImages() {
+        int imageNum = Integer.parseInt(etCount.getText().toString());
+        ImageParamsConfig imageParamsConfig = new ImageParamsConfig
+                .Builder()
+                .selectCount(imageNum)
+                .isShowCamera(true)
+                .isClip(true)
+                .width(600)
+                .height(800)
+                .isCircleClip(true)
+                .clipBorderWidth(0.5f)
+                .maxScale(6f)
+                .minScale(0.8f)
+                .isContinuityEnlarge(false)
+                .maskColor(Color.parseColor("#80000000"))
+                .clipBorderColor(Color.parseColor("#ffffff"))
+                .build();
+        ImageSelectUtils.newInstance().create()
+                .imageParamsConfig(imageParamsConfig)
+                .openImageSelectPage(this)
+                .onResult(new OnResultCallBack() {
+                    @Override
+                    public void onResult(List<ImageModel> resultList) {
+                        imageShowAdapter.setDatas(resultList);
+                    }
+                });
     }
 }

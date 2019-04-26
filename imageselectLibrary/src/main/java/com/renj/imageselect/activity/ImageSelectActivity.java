@@ -512,7 +512,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
                             if (create().onClipImageChange != null) {
                                 // 单张裁剪，总数为 1
-                                create().onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isCircleClip(), 0, 1);
+                                create().onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isCircleClip(), 1, 1);
                             }
 
                             if (create().onResultCallBack != null) {

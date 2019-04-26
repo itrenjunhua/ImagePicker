@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_select"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/my_selector_main_bt"
+        android:gravity="center"
+        android:text="选择图片"
+        android:textColor="@color/color_white"
+        android:textSize="15sp" />
+
+    <ImageView
+        android:id="@+id/iv_clip_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>

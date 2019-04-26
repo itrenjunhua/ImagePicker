@@ -130,7 +130,6 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
                 onImageClipMoreListener.cancel();
         } else if (R.id.tv_clip_more == vId) {
             currentIndex += 1;
-
             ImageClipView focusedChild = clipMorePagerAdapter.getPrimaryItem();
             focusedChild.cut(new ImageClipView.CutListener() {
                 @Override
@@ -140,9 +139,11 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
-                            if (onClipImageChange != null) {
-                                onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, resultImages, imageParamsConfig.isCircleClip(), currentIndex + 1, srcImages.size());
+                            if (currentIndex < srcImages.size()) {
+                                tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
+                                if (onClipImageChange != null) {
+                                    onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, resultImages, imageParamsConfig.isCircleClip(), (currentIndex + 1), srcImages.size());
+                                }
                             }
                         }
                     });

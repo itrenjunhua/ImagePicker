@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity {
                 .isContinuityEnlarge(false)
                 .build();
         ImageSelectUtils.newInstance().create()
-                .selectedLayoutId(R.layout.my_selected_iamge_layout)
+                .selectedLayoutId(R.layout.my_selected_layout)
                 .onSelectedImageChange(new OnSelectedImageChange() {
                     @Override
                     public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
