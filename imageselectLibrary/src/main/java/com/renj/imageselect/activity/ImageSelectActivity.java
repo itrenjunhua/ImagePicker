@@ -35,7 +35,6 @@ import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
-import com.renj.imageselect.utils.Logger;
 import com.renj.imageselect.utils.Utils;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
 import com.renj.imageselect.weight.ImageClipView;
@@ -386,7 +385,6 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Logger.i("Thread => " + Thread.currentThread().getName());
                         tvSelectMenu.setText("全部图片");
                         imageSelectAdapter.setImageModels(imageModels);
                         imageMenuDialog.setMenuData(folderModels);
