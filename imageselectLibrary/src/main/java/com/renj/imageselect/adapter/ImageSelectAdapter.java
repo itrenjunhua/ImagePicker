@@ -1,6 +1,7 @@
 package com.renj.imageselect.adapter;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +40,15 @@ public class ImageSelectAdapter extends BaseAdapter {
     // 被选择的多张图片
     private List<ImageModel> checkImages = new ArrayList<>();
     private boolean showCamera;
+    @LayoutRes
+    private int itemCameraLayoutId;
+    @LayoutRes
+    private int itemImageLayoutId;
 
-    public ImageSelectAdapter(Context context) {
+    public ImageSelectAdapter(Context context, @LayoutRes int itemCameraLayoutId, @LayoutRes int itemImageLayoutId) {
         this.context = context;
+        this.itemCameraLayoutId = itemCameraLayoutId;
+        this.itemImageLayoutId = itemImageLayoutId;
     }
 
     public ImageSelectAdapter(@NonNull Context context, @NonNull List<ImageModel> imageModels) {
@@ -137,12 +144,12 @@ public class ImageSelectAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (CAMERA_VIEW == getItemViewType(position)) {
-            ImageView imageView = (ImageView) LayoutInflater.from(context).inflate(R.layout.image_select_camera_item, parent, false);
+            ImageView imageView = (ImageView) LayoutInflater.from(context).inflate(itemCameraLayoutId, parent, false);
             return imageView;
         } else {
             ViewHolder viewHolder;
             if (convertView == null || convertView instanceof ImageView) {
-                convertView = LayoutInflater.from(context).inflate(R.layout.image_select_item, null);
+                convertView = LayoutInflater.from(context).inflate(itemImageLayoutId, null);
                 viewHolder = new ViewHolder(convertView);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();

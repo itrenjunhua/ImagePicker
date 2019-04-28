@@ -89,6 +89,14 @@ public interface DefaultConfigData {
      */
     int SELECTED_IMAGE_LAYOUT = R.layout.image_select_layout;
     /**
+     * 默认选择图片条目布局资源文件(点击打开相机条目)
+     */
+    int SELECTED_IMAGE_ITEM_CAMERA_LAYOUT = R.layout.image_select_camera_item;
+    /**
+     * 默认选择图片条目布局资源文件(图片显示条目)
+     */
+    int SELECTED_IMAGE_ITEM_IMAGE_LAYOUT = R.layout.image_select_item;
+    /**
      * 默认裁剪单张图片布局资源文件
      */
     int CLIP_SINGLE_LAYOUT = R.layout.image_clip_single_layout;

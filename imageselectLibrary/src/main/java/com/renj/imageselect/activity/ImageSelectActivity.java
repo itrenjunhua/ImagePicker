@@ -143,7 +143,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         imageMenuDialog = new ImageMenuDialog(this);
 
-        imageSelectAdapter = new ImageSelectAdapter(this);
+        imageSelectAdapter = new ImageSelectAdapter(this, create(false).itemCameraLayoutId, create(false).itemImageLayoutId);
         gvImages.setAdapter(imageSelectAdapter);
     }
 
@@ -548,6 +548,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         /*********** 选择图片页面动态布局和回调 ***********/
         @LayoutRes
         int selectedLayoutId; // 选择图片页面布局资源id
+        @LayoutRes
+        private int itemCameraLayoutId; // 选择图片条目布局资源文件(点击打开相机条目)
+        @LayoutRes
+        private int itemImageLayoutId; // 选择图片条目布局资源文件(图片显示条目)
         OnSelectedImageChange onSelectedImageChange;  // 图片选择页面，图片选择发生变化时回调
 
         /*********** 裁剪图片页面动态布局和回调 ***********/
@@ -564,6 +568,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             onResultCallBack = null;
             imageParamsConfig = null;
             selectedLayoutId = DefaultConfigData.SELECTED_IMAGE_LAYOUT;
+            itemCameraLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_CAMERA_LAYOUT;
+            itemImageLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_IMAGE_LAYOUT;
             onSelectedImageChange = null;
             clipSingleLayoutId = DefaultConfigData.CLIP_SINGLE_LAYOUT;
             clipMoreLayoutId = DefaultConfigData.CLIP_MORE_LAYOUT;
@@ -575,11 +581,37 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
          * <b>注意：请参照 默认布局文件 image_select_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
          * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
          *
-         * @param selectedLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_select_layout.xml)
+         * @param selectedLayoutId 布局文件资源id
          * @return {@link ImageSelectObservable} 对象
          */
         public ImageSelectObservable selectedLayoutId(@LayoutRes int selectedLayoutId) {
             this.selectedLayoutId = selectedLayoutId;
+            return this;
+        }
+
+        /**
+         * 动态设置选择图片条目布局资源文件(点击打开相机条目)。<br/>
+         * <b>注意：请参照 默认布局文件 image_select_camera_item.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
+         *
+         * @param itemCameraLayoutId 布局文件资源id
+         * @return {@link ImageSelectObservable} 对象
+         */
+        public ImageSelectObservable selectItemCameraLayoutId(@LayoutRes int itemCameraLayoutId) {
+            this.itemCameraLayoutId = itemCameraLayoutId;
+            return this;
+        }
+
+        /**
+         * 动态设置选择图片条目布局资源文件(图片显示条目)。<br/>
+         * <b>注意：请参照 默认布局文件 image_select_item.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
+         *
+         * @param itemImageLayoutId 布局文件资源id
+         * @return {@link ImageSelectObservable} 对象
+         */
+        public ImageSelectObservable selectItemImageLayoutId(@LayoutRes int itemImageLayoutId) {
+            this.itemImageLayoutId = itemImageLayoutId;
             return this;
         }
 

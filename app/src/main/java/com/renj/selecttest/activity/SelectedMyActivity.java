@@ -71,6 +71,8 @@ public class SelectedMyActivity extends BaseActivity {
                 .build();
         ImageSelectUtils.newInstance().create()
                 .selectedLayoutId(R.layout.my_selected_layout)
+                .selectItemCameraLayoutId(R.layout.my_image_select_camera_item)
+                .selectItemImageLayoutId(R.layout.my_image_select_item)
                 .onSelectedImageChange(new OnSelectedImageChange() {
                     @Override
                     public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:scaleType="centerInside"
-    android:src="@mipmap/camera"
+    android:src="@mipmap/my_camera"
     app:auto_height="1"
     app:auto_type="type_height"
     app:auto_width="1">
