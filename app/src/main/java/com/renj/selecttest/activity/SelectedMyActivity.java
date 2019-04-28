@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.listener.OnSelectedImageChange;
@@ -14,6 +15,7 @@ import com.renj.imageselect.utils.ImageSelectUtils;
 import com.renj.imageselect.utils.Logger;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
+import com.renj.selecttest.utils.Utils;
 
 import java.util.List;
 
@@ -61,7 +63,12 @@ public class SelectedMyActivity extends BaseActivity {
     }
 
     private void selectedImage() {
-        int imageNum = Integer.parseInt(etCount.getText().toString());
+        String textViewContent = Utils.getTextViewContent(etCount);
+        if (Utils.isEmpty(textViewContent)) {
+            Toast.makeText(SelectedMyActivity.this, "请输入张数", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int imageNum = Utils.parseInteger(textViewContent);
         ImageParamsConfig imageParamsConfig = new ImageParamsConfig
                 .Builder()
                 .selectCount(imageNum)
