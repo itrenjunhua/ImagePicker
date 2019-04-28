@@ -1,10 +1,20 @@
 # ImageSelect
-Android 图片选择、裁剪代码库
+Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了以下功能：
+> 选择图片
+* 将设备中的图片进行分目录展示，用户可切换目录
+* 可设置选择图片张数
+* 自定义选择图片页面样式以及图片选中样式
+* 设置图片选中改变监听
+> 裁剪图片
+* 可设置裁剪图片张数
+* 自定义裁剪图片界面样式
+* 设置裁剪图片参数(大小，边框样式，裁剪形状[矩形、圆形]等)
+* 设置图片裁剪改变监听
 
-## 使用
-### 配置加载框架
-注意：在使用选择和裁剪图片之前，必须先配置用于图片加载的框架，否则不能加载图片。  
-目的：在选择裁剪框架中不另外导入图片加载的框架，在主项目中进行配置，这样就可以使用和主项目中相同的图片加载框架，避免使用的不同的框架造成不必要的空间占用
+# 使用
+## 配置加载框架
+**注意：在使用选择和裁剪图片之前，必须先配置用于图片加载的框架，否则不能加载图片。**
+原因：在主项目中进行配置图片加载框架，不在选择裁剪框架中导入图片加载框架加载图片，避免和主项目使用不同的图片框架造成不必要的空间占用和代码冗余。
 
     ImageSelectUtils.newInstance().configImageLoaderModule(new ImageLoaderUtils.ImageLoaderModule() {
                 @Override
@@ -14,63 +24,206 @@ Android 图片选择、裁剪代码库
                 }
             });
 
-### 选择裁剪图片
-1.选择裁剪单张图片
+## 使用选择图片功能
+> 使用默认样式选择图片
 
-    ImageSelectConfig imageSelectConfig = new ImageSelectConfig
-                    .Builder()
-                    .width(200)
-                    .height(300)
-                    .clipBorderWidth(3)
-                    .selectCount(1)
-                    .isShowCamera(true)
-                    .maskColor(Color.parseColor("#88000000"))
-                    .clipBorderColor(Color.parseColor("#ff0000"))
-                    .isClip(true)
-                    .isCircleClip(false)
-                    .build();
-            ImageSelectUtils.newInstance().create()
-                    .clipConfig(imageSelectConfig)
-                    .openImageSelectPage(MainActivity.this)
-                    .onResult(new OnResultCallBack() {
-                        @Override
-                        public void onResult(List<ImageModel> selectResults) {
-                            ImageLoaderManager.loadImageForFile(MainActivity.this, selectResults.get(0).path, imageView);
-                        }
-                    });
-            
-2.选择裁剪多张图片
+    ImageParamsConfig imageParamsConfig = new ImageParamsConfig
+            .Builder()
+            .selectCount(imageNum)
+            .isShowCamera(true)
+            .isContinuityEnlarge(false)
+            .isClip(false)
+            .build();
+    ImageSelectUtils.newInstance().create()
+            .imageParamsConfig(imageParamsConfig)
+            .openImageSelectPage(this)
+            .onResult(new OnResultCallBack() {
+                @Override
+                public void onResult(List<ImageModel> resultList) {
+                    imageShowAdapter.setDatas(resultList);
+                }
+            });
 
-    ImageSelectConfig imageSelectConfig1 = new ImageSelectConfig
-                    .Builder()
-                    .width(600)
-                    .height(800)
-                    .clipBorderWidth(0.5f)
-                    .selectCount(imageNumInt)
-                    .isShowCamera(true)
-                    .maskColor(Color.parseColor("#80000000"))
-                    .clipBorderColor(Color.parseColor("#ffffff"))
-                    .isClip(true)
-                    .isCircleClip(true)
-                    .maxScale(6f)
-                    .minScale(0.8f)
-                    .isContinuityEnlarge(false)
-                    .build();
-            ImageSelectUtils.newInstance().create()
-                    .clipConfig(imageSelectConfig1)
-                    .openImageSelectPage(MainActivity.this)
-                    .onResult(new OnResultCallBack() {
-                        @Override
-                        public void onResult(List<ImageModel> selectResults) {
-                            Toast.makeText(MainActivity.this, "一共选择了" + selectResults.size() + "张图片", Toast.LENGTH_SHORT).show();
-                            ImageLoaderManager.loadImageForFile(MainActivity.this, selectResults.get(0).path, imageView);
-                        }
-                    });
+> 使用自定义样式加载图片，并且增加图片选中改变监听
 
-## 附录
-相关页面布局文件名称：
-* image_select_layout.xml：图片选择布局文件
-* image_clip_single_layout.xml：裁剪单张图片布局文件
-* image_clip_more_layout.xml：裁剪多张图片布局文件
+    ImageParamsConfig imageParamsConfig = new ImageParamsConfig
+            .Builder()
+            .selectCount(imageNum)
+            .isShowCamera(true)
+            .isContinuityEnlarge(false)
+            .isClip(false)
+            .build();
+    ImageSelectUtils.newInstance().create()
+            .selectedLayoutId(R.layout.my_selected_layout)
+            .selectItemCameraLayoutId(R.layout.my_image_select_camera_item)
+            .selectItemImageLayoutId(R.layout.my_image_select_item)
+            .onSelectedImageChange(new OnSelectedImageChange() {
+                @Override
+                public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
+                    confirmView.setText(selectedCount + "/" + totalCount + "确定");
+                }
 
-**注意：修改样式时，不要删除控件或者修改控件的id**
+                @Override
+                public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
+                                             @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
+                    Logger.i("imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                    confirmView.setText(selectedCount + "/" + totalCount + "确定");
+                }
+            })
+            .imageParamsConfig(imageParamsConfig)
+            .openImageSelectPage(this)
+            .onResult(new OnResultCallBack() {
+                @Override
+                public void onResult(List<ImageModel> resultList) {
+                    imageShowAdapter.setDatas(resultList);
+                }
+            });
+
+
+## 使用裁剪图片功能
+> 使用默认样式裁剪单张图片
+
+    ImageParamsConfig imageParamsConfig = new ImageParamsConfig
+            .Builder()
+            .selectCount(1)
+            .isShowCamera(true)
+            .isClip(true)
+            .width(400)
+            .height(400)
+            .isCircleClip(false)
+            .clipBorderWidth(2)
+            .maskColor(Color.parseColor("#88000000"))
+            .clipBorderColor(Color.parseColor("#ff0000"))
+            .build();
+    ImageSelectUtils.newInstance().create()
+            .imageParamsConfig(imageParamsConfig)
+            .openImageSelectPage(this)
+            .onResult(new OnResultCallBack() {
+                @Override
+                public void onResult(List<ImageModel> resultList) {
+                    ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult);
+                }
+            });
+
+> 使用自定义样式裁剪单张图片并增加裁剪改变监听
+
+    ImageParamsConfig imageParamsConfig = new ImageParamsConfig
+            .Builder()
+            .selectCount(1)
+            .isShowCamera(true)
+            .isClip(true)
+            .width(400)
+            .height(400)
+            .isCircleClip(false)
+            .clipBorderWidth(2)
+            .maskColor(Color.parseColor("#88000000"))
+            .clipBorderColor(Color.parseColor("#ff0000"))
+            .build();
+    ImageSelectUtils.newInstance().create()
+            // .selectedLayoutId(R.layout.my_selected_layout) // 自定义选择图片布局
+            .clipSingleLayoutId(R.layout.my_clip_single_layout) // 自定义单张裁剪部分布局
+            .onClipImageChange(new OnClipImageChange() {
+                @Override
+                public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
+                                         @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
+                                         boolean isCircleClip, int clipCount, int totalCount) {
+                    // clipView.setText(clipCount + "/" + totalCount + "裁剪");
+                    Logger.i("imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
+                }
+            })
+            .imageParamsConfig(imageParamsConfig)
+            .openImageSelectPage(this)
+            .onResult(new OnResultCallBack() {
+                @Override
+                public void onResult(List<ImageModel> resultList) {
+                    ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult);
+                }
+            });
+
+> 使用默认样式裁剪多张图片
+
+    ImageParamsConfig imageParamsConfig = new ImageParamsConfig
+            .Builder()
+            .selectCount(imageNum)
+            .isShowCamera(true)
+            .isClip(true)
+            .width(600)
+            .height(800)
+            .isCircleClip(true)
+            .clipBorderWidth(0.5f)
+            .maxScale(6f)
+            .minScale(0.8f)
+            .isContinuityEnlarge(false)
+            .maskColor(Color.parseColor("#80000000"))
+            .clipBorderColor(Color.parseColor("#ffffff"))
+            .build();
+    ImageSelectUtils.newInstance().create()
+            .imageParamsConfig(imageParamsConfig)
+            .openImageSelectPage(this)
+            .onResult(new OnResultCallBack() {
+                @Override
+                public void onResult(List<ImageModel> resultList) {
+                    imageShowAdapter.setDatas(resultList);
+                }
+            });
+
+> 使用默认样式裁剪多张图片并增加裁剪改变监听
+
+    ImageParamsConfig imageParamsConfig = new ImageParamsConfig
+            .Builder()
+            .selectCount(imageNum)
+            .isShowCamera(true)
+            .isClip(true)
+            .width(600)
+            .height(800)
+            .isCircleClip(true)
+            .clipBorderWidth(0.5f)
+            .maxScale(6f)
+            .minScale(0.8f)
+            .isContinuityEnlarge(false)
+            .maskColor(Color.parseColor("#80000000"))
+            .clipBorderColor(Color.parseColor("#ffffff"))
+            .build();
+    ImageSelectUtils.newInstance().create()
+            .selectedLayoutId(R.layout.my_selected_layout)
+            .clipMoreLayoutId(R.layout.my_clip_more_layout)
+            .onSelectedImageChange(new OnSelectedImageChange() {
+                @Override
+                public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
+                    Logger.i("selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                    confirmView.setText(selectedCount + "/" + totalCount + "确定");
+                }
+
+                @Override
+                public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
+                                             @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
+                    Logger.i("imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                    confirmView.setText(selectedCount + "/" + totalCount + "确定");
+                }
+            })
+            .onClipImageChange(new OnClipImageChange() {
+                @Override
+                public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
+                                         @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
+                                         boolean isCircleClip, int clipCount, int totalCount) {
+                    Logger.i("imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
+                }
+            })
+            .imageParamsConfig(imageParamsConfig)
+            .openImageSelectPage(this)
+            .onResult(new OnResultCallBack() {
+                @Override
+                public void onResult(List<ImageModel> resultList) {
+                    imageShowAdapter.setDatas(resultList);
+                }
+            });
+
+**注意：以上代码中使用自定义布局修改样式时，请认真阅读对应方法注释。
+在对应默认布局文件中有 id 的控件为必须控件，在自定义的布局文件中必须存在，
+并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。**
+
+
+
+
+
+
