@@ -143,6 +143,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         imageMenuDialog = new ImageMenuDialog(this);
 
+        gvImages.setNumColumns(create(false).gridColNumbers);
         imageSelectAdapter = new ImageSelectAdapter(this, create(false).itemCameraLayoutId, create(false).itemImageLayoutId);
         gvImages.setAdapter(imageSelectAdapter);
     }
@@ -546,6 +547,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         ImageParamsConfig imageParamsConfig;
 
         /*********** 选择图片页面动态布局和回调 ***********/
+        int gridColNumbers; // 图片选择页面列数
         @LayoutRes
         int selectedLayoutId; // 选择图片页面布局资源id
         @LayoutRes
@@ -567,6 +569,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         private void init() {
             onResultCallBack = null;
             imageParamsConfig = null;
+            gridColNumbers = DefaultConfigData.GRID_COL_NUMBERS; // 图片选择页面列数
             selectedLayoutId = DefaultConfigData.SELECTED_IMAGE_LAYOUT;
             itemCameraLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_CAMERA_LAYOUT;
             itemImageLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_IMAGE_LAYOUT;
@@ -574,6 +577,17 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             clipSingleLayoutId = DefaultConfigData.CLIP_SINGLE_LAYOUT;
             clipMoreLayoutId = DefaultConfigData.CLIP_MORE_LAYOUT;
             onClipImageChange = null;
+        }
+
+        /**
+         * 设置图片选择页面列数
+         *
+         * @param gridColNumbers 列数
+         * @return
+         */
+        public ImageSelectObservable setGridColNumbers(int gridColNumbers) {
+            this.gridColNumbers = gridColNumbers;
+            return this;
         }
 
         /**

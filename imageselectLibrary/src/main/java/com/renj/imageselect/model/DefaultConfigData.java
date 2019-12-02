@@ -85,6 +85,10 @@ public interface DefaultConfigData {
      */
     boolean IS_SHOW_CAMERA = true;
     /**
+     * 图片选择页面列数
+     */
+    int GRID_COL_NUMBERS = 3;
+    /**
      * 默认选择图片布局资源文件
      */
     int SELECTED_IMAGE_LAYOUT = R.layout.image_select_layout;
