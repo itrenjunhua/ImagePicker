@@ -8,6 +8,8 @@ import com.renj.imageselect.utils.ImageLoaderHelp;
 import com.renj.imageselect.utils.ImageSelectUtils;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
+import java.io.File;
+
 /**
  * ======================================================================
  * <p>
@@ -32,6 +34,7 @@ public class MyApplication extends Application {
 //        ImageSelectUtils.getInstance().configImageSelectParams(
 //                new ImageSelectParams.Builder()
 //                        .loggerTag("MyCustomTag")
+//                        .fileSavePath(new File(""))
 //                        .showLogger(true)
 //                        .center(true)
 //                        .build());
