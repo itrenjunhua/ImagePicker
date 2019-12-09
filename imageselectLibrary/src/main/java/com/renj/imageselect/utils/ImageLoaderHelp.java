@@ -18,14 +18,14 @@ import org.jetbrains.annotations.Contract;
  * <p>
  * ======================================================================
  */
-public class ImageLoaderUtils {
-    private volatile static ImageLoaderUtils instance = new ImageLoaderUtils();
+public class ImageLoaderHelp {
+    private volatile static ImageLoaderHelp instance = new ImageLoaderHelp();
 
-    private ImageLoaderUtils() {
+    private ImageLoaderHelp() {
     }
 
     @Contract(pure = true)
-    public static ImageLoaderUtils newInstance() {
+    public static ImageLoaderHelp getInstance() {
         return instance;
     }
 

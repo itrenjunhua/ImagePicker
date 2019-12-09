@@ -1,6 +1,7 @@
 package com.renj.selecttest.activity;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -12,7 +13,7 @@ import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.PromptUtils;
+import com.renj.imageselect.utils.CommonUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
 import com.renj.selecttest.utils.Utils;
@@ -89,7 +90,7 @@ public class SelectedMyActivity extends BaseActivity {
                     @Override
                     public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
                                                  @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
-                        PromptUtils.i("imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                        Log.i("SelectedMyActivity","imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
                     }
                 })

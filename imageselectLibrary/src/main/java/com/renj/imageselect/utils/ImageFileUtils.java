@@ -1,11 +1,12 @@
 package com.renj.imageselect.utils;
 
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.renj.imageselect.model.DefaultConfigData;
 import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.model.ImageSelectParams;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,7 +25,7 @@ import java.io.OutputStream;
  * <p>
  * ======================================================================
  */
-public class Utils {
+public class ImageFileUtils {
 
     /**
      * 保存图片到文件
@@ -35,7 +36,7 @@ public class Utils {
      */
     @Nullable
     public static ImageModel saveBitmap2File(@NonNull String name, @NonNull Bitmap bitmap) {
-        File saveDir = getSaveDir();
+        File saveDir = CommonUtils.getSaveDir();
         if (saveDir == null || bitmap == null) return null;
 
         try {
@@ -46,7 +47,8 @@ public class Utils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            PromptUtils.e("保存裁剪图片失败 => " + e);
+            if (CommonUtils.isShowLogger())
+                CommonUtils.e("保存裁剪图片失败 => " + e);
         }
         return null;
     }
@@ -62,39 +64,16 @@ public class Utils {
     }
 
     /**
-     * 获取保存路径
-     *
-     * @return
-     */
-    @Nullable
-    private static File getSaveDir() {
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            File file = new File(Environment.getExternalStorageDirectory(), "image_select");
-            if (file == null || !file.exists() || !file.isDirectory())
-                file.mkdirs();
-            return file;
-        }
-        return null;
-    }
-
-    /**
      * 获取使用相机时保存的照片路径
      *
      * @return
      */
     @NonNull
     public static File getCameraSavePath() {
-        String name = "camera_" + System.currentTimeMillis() + ".png";
-        return new File(getSaveDir(), name);
-    }
+        File saveDir = CommonUtils.getSaveDir();
+        if (saveDir == null) return null;
 
-    /**
-     * 开启新线程执行任务
-     *
-     * @param runnable
-     */
-    public static void runOnNewThread(Runnable runnable) {
-        Thread thread = new Thread(runnable);
-        thread.start();
+        String name = "camera_" + System.currentTimeMillis() + ".png";
+        return new File(saveDir, name);
     }
 }

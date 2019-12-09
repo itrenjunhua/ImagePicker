@@ -24,7 +24,7 @@ import android.widget.ImageView;
 import com.renj.imageselect.model.DefaultConfigData;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
-import com.renj.imageselect.utils.Utils;
+import com.renj.imageselect.utils.ImageFileUtils;
 
 import static android.graphics.Canvas.ALL_SAVE_FLAG;
 
@@ -245,7 +245,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
         Bitmap source = getDrawingCache();
         Bitmap bitmap = clipBitmap(clipShape, clipRectF, source);
         setDrawingCacheEnabled(false);
-        return Utils.saveBitmap2File(Utils.getName(), bitmap);
+        return ImageFileUtils.saveBitmap2File(ImageFileUtils.getName(), bitmap);
     }
 
     /**

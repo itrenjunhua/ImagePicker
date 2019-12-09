@@ -22,6 +22,7 @@ import com.renj.imageselect.R;
 import com.renj.imageselect.listener.OnClipImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
+import com.renj.imageselect.utils.CommonUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -105,6 +106,8 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
 
     public void setImageData(List<ImageModel> srcImages) {
         this.srcImages = srcImages;
+        if (CommonUtils.isShowLogger())
+            CommonUtils.i("裁剪：(" + (currentIndex + 1) + " / " + srcImages.size() + ")");
         tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
         if (onClipImageChange != null) {
             onClipImageChange.onDefault(tvClip, tvCancel, currentIndex + 1, srcImages.size());
@@ -113,10 +116,6 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
     }
 
     private OnImageClipMoreListener onImageClipMoreListener;
-
-    public OnImageClipMoreListener getOnImageClipMoreListener() {
-        return onImageClipMoreListener;
-    }
 
     public void setOnImageClipMoreListener(OnImageClipMoreListener onImageClipMoreListener) {
         this.onImageClipMoreListener = onImageClipMoreListener;
@@ -140,6 +139,8 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
                         @Override
                         public void run() {
                             if (currentIndex < srcImages.size()) {
+                                if (CommonUtils.isShowLogger())
+                                    CommonUtils.i("裁剪：(" + (currentIndex + 1) + " / " + srcImages.size() + ")");
                                 tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
                                 if (onClipImageChange != null) {
                                     onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, resultImages, imageParamsConfig.isCircleClip(), (currentIndex + 1), srcImages.size());

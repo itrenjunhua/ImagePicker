@@ -42,4 +42,13 @@ public class FolderModel {
         folders.add(imageModel);
         this.totalCount = folders.size();
     }
+
+    @Override
+    public String toString() {
+        return "FolderModel{" +
+                "name='" + name + '\'' +
+                ", folders=" + folders +
+                ", totalCount=" + totalCount +
+                '}';
+    }
 }

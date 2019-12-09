@@ -23,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
@@ -35,8 +34,8 @@ import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
-import com.renj.imageselect.utils.PromptUtils;
-import com.renj.imageselect.utils.Utils;
+import com.renj.imageselect.utils.CommonUtils;
+import com.renj.imageselect.utils.ImageFileUtils;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
 import com.renj.imageselect.weight.ImageClipView;
 import com.renj.imageselect.weight.ImageMenuDialog;
@@ -249,6 +248,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         imageMenuDialog.setMenuClickListener(new ImageMenuDialog.MenuClickListener() {
             @Override
             public void menuClick(FolderModel folderModel) {
+                if (CommonUtils.isShowLogger())
+                    CommonUtils.i("选中图片目录：" + folderModel);
                 tvSelectMenu.setText(folderModel.name);
                 imageSelectAdapter.setImageModels(folderModel.folders);
             }
@@ -261,8 +262,12 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 int selectCount = imageParamsConfig.getSelectCount();
                 if (imageParamsConfig.isShowCamera() && position == 0) {
                     if (imageSelectAdapter.getCheckImages().size() >= selectCount) {
-                        PromptUtils.showToast(ImageSelectActivity.this, "最多选择" + selectCount + "张图片");
+                        if (CommonUtils.isShowLogger())
+                            CommonUtils.e("最多选择" + selectCount + "张图片");
+                        CommonUtils.showToast(ImageSelectActivity.this, "最多选择" + selectCount + "张图片");
                     } else {
+                        if (CommonUtils.isShowLogger())
+                            CommonUtils.i("打开相机进行拍照");
                         openCamera();
                     }
                     return;
@@ -287,7 +292,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); // 启动系统相机
-        cameraSavePath = Utils.getCameraSavePath();
+        cameraSavePath = ImageFileUtils.getCameraSavePath();
+        if (cameraSavePath == null) return;
         Uri photoUri;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -324,6 +330,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * @param imageModel
      */
     private void handlerCameraResult(@NonNull ImageModel imageModel) {
+        if (CommonUtils.isShowLogger())
+            CommonUtils.i("拍照成功，处理结果中");
         if (imageParamsConfig.getSelectCount() == 1) {
             // 如果是单张，判断是否需要裁剪或直接返回结果
             selectSingle(imageModel);
@@ -336,6 +344,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             } else {
                 if (create(false).onResultCallBack != null)
                     create(false).onResultCallBack.onResult(checkImages);
+                if (CommonUtils.isShowLogger())
+                    CommonUtils.i("拍照成功，直接返回已选择和拍照图片");
                 finish();
             }
         }
@@ -348,6 +358,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void selectSingle(@NonNull ImageModel imageModel) {
         if (imageParamsConfig.isClip()) {
+            if (CommonUtils.isShowLogger())
+                CommonUtils.i("单张图片裁剪");
             imageClipView.setImage(imageModel.path);
             pageStatusChange(STATUS_CLIP_SINGLE_PAGE);
         } else {
@@ -356,6 +368,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 selectResults.add(imageModel);
                 create(false).onResultCallBack.onResult(selectResults);
             }
+            if (CommonUtils.isShowLogger())
+                CommonUtils.i("单张图片选择完成");
             ImageSelectActivity.this.finish();
         }
     }
@@ -367,6 +381,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void selectMore(int position, ImageModel imageModel) {
         boolean isSelected = imageSelectAdapter.addOrClearCheckedPosition(position);
+        if (CommonUtils.isShowLogger()) {
+            CommonUtils.i("图片选择：" + imageModel + " 是否选中：" + isSelected);
+            CommonUtils.i("已选择图片数：" + imageSelectAdapter.getCheckImages().size());
+        }
         tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageParamsConfig.getSelectCount() + ") 确定");
         if (create(false).onSelectedImageChange != null) {
             create(false).onSelectedImageChange.onSelectedChange(tvConfirmSelect, tvCancelSelect,
@@ -379,6 +397,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 开始从SD卡中加载图片
      */
     private void startLoadImage() {
+        if (CommonUtils.isShowLogger())
+            CommonUtils.i("开始加载图片");
         loadingDialog.show();
         LoadSDImageUtils.loadImageForSdCard(this, new LoadSDImageUtils.LoadImageForSdCardFinishListener() {
             @Override
@@ -387,6 +407,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        if (CommonUtils.isShowLogger())
+                            CommonUtils.i("图片加载完成");
                         tvSelectMenu.setText("全部图片");
                         imageSelectAdapter.setImageModels(imageModels);
                         imageMenuDialog.setMenuData(folderModels);
@@ -424,15 +446,21 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 if (clipMoreLayout != null) {
                     clipMoreLayout.setVisibility(View.VISIBLE);
                     List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
+                    if (CommonUtils.isShowLogger())
+                        CommonUtils.i("多张图片裁剪");
                     clipMoreLayout.setImageData(checkImages);
                     clipMoreLayout.setOnImageClipMoreListener(new ImageClipMoreLayout.OnImageClipMoreListener() {
                         @Override
                         public void cancel() {
+                            if (CommonUtils.isShowLogger())
+                                CommonUtils.i("取消图片裁剪");
                             ImageSelectActivity.this.finish();
                         }
 
                         @Override
                         public void finish(List<ImageModel> clipResult) {
+                            if (CommonUtils.isShowLogger())
+                                CommonUtils.i("多张图片裁剪完成");
                             if (create(false).onResultCallBack != null)
                                 create(false).onResultCallBack.onResult(clipResult);
                             ImageSelectActivity.this.finish();
@@ -483,11 +511,15 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         if (R.id.tv_select_menu == vId) {
             imageMenuDialog.show();
         } else if (R.id.tv_cancel == vId || R.id.tv_cancel_select == vId) {
+            if (CommonUtils.isShowLogger())
+                CommonUtils.i("取消");
             finish();
         } else if (R.id.tv_confirm_select == vId) {
             List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
             if (checkImages.size() <= 0) {
-                PromptUtils.showToast(ImageSelectActivity.this, "没有选择图片");
+                if (CommonUtils.isShowLogger())
+                    CommonUtils.e("没有选择图片");
+                CommonUtils.showToast(ImageSelectActivity.this, "没有选择图片");
                 return;
             }
             if (imageParamsConfig.isClip()) {
@@ -495,6 +527,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             } else {
                 if (create(false).onResultCallBack != null)
                     create(false).onResultCallBack.onResult(checkImages);
+                if (CommonUtils.isShowLogger())
+                    CommonUtils.i("选择图片完成");
                 finish();
             }
         } else if (R.id.tv_clip == vId) {
@@ -518,6 +552,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                                 create(false).onResultCallBack.onResult(selectResults);
                             }
                             loadingDialog.dismiss();
+                            if (CommonUtils.isShowLogger())
+                                CommonUtils.i("单张裁剪图片完成");
                             finish();
                         }
                     });

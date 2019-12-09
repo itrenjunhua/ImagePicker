@@ -9,12 +9,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.utils.ImageLoaderUtils;
-import com.renj.imageselect.utils.PromptUtils;
+import com.renj.imageselect.utils.ImageLoaderHelp;
+import com.renj.imageselect.utils.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +84,9 @@ public class ImageSelectAdapter extends BaseAdapter {
     public boolean addOrClearCheckedPosition(int position) {
         int index = showCamera ? position - 1 : position;
         if (checkImages.size() >= maxCount && !checkImages.contains(imageModels.get(index))) {
-            PromptUtils.showToast(context, "最多选择" + maxCount + "张图片");
+            if (CommonUtils.isShowLogger())
+                CommonUtils.e("最多选择" + maxCount + "张图片");
+            CommonUtils.showToast(context, "最多选择" + maxCount + "张图片");
             return false;
         }
 
@@ -181,7 +182,7 @@ public class ImageSelectAdapter extends BaseAdapter {
         }
 
         public void setData(@NonNull ImageModel imageModel) {
-            ImageLoaderUtils.newInstance().loadImage(imageModel.path, imageView);
+            ImageLoaderHelp.getInstance().loadImage(imageModel.path, imageView);
         }
     }
 }

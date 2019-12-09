@@ -18,7 +18,6 @@ import com.renj.imageselect.R;
  * ======================================================================
  */
 public interface DefaultConfigData {
-
     /**
      * 裁剪宽度
      */

@@ -2,6 +2,7 @@ package com.renj.selecttest.activity;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -14,7 +15,7 @@ import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.PromptUtils;
+import com.renj.imageselect.utils.CommonUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
 import com.renj.selecttest.utils.Utils;
@@ -92,14 +93,14 @@ public class ClipMoreMyActivity extends BaseActivity {
                 .onSelectedImageChange(new OnSelectedImageChange() {
                     @Override
                     public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
-                        PromptUtils.i("selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                        Log.i("ClipMoreMyActivity", "selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
                     }
 
                     @Override
                     public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
                                                  @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
-                        PromptUtils.i("imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                        Log.i("ClipMoreMyActivity", "imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
                     }
                 })
@@ -108,7 +109,7 @@ public class ClipMoreMyActivity extends BaseActivity {
                     public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
                                              @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
                                              boolean isCircleClip, int clipCount, int totalCount) {
-                        PromptUtils.i("imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
+                        Log.i("ClipMoreMyActivity", "imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
                     }
                 })
                 .imageParamsConfig(imageParamsConfig)

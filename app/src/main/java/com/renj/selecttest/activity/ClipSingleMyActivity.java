@@ -2,6 +2,7 @@ package com.renj.selecttest.activity;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,7 +12,7 @@ import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.PromptUtils;
+import com.renj.imageselect.utils.CommonUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
@@ -76,7 +77,7 @@ public class ClipSingleMyActivity extends BaseActivity {
                                              @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
                                              boolean isCircleClip, int clipCount, int totalCount) {
                         // clipView.setText(clipCount + "/" + totalCount + "裁剪");
-                        PromptUtils.i("imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
+                        Log.i("ClipSingleMyActivity","imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
                     }
                 })
                 .imageParamsConfig(imageParamsConfig)

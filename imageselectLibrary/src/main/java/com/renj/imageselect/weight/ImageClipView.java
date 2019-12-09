@@ -14,8 +14,8 @@ import android.widget.RelativeLayout;
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
-import com.renj.imageselect.utils.ImageLoaderUtils;
-import com.renj.imageselect.utils.Utils;
+import com.renj.imageselect.utils.CommonUtils;
+import com.renj.imageselect.utils.ImageLoaderHelp;
 
 /**
  * ======================================================================
@@ -68,7 +68,7 @@ public class ImageClipView extends RelativeLayout {
      * @param path 图片路径
      */
     public void setImage(@NonNull String path) {
-        ImageLoaderUtils.newInstance().loadImage(path, photoView);
+        ImageLoaderHelp.getInstance().loadImage(path, photoView);
     }
 
     /**
@@ -86,7 +86,7 @@ public class ImageClipView extends RelativeLayout {
      * @return {@link ImageModel} 对象
      */
     public void cut(@NonNull final CutListener cutListener) {
-        Utils.runOnNewThread(new Runnable() {
+        CommonUtils.runOnNewThread(new Runnable() {
             @Override
             public void run() {
                 clipView.confirmClip(new ClipView.OnClipRangeListener() {

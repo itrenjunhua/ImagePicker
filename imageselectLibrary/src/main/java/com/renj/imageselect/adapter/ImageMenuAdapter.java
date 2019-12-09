@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.FolderModel;
-import com.renj.imageselect.utils.ImageLoaderUtils;
+import com.renj.imageselect.utils.CommonUtils;
+import com.renj.imageselect.utils.ImageLoaderHelp;
 
 import java.util.List;
 
@@ -101,8 +102,10 @@ public class ImageMenuAdapter extends BaseAdapter {
         }
 
         public void setData(FolderModel folderModel, int position) {
+            if (CommonUtils.isShowLogger())
+                CommonUtils.i("目录：" + folderModel.name + " => 图片数：" + folderModel.totalCount);
             textView.setText(folderModel.name + "(" + folderModel.totalCount + ")");
-            ImageLoaderUtils.newInstance().loadImage(folderModel.folders.get(0).path, imageView);
+            ImageLoaderHelp.getInstance().loadImage(folderModel.folders.get(0).path, imageView);
 
             if (position == selectPosition) {
                 rbMenu.setChecked(true);

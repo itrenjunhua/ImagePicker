@@ -3,7 +3,8 @@ package com.renj.selecttest;
 import android.app.Application;
 import android.widget.ImageView;
 
-import com.renj.imageselect.utils.ImageLoaderUtils;
+import com.renj.imageselect.model.ImageSelectParams;
+import com.renj.imageselect.utils.ImageLoaderHelp;
 import com.renj.imageselect.utils.ImageSelectUtils;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
@@ -28,7 +29,13 @@ public class MyApplication extends Application {
 
         ImageLoaderManager.init(this);
 
-        ImageSelectUtils.getInstance().configImageLoaderModule(new ImageLoaderUtils.ImageLoaderModule() {
+//        ImageSelectUtils.getInstance().configImageSelectParams(
+//                new ImageSelectParams.Builder()
+//                        .loggerTag("MyCustomTag")
+//                        .showLogger(true)
+//                        .center(true)
+//                        .build());
+        ImageSelectUtils.getInstance().configImageLoaderModule(new ImageLoaderHelp.ImageLoaderModule() {
             @Override
             public void loadImage(String path, ImageView imageView) {
                 // 使用图片加载框架加载图片

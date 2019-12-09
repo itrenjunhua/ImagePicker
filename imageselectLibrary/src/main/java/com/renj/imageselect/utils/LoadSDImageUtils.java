@@ -39,7 +39,7 @@ public class LoadSDImageUtils {
      */
     public static void loadImageForSdCard(@NonNull Activity context, @NonNull LoadImageForSdCardFinishListener loadImageForSdCardFinishListener) {
         LoadImageForSdCard loadImageForSdCard = new LoadImageForSdCard(context, loadImageForSdCardFinishListener);
-        Utils.runOnNewThread(loadImageForSdCard);
+        CommonUtils.runOnNewThread(loadImageForSdCard);
     }
 
 
