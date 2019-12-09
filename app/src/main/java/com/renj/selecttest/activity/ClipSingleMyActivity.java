@@ -11,7 +11,7 @@ import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.Logger;
+import com.renj.imageselect.utils.PromptUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
@@ -67,7 +67,7 @@ public class ClipSingleMyActivity extends BaseActivity {
                 .maskColor(Color.parseColor("#88000000"))
                 .clipBorderColor(Color.parseColor("#ff0000"))
                 .build();
-        ImageSelectUtils.newInstance().create()
+        ImageSelectUtils.getInstance().create()
                 // .selectedLayoutId(R.layout.my_selected_layout) // 自定义选择图片布局
                 .clipSingleLayoutId(R.layout.my_clip_single_layout) // 自定义单张裁剪部分布局
                 .onClipImageChange(new OnClipImageChange() {
@@ -76,7 +76,7 @@ public class ClipSingleMyActivity extends BaseActivity {
                                              @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
                                              boolean isCircleClip, int clipCount, int totalCount) {
                         // clipView.setText(clipCount + "/" + totalCount + "裁剪");
-                        Logger.i("imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
+                        PromptUtils.i("imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
                     }
                 })
                 .imageParamsConfig(imageParamsConfig)

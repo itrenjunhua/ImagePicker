@@ -35,6 +35,7 @@ import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
+import com.renj.imageselect.utils.PromptUtils;
 import com.renj.imageselect.utils.Utils;
 import com.renj.imageselect.weight.ImageClipMoreLayout;
 import com.renj.imageselect.weight.ImageClipView;
@@ -260,7 +261,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 int selectCount = imageParamsConfig.getSelectCount();
                 if (imageParamsConfig.isShowCamera() && position == 0) {
                     if (imageSelectAdapter.getCheckImages().size() >= selectCount) {
-                        Toast.makeText(ImageSelectActivity.this, "最多选择" + selectCount + "张图片", Toast.LENGTH_SHORT).show();
+                        PromptUtils.showToast(ImageSelectActivity.this, "最多选择" + selectCount + "张图片");
                     } else {
                         openCamera();
                     }
@@ -486,7 +487,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         } else if (R.id.tv_confirm_select == vId) {
             List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
             if (checkImages.size() <= 0) {
-                Toast.makeText(ImageSelectActivity.this, "没有选择图片", Toast.LENGTH_SHORT).show();
+                PromptUtils.showToast(ImageSelectActivity.this, "没有选择图片");
                 return;
             }
             if (imageParamsConfig.isClip()) {
@@ -585,7 +586,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
          * @param gridColNumbers 列数
          * @return
          */
-        public ImageSelectObservable setGridColNumbers(int gridColNumbers) {
+        public ImageSelectObservable gridColNumbers(int gridColNumbers) {
             this.gridColNumbers = gridColNumbers;
             return this;
         }

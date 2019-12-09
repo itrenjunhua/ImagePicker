@@ -46,7 +46,7 @@ public class Utils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.e("保存裁剪图片失败 => " + e);
+            PromptUtils.e("保存裁剪图片失败 => " + e);
         }
         return null;
     }

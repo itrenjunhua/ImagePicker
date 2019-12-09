@@ -18,7 +18,7 @@ Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了
 **注意：在使用选择和裁剪图片之前，必须先配置用于图片加载的框架，否则不能加载图片。**  
 原因：在主项目中进行配置图片加载框架，不在选择裁剪框架中导入图片加载框架加载图片，避免和主项目使用不同的图片框架造成不必要的空间占用和代码冗余。
 
-    ImageSelectUtils.newInstance().configImageLoaderModule(new ImageLoaderUtils.ImageLoaderModule() {
+    ImageSelectUtils.getInstance().configImageLoaderModule(new ImageLoaderUtils.ImageLoaderModule() {
                 @Override
                 public void loadImage(String path, ImageView imageView) {
                     // 使用图片加载框架加载图片
@@ -36,7 +36,7 @@ Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了
             .isContinuityEnlarge(false)
             .isClip(false)
             .build();
-    ImageSelectUtils.newInstance().create()
+    ImageSelectUtils.getInstance().create()
             .imageParamsConfig(imageParamsConfig)
             .openImageSelectPage(this)
             .onResult(new OnResultCallBack() {
@@ -55,7 +55,7 @@ Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了
             .isContinuityEnlarge(false)
             .isClip(false)
             .build();
-    ImageSelectUtils.newInstance().create()
+    ImageSelectUtils.getInstance().create()
             .selectedLayoutId(R.layout.my_selected_layout)
             .selectItemCameraLayoutId(R.layout.my_image_select_camera_item)
             .selectItemImageLayoutId(R.layout.my_image_select_item)
@@ -97,7 +97,7 @@ Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了
             .maskColor(Color.parseColor("#88000000"))
             .clipBorderColor(Color.parseColor("#ff0000"))
             .build();
-    ImageSelectUtils.newInstance().create()
+    ImageSelectUtils.getInstance().create()
             .imageParamsConfig(imageParamsConfig)
             .openImageSelectPage(this)
             .onResult(new OnResultCallBack() {
@@ -121,7 +121,7 @@ Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了
             .maskColor(Color.parseColor("#88000000"))
             .clipBorderColor(Color.parseColor("#ff0000"))
             .build();
-    ImageSelectUtils.newInstance().create()
+    ImageSelectUtils.getInstance().create()
             // .selectedLayoutId(R.layout.my_selected_layout) // 自定义选择图片布局
             .clipSingleLayoutId(R.layout.my_clip_single_layout) // 自定义单张裁剪部分布局
             .onClipImageChange(new OnClipImageChange() {
@@ -159,7 +159,7 @@ Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了
             .maskColor(Color.parseColor("#80000000"))
             .clipBorderColor(Color.parseColor("#ffffff"))
             .build();
-    ImageSelectUtils.newInstance().create()
+    ImageSelectUtils.getInstance().create()
             .imageParamsConfig(imageParamsConfig)
             .openImageSelectPage(this)
             .onResult(new OnResultCallBack() {
@@ -186,7 +186,7 @@ Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了
             .maskColor(Color.parseColor("#80000000"))
             .clipBorderColor(Color.parseColor("#ffffff"))
             .build();
-    ImageSelectUtils.newInstance().create()
+    ImageSelectUtils.getInstance().create()
             .selectedLayoutId(R.layout.my_selected_layout)
             .clipMoreLayoutId(R.layout.my_clip_more_layout)
             .onSelectedImageChange(new OnSelectedImageChange() {

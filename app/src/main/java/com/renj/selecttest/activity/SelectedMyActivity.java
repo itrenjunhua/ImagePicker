@@ -12,7 +12,7 @@ import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.Logger;
+import com.renj.imageselect.utils.PromptUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
 import com.renj.selecttest.utils.Utils;
@@ -76,7 +76,7 @@ public class SelectedMyActivity extends BaseActivity {
                 .isContinuityEnlarge(false)
                 .isClip(false)
                 .build();
-        ImageSelectUtils.newInstance().create()
+        ImageSelectUtils.getInstance().create()
                 .selectedLayoutId(R.layout.my_selected_layout)
                 .selectItemCameraLayoutId(R.layout.my_image_select_camera_item)
                 .selectItemImageLayoutId(R.layout.my_image_select_item)
@@ -89,7 +89,7 @@ public class SelectedMyActivity extends BaseActivity {
                     @Override
                     public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
                                                  @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
-                        Logger.i("imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                        PromptUtils.i("imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
                     }
                 })

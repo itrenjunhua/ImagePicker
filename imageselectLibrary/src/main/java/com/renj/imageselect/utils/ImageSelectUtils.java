@@ -24,7 +24,7 @@ public class ImageSelectUtils {
     }
 
     @Contract(pure = true)
-    public static ImageSelectUtils newInstance() {
+    public static ImageSelectUtils getInstance() {
         return instance;
     }
 

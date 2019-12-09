@@ -1,6 +1,11 @@
 package com.renj.imageselect.utils;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
+
+import com.renj.imageselect.BuildConfig;
 
 /**
  * ======================================================================
@@ -9,27 +14,25 @@ import android.util.Log;
  * <p>
  * 创建时间：2017-07-06   15:09
  * <p>
- * 描述：自定义日志打印工具类，支持设置Tag，打印消息的级别和是否打印全类名(类的全路径名)<br/>
- * 打印形式为：(全)类名.方法名(所在行数): 打印的信息
+ * 描述：提示信息工具类
  * <p>
  * 修订历史：
  * <p>
  * ======================================================================
  */
-public class Logger {
+public class PromptUtils {
     /**
-     * Log日子的 Tag，默认 Logger
+     * Log日子的 Tag，默认 ImageSelect Logger
      */
-    private static String TAG = "Logger";
+    private static String TAG = "ImageSelect Logger";
     /**
      * 是否打印全部类名(类的全路径名)，默认false
      */
     private static boolean IS_FULL_CLASSNAME;
-
     /**
      * 是否 debug 版本，true 是调试版本；false 是正式版本
      */
-    private static boolean isDebug = true;
+    private static boolean isDebug = BuildConfig.DEBUG;
 
     /**
      * 设置是否打印类的全路径名
@@ -37,16 +40,25 @@ public class Logger {
      * @param isFullClassName true：打印类的全路径名
      */
     public static void isFullClassName(boolean isFullClassName) {
-        Logger.IS_FULL_CLASSNAME = isFullClassName;
+        PromptUtils.IS_FULL_CLASSNAME = isFullClassName;
     }
 
     /**
-     * 设置Log的Tag，默认 "MyLogger"
+     * 是否需要显示日志信息，默认为debug版本下显示，release版本不显示
+     *
+     * @param showLogger true：一直显示
+     */
+    public static void isShowLogger(boolean showLogger) {
+        PromptUtils.isDebug = showLogger;
+    }
+
+    /**
+     * 设置Log的Tag，默认 {@link #TAG}
      *
      * @param tag
      */
-    public static void setAppTAG(String tag) {
-        Logger.TAG = tag;
+    public static void setLoggerTAG(String tag) {
+        PromptUtils.TAG = tag;
     }
 
 
@@ -55,7 +67,6 @@ public class Logger {
             Log.v(TAG, getLogTitle() + msg);
         }
     }
-
 
     public static void d(String msg) {
         if (isDebug) {
@@ -96,5 +107,14 @@ public class Logger {
             }
         }
         return className + "." + elm.getMethodName() + "(" + elm.getLineNumber() + ")" + ": ";
+    }
+
+    /**
+     * 显示Toast
+     */
+    public static void showToast(Context context, String msg) {
+        Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 }

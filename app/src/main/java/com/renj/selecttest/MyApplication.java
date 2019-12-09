@@ -28,7 +28,7 @@ public class MyApplication extends Application {
 
         ImageLoaderManager.init(this);
 
-        ImageSelectUtils.newInstance().configImageLoaderModule(new ImageLoaderUtils.ImageLoaderModule() {
+        ImageSelectUtils.getInstance().configImageLoaderModule(new ImageLoaderUtils.ImageLoaderModule() {
             @Override
             public void loadImage(String path, ImageView imageView) {
                 // 使用图片加载框架加载图片

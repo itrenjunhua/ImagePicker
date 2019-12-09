@@ -73,7 +73,7 @@ public class SelectedActivity extends BaseActivity {
                 .isContinuityEnlarge(false)
                 .isClip(false)
                 .build();
-        ImageSelectUtils.newInstance().create()
+        ImageSelectUtils.getInstance().create()
                 .imageParamsConfig(imageParamsConfig)
                 .openImageSelectPage(this)
                 .onResult(new OnResultCallBack() {

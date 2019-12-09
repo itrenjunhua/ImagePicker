@@ -14,7 +14,7 @@ import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.Logger;
+import com.renj.imageselect.utils.PromptUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
 import com.renj.selecttest.utils.Utils;
@@ -86,20 +86,20 @@ public class ClipMoreMyActivity extends BaseActivity {
                 .maskColor(Color.parseColor("#80000000"))
                 .clipBorderColor(Color.parseColor("#ffffff"))
                 .build();
-        ImageSelectUtils.newInstance().create()
+        ImageSelectUtils.getInstance().create()
                 .selectedLayoutId(R.layout.my_selected_layout)
                 .clipMoreLayoutId(R.layout.my_clip_more_layout)
                 .onSelectedImageChange(new OnSelectedImageChange() {
                     @Override
                     public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
-                        Logger.i("selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                        PromptUtils.i("selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
                     }
 
                     @Override
                     public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
                                                  @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
-                        Logger.i("imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                        PromptUtils.i("imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
                     }
                 })
@@ -108,7 +108,7 @@ public class ClipMoreMyActivity extends BaseActivity {
                     public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
                                              @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
                                              boolean isCircleClip, int clipCount, int totalCount) {
-                        Logger.i("imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
+                        PromptUtils.i("imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
                     }
                 })
                 .imageParamsConfig(imageParamsConfig)

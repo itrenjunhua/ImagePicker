@@ -64,7 +64,7 @@ public class ClipSingleActivity extends BaseActivity {
                 .maskColor(Color.parseColor("#88000000"))
                 .clipBorderColor(Color.parseColor("#ff0000"))
                 .build();
-        ImageSelectUtils.newInstance().create()
+        ImageSelectUtils.getInstance().create()
                 .imageParamsConfig(imageParamsConfig)
                 .openImageSelectPage(this)
                 .onResult(new OnResultCallBack() {
