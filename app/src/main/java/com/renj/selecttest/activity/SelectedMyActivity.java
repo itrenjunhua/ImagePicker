@@ -1,6 +1,7 @@
 package com.renj.selecttest.activity;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -55,12 +56,7 @@ public class SelectedMyActivity extends BaseActivity {
         imageShowAdapter = new ImageShowAdapter(this);
         gvImages.setAdapter(imageShowAdapter);
 
-        tvSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedImage();
-            }
-        });
+        tvSelect.setOnClickListener(v -> selectedImage());
     }
 
     private void selectedImage() {
@@ -90,17 +86,12 @@ public class SelectedMyActivity extends BaseActivity {
                     @Override
                     public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
                                                  @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
-                        Log.i("SelectedMyActivity","imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                        Log.i("SelectedMyActivity", "imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
                     }
                 })
                 .imageParamsConfig(imageParamsConfig)
                 .openImageSelectPage(this)
-                .onResult(new OnResultCallBack() {
-                    @Override
-                    public void onResult(List<ImageModel> resultList) {
-                        imageShowAdapter.setDatas(resultList);
-                    }
-                });
+                .onResult(resultList -> imageShowAdapter.setDatas(resultList));
     }
 }

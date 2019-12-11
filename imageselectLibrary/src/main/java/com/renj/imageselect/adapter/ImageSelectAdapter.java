@@ -1,14 +1,15 @@
 package com.renj.imageselect.adapter;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.model.ImageModel;

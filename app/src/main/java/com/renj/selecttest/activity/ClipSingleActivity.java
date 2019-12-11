@@ -43,12 +43,7 @@ public class ClipSingleActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        tvSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                singleImage();
-            }
-        });
+        tvSelect.setOnClickListener(v -> singleImage());
     }
 
     private void singleImage() {
@@ -67,12 +62,7 @@ public class ClipSingleActivity extends BaseActivity {
         ImageSelectUtils.getInstance().create()
                 .imageParamsConfig(imageParamsConfig)
                 .openImageSelectPage(this)
-                .onResult(new OnResultCallBack() {
-                    @Override
-                    public void onResult(List<ImageModel> resultList) {
-                        ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult);
-                    }
-                });
+                .onResult(resultList -> ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult));
     }
 
 }

@@ -3,8 +3,6 @@ package com.renj.imageselect.utils;
 import com.renj.imageselect.activity.ImageSelectActivity;
 import com.renj.imageselect.model.ImageSelectParams;
 
-import org.jetbrains.annotations.Contract;
-
 /**
  * ======================================================================
  * <p>
@@ -25,7 +23,6 @@ public class ImageSelectUtils {
         CommonUtils.initParams(new ImageSelectParams.Builder().build());
     }
 
-    @Contract(pure = true)
     public static ImageSelectUtils getInstance() {
         return instance;
     }

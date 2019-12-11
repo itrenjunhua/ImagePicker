@@ -30,52 +30,34 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        btSelected.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SelectedActivity.class);
-                startActivity(intent);
-            }
+        btSelected.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SelectedActivity.class);
+            startActivity(intent);
         });
 
-        btSelectedMy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SelectedMyActivity.class);
-                startActivity(intent);
-            }
+        btSelectedMy.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SelectedMyActivity.class);
+            startActivity(intent);
         });
 
-        btClipSingle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ClipSingleActivity.class);
-                startActivity(intent);
-            }
+        btClipSingle.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ClipSingleActivity.class);
+            startActivity(intent);
         });
 
-        btClipSingleMy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ClipSingleMyActivity.class);
-                startActivity(intent);
-            }
+        btClipSingleMy.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ClipSingleMyActivity.class);
+            startActivity(intent);
         });
 
-        btClipMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ClipMoreActivity.class);
-                startActivity(intent);
-            }
+        btClipMore.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ClipMoreActivity.class);
+            startActivity(intent);
         });
 
-        btClipMoreMy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ClipMoreMyActivity.class);
-                startActivity(intent);
-            }
+        btClipMoreMy.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ClipMoreMyActivity.class);
+            startActivity(intent);
         });
     }
 }

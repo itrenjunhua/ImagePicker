@@ -3,7 +3,7 @@ package com.renj.imageloaderlibrary.utils;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Looper;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.WindowManager;
 
 import java.util.ArrayList;
@@ -41,7 +41,6 @@ public class Utils {
      *
      * @return 屏幕的宽
      */
-    @org.jetbrains.annotations.Contract(pure = true)
     public static int getWinWidth() {
         return winWidth;
     }
@@ -51,7 +50,6 @@ public class Utils {
      *
      * @return 屏幕的高
      */
-    @org.jetbrains.annotations.Contract(pure = true)
     public static int getWinHeight() {
         return winHeight;
     }

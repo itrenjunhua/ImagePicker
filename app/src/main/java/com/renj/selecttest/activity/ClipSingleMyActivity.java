@@ -1,7 +1,9 @@
 package com.renj.selecttest.activity;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -47,12 +49,7 @@ public class ClipSingleMyActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        tvSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                singleImage();
-            }
-        });
+        tvSelect.setOnClickListener(v -> singleImage());
     }
 
     private void singleImage() {
@@ -77,16 +74,11 @@ public class ClipSingleMyActivity extends BaseActivity {
                                              @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
                                              boolean isCircleClip, int clipCount, int totalCount) {
                         // clipView.setText(clipCount + "/" + totalCount + "裁剪");
-                        Log.i("ClipSingleMyActivity","imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
+                        Log.i("ClipSingleMyActivity", "imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
                     }
                 })
                 .imageParamsConfig(imageParamsConfig)
                 .openImageSelectPage(this)
-                .onResult(new OnResultCallBack() {
-                    @Override
-                    public void onResult(List<ImageModel> resultList) {
-                        ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult);
-                    }
-                });
+                .onResult(resultList -> ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult));
     }
 }

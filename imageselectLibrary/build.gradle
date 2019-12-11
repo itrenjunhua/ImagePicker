@@ -10,7 +10,7 @@ android {
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -25,9 +25,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // support
-    implementation rootProject.ext.dependencies["androidSupportV7"]
-    // jetbrains 注解
-    implementation rootProject.ext.dependencies["jetbrainsAnnotations"]
+    implementation rootProject.ext.dependencies["appcompat"]
     // 防止 Android Studio 升级之后出现 Cannot access android.arch.lifecycle.ViewModelStoreOwner 错误
-    implementation 'android.arch.lifecycle:extensions:1.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 }

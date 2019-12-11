@@ -1,12 +1,11 @@
 package com.renj.imageselect.utils;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.renj.imageselect.model.DefaultConfigData;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.model.ImageSelectParams;
 
 import java.io.File;
 import java.io.FileOutputStream;

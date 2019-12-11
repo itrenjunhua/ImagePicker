@@ -1,6 +1,7 @@
 package com.renj.imageselect.listener;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+
 import android.widget.TextView;
 
 import com.renj.imageselect.model.ImageModel;
@@ -37,13 +38,13 @@ public class OnClipImageChange {
     /**
      * 图片发生裁剪时回调(主要方便动态修改显示的文字)<br/>
      *
-     * @param clipView     裁剪按钮控件
-     * @param cancelView   取消按钮控件
-     * @param imageModel   当前裁剪完成的图片
-     * @param clipResultList     裁剪后的图片集合
-     * @param isCircleClip 是否圆形裁剪
-     * @param clipCount    当前已裁剪的张数
-     * @param totalCount   共需要裁剪的张数
+     * @param clipView       裁剪按钮控件
+     * @param cancelView     取消按钮控件
+     * @param imageModel     当前裁剪完成的图片
+     * @param clipResultList 裁剪后的图片集合
+     * @param isCircleClip   是否圆形裁剪
+     * @param clipCount      当前已裁剪的张数
+     * @param totalCount     共需要裁剪的张数
      */
     public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
                              @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,

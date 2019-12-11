@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,7 +112,7 @@ public class ImageClipView extends RelativeLayout {
         photoView.setClipViewParams(imageParamsConfig);
     }
 
-    public interface CutListener{
+    public interface CutListener {
         void cutFinish(ImageModel imageModel);
     }
 }

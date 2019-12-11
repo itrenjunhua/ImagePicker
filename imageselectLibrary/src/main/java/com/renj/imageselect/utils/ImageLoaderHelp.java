@@ -2,8 +2,6 @@ package com.renj.imageselect.utils;
 
 import android.widget.ImageView;
 
-import org.jetbrains.annotations.Contract;
-
 /**
  * ======================================================================
  * <p>
@@ -24,7 +22,6 @@ public class ImageLoaderHelp {
     private ImageLoaderHelp() {
     }
 
-    @Contract(pure = true)
     public static ImageLoaderHelp getInstance() {
         return instance;
     }

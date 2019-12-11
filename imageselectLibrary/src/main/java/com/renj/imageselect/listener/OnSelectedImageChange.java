@@ -1,7 +1,8 @@
 package com.renj.imageselect.listener;
 
-import android.support.annotation.NonNull;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.renj.imageselect.model.ImageModel;
 

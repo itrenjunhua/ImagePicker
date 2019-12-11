@@ -51,12 +51,7 @@ public class SelectedActivity extends BaseActivity {
         imageShowAdapter = new ImageShowAdapter(this);
         gvImages.setAdapter(imageShowAdapter);
 
-        tvSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedImage();
-            }
-        });
+        tvSelect.setOnClickListener(v -> selectedImage());
     }
 
     private void selectedImage() {
@@ -76,12 +71,7 @@ public class SelectedActivity extends BaseActivity {
         ImageSelectUtils.getInstance().create()
                 .imageParamsConfig(imageParamsConfig)
                 .openImageSelectPage(this)
-                .onResult(new OnResultCallBack() {
-                    @Override
-                    public void onResult(List<ImageModel> resultList) {
-                        imageShowAdapter.setDatas(resultList);
-                    }
-                });
+                .onResult(resultList -> imageShowAdapter.setDatas(resultList));
     }
 
 }

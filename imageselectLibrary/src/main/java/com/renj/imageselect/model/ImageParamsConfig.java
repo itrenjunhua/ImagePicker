@@ -2,8 +2,9 @@ package com.renj.imageselect.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.FloatRange;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.FloatRange;
+import androidx.annotation.NonNull;
 
 import com.renj.imageselect.listener.OnResultCallBack;
 
@@ -80,7 +81,7 @@ public class ImageParamsConfig implements Parcelable {
         return this.maxScale;
     }
 
-    public float getBoundaryResistance(){
+    public float getBoundaryResistance() {
         return this.boundaryResistance;
     }
 
@@ -329,7 +330,6 @@ public class ImageParamsConfig implements Parcelable {
         }
 
         @NonNull
-        @org.jetbrains.annotations.Contract(pure = true)
         @Override
         public ImageParamsConfig[] newArray(int size) {
             return new ImageParamsConfig[size];

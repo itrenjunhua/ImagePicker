@@ -1,7 +1,9 @@
 package com.renj.selecttest.activity;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -15,7 +17,6 @@ import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.CommonUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
 import com.renj.selecttest.utils.Utils;
@@ -57,12 +58,7 @@ public class ClipMoreMyActivity extends BaseActivity {
         imageShowAdapter = new ImageShowAdapter(this);
         gvImages.setAdapter(imageShowAdapter);
 
-        tvSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moreImages();
-            }
-        });
+        tvSelect.setOnClickListener(v -> moreImages());
     }
 
     private void moreImages() {
@@ -114,11 +110,6 @@ public class ClipMoreMyActivity extends BaseActivity {
                 })
                 .imageParamsConfig(imageParamsConfig)
                 .openImageSelectPage(this)
-                .onResult(new OnResultCallBack() {
-                    @Override
-                    public void onResult(List<ImageModel> resultList) {
-                        imageShowAdapter.setDatas(resultList);
-                    }
-                });
+                .onResult(resultList -> imageShowAdapter.setDatas(resultList));
     }
 }

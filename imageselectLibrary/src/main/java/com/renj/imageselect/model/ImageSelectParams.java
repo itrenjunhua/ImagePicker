@@ -1,7 +1,8 @@
 package com.renj.imageselect.model;
 
 import android.os.Environment;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.renj.imageselect.BuildConfig;
 

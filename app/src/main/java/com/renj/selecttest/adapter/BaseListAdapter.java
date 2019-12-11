@@ -2,7 +2,7 @@ package com.renj.selecttest.adapter;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +39,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
         this.context = fragment.getActivity();
     }
 
-    public BaseListAdapter(@NonNull android.support.v4.app.Fragment fragment) {
+    public BaseListAdapter(@NonNull androidx.fragment.app.Fragment fragment) {
         this.context = fragment.getActivity();
     }
 
@@ -53,7 +53,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
         this.dataList = dataList;
     }
 
-    public BaseListAdapter(@NonNull android.support.v4.app.Fragment fragment, @NonNull List<T> dataList) {
+    public BaseListAdapter(@NonNull androidx.fragment.app.Fragment fragment, @NonNull List<T> dataList) {
         this.context = fragment.getActivity();
         this.dataList = dataList;
     }

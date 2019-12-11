@@ -53,12 +53,7 @@ public class ClipMoreActivity extends BaseActivity {
         imageShowAdapter = new ImageShowAdapter(this);
         gvImages.setAdapter(imageShowAdapter);
 
-        tvSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moreImages();
-            }
-        });
+        tvSelect.setOnClickListener(v -> moreImages());
     }
 
     private void moreImages() {
@@ -86,11 +81,6 @@ public class ClipMoreActivity extends BaseActivity {
         ImageSelectUtils.getInstance().create()
                 .imageParamsConfig(imageParamsConfig)
                 .openImageSelectPage(this)
-                .onResult(new OnResultCallBack() {
-                    @Override
-                    public void onResult(List<ImageModel> resultList) {
-                        imageShowAdapter.setDatas(resultList);
-                    }
-                });
+                .onResult(resultList -> imageShowAdapter.setDatas(resultList));
     }
 }
