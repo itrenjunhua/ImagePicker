@@ -14,10 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data
-            android:name="com.renj.imageloaderlibrary.glide.MyGlideModule"
-            android:value="AppGlideModule" />
-
         <activity
             android:name="com.renj.selecttest.activity.MainActivity"
             android:label="@string/image_selected_clip">
