@@ -19,7 +19,7 @@ Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了
 
 # 使用
 ## 配置加载框架
-**注意：在使用选择和裁剪图片之前，必须先配置用于图片加载的框架，否则不能加载图片。**  
+**注意：在使用选择和裁剪图片之前，必须先配置用于图片加载的框架，否则不能加载图片。[点击查看图片加载框架](https://github.com/itrenjunhua/ImageLoader)**  
 原因：在主项目中进行配置图片加载框架，不在选择裁剪框架中导入图片加载框架加载图片，避免和主项目使用不同的图片框架造成不必要的空间占用和代码冗余。
 
 	// 配置全局参数
@@ -237,6 +237,42 @@ Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了
 **注意：以上代码中使用自定义布局修改样式时，请认真阅读对应方法注释。
 在对应默认布局文件中有 id 的控件为必须控件，在自定义的布局文件中必须存在，
 并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。**
+
+
+## 混淆
+
+* imageselectLibrary库
+
+		-keep class com.renj.imageselect.**{*;}
+		-dontwarn com.renj.imageselect.**
+	
+    
+* imageloaderlibrary库 [点击查看图片加载框架](https://github.com/itrenjunhua/ImageLoader)
+
+		-keep class com.renj.imageloaderlibrary.**{*;}
+		-keep public class * extends com.renj.imageloaderlibrary.config.ImageLoadConfig
+		-keep public class * implements com.renj.imageloaderlibrary.loader.IImageLoaderModule
+		-keep emum com.renj.imageloaderlibrary.config.ImageLoadLibrary{
+          **[] $VALUES;
+          public ** valueOf(java.lang.String);
+          public *;
+        }
+		-dontwarn com.renj.imageloaderlibrary.**
+    
+* glidelibrary库 [点击查看图片加载框架](https://github.com/itrenjunhua/ImageLoader)
+
+		-keep class com.renj.glide.**{*;}
+		-dontwarn com.renj.glide.**
+		
+		# Glide库混淆
+		-keep public class * implements com.bumptech.glide.module.GlideModule
+        -keep public class * extends com.bumptech.glide.module.AppGlideModule
+        -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+          **[] $VALUES;
+          public *;
+        }
+        # for DexGuard only
+        -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 
 
