@@ -238,8 +238,39 @@ Android 图片选择、裁剪代码库(**imageselectLibrary**)，主要实现了
 在对应默认布局文件中有 id 的控件为必须控件，在自定义的布局文件中必须存在，
 并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。**
 
+## 混淆
 
+* imageselectLibrary库
 
+		-keep class com.renj.imageselect.**{*;}
+		-dontwarn com.renj.imageselect.**
+    
+* imageloaderlibrary库 [点击查看图片加载框架](https://github.com/itrenjunhua/ImageLoader)
+
+		-keep class com.renj.imageloaderlibrary.**{*;}
+		-keep public class * extends com.renj.imageloaderlibrary.config.ImageLoadConfig
+		-keep public class * implements com.renj.imageloaderlibrary.loader.IImageLoaderModule
+		-keep emum com.renj.imageloaderlibrary.config.ImageLoadLibrary{
+          **[] $VALUES;
+          public ** valueOf(java.lang.String);
+          public *;
+        }
+		-dontwarn com.renj.imageloaderlibrary.**
+    
+* glidelibrary库 [点击查看图片加载框架](https://github.com/itrenjunhua/ImageLoader)
+
+		-keep class com.renj.glide.**{*;}
+		-dontwarn com.renj.glide.**
+		
+		# Glide库混淆
+		-keep public class * implements com.bumptech.glide.module.GlideModule
+        -keep public class * extends com.bumptech.glide.module.AppGlideModule
+        -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+          **[] $VALUES;
+          public *;
+        }
+        # for DexGuard only
+        -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 
 
