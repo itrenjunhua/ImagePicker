@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
+import com.renj.imageselect.model.ImageParamsConfig;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,10 +36,12 @@ public class LoadSDImageUtils {
      * 从sd卡中加载图片
      *
      * @param context                          上下文
+     * @param imageParamsConfig
      * @param loadImageForSdCardFinishListener 加载完成监听，回调在子线程中执行
      */
-    public static void loadImageForSdCard(@NonNull Activity context, @NonNull LoadImageForSdCardFinishListener loadImageForSdCardFinishListener) {
-        LoadImageForSdCard loadImageForSdCard = new LoadImageForSdCard(context, loadImageForSdCardFinishListener);
+    public static void loadImageForSdCard(@NonNull Activity context, ImageParamsConfig imageParamsConfig,
+                                          @NonNull LoadImageForSdCardFinishListener loadImageForSdCardFinishListener) {
+        LoadImageForSdCard loadImageForSdCard = new LoadImageForSdCard(context, imageParamsConfig, loadImageForSdCardFinishListener);
         CommonUtils.runOnNewThread(loadImageForSdCard);
     }
 
@@ -61,10 +64,13 @@ public class LoadSDImageUtils {
      */
     static class LoadImageForSdCard implements Runnable {
         private Context context;
+        private ImageParamsConfig imageParamsConfig;
         private LoadImageForSdCardFinishListener listener;
 
-        public LoadImageForSdCard(@NonNull Context context, @NonNull LoadImageForSdCardFinishListener listener) {
+        public LoadImageForSdCard(@NonNull Context context, ImageParamsConfig imageParamsConfig,
+                                  @NonNull LoadImageForSdCardFinishListener listener) {
             this.context = context;
+            this.imageParamsConfig = imageParamsConfig;
             this.listener = listener;
         }
 
@@ -108,11 +114,22 @@ public class LoadSDImageUtils {
             if (imageModels == null || imageModels.size() <= 0) return folderModels;
 
             folderModels.add(new FolderModel("全部图片", imageModels));
+            List<String> fileSuffix = imageParamsConfig.getFileSuffix();
             for (ImageModel imageModel : imageModels) {
                 String name = getFolderNameByPath(imageModel.path);
                 if (!TextUtils.isEmpty(name)) {
-                    FolderModel folderModel = getFolderModelByName(name, folderModels);
-                    folderModel.addImageModel(imageModel);
+                    if (fileSuffix != null) {
+                        for (String suffix : fileSuffix) {
+                            if (name.endsWith(suffix)) {
+                                FolderModel folderModel = getFolderModelByName(name, folderModels);
+                                folderModel.addImageModel(imageModel);
+                                break;
+                            }
+                        }
+                    } else {
+                        FolderModel folderModel = getFolderModelByName(name, folderModels);
+                        folderModel.addImageModel(imageModel);
+                    }
                 }
             }
             return folderModels;

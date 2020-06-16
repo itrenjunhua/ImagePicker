@@ -400,7 +400,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         if (CommonUtils.isShowLogger())
             CommonUtils.i("开始加载图片");
         loadingDialog.show();
-        LoadSDImageUtils.loadImageForSdCard(this, new LoadSDImageUtils.LoadImageForSdCardFinishListener() {
+        LoadSDImageUtils.loadImageForSdCard(this, imageParamsConfig, new LoadSDImageUtils.LoadImageForSdCardFinishListener() {
             @Override
             public void finish(final List<ImageModel> imageModels, final List<FolderModel> folderModels) {
                 Handler handler = new Handler(Looper.getMainLooper());

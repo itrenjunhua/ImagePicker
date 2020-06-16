@@ -3,9 +3,11 @@ package com.renj.imageselect.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.FloatRange;
-import android.support.annotation.NonNull;
 
 import com.renj.imageselect.listener.OnResultCallBack;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * ======================================================================
@@ -14,7 +16,7 @@ import com.renj.imageselect.listener.OnResultCallBack;
  * <p>
  * 创建时间：2018-01-03   13:59
  * <p>
- * 描述：裁剪参数配置
+ * 描述：图片选择裁剪参数配置
  * <p>
  * 修订历史：
  * <p>
@@ -35,6 +37,7 @@ public class ImageParamsConfig implements Parcelable {
     int maskColor; // 遮罩层颜色
     boolean isContinuityEnlarge; // 是否双击连续放大
     boolean isShowCamera; // 是否显示打开相机按钮
+    String[] fileSuffix; // 过滤后缀名
 
     private ImageParamsConfig(Builder builder) {
         this.width = builder.width;
@@ -50,6 +53,7 @@ public class ImageParamsConfig implements Parcelable {
         this.maskColor = builder.maskColor;
         this.isContinuityEnlarge = builder.isContinuityEnlarge;
         this.isShowCamera = builder.isShowCamera;
+        this.fileSuffix = builder.fileSuffix;
     }
 
     public int getWidth() {
@@ -80,7 +84,7 @@ public class ImageParamsConfig implements Parcelable {
         return this.maxScale;
     }
 
-    public float getBoundaryResistance(){
+    public float getBoundaryResistance() {
         return this.boundaryResistance;
     }
 
@@ -104,6 +108,9 @@ public class ImageParamsConfig implements Parcelable {
         return this.isShowCamera;
     }
 
+    public List<String> getFileSuffix() {
+        return (fileSuffix == null || fileSuffix.length <= 0) ? null : Arrays.asList(fileSuffix);
+    }
 
     public static class Builder {
         int width = DefaultConfigData.WIDTH; // 裁剪宽度
@@ -120,6 +127,7 @@ public class ImageParamsConfig implements Parcelable {
         int maskColor = DefaultConfigData.MASK_COLOR; // 遮罩层颜色
         boolean isContinuityEnlarge = DefaultConfigData.IS_CONTINUITY_ENLARGE; // 是否双击连续放大
         boolean isShowCamera = DefaultConfigData.IS_SHOW_CAMERA; // 是否显示打开相机按钮
+        String[] fileSuffix; // 后缀名
 
         public Builder() {
         }
@@ -274,6 +282,17 @@ public class ImageParamsConfig implements Parcelable {
         }
 
         /**
+         * 指定文件后缀名
+         *
+         * @param fileSuffix 显示的文件后缀
+         * @return
+         */
+        public Builder fileSuffix(String... fileSuffix) {
+            this.fileSuffix = fileSuffix;
+            return this;
+        }
+
+        /**
          * 构建 {@link ImageParamsConfig} 对象
          *
          * @return {@link ImageParamsConfig} 对象
@@ -303,6 +322,7 @@ public class ImageParamsConfig implements Parcelable {
         dest.writeInt(this.maskColor);
         dest.writeByte(this.isContinuityEnlarge ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isShowCamera ? (byte) 1 : (byte) 0);
+        dest.writeStringArray(this.fileSuffix);
     }
 
     protected ImageParamsConfig(Parcel in) {
@@ -319,17 +339,15 @@ public class ImageParamsConfig implements Parcelable {
         this.maskColor = in.readInt();
         this.isContinuityEnlarge = in.readByte() != 0;
         this.isShowCamera = in.readByte() != 0;
+        this.fileSuffix = in.createStringArray();
     }
 
     public static final Parcelable.Creator<ImageParamsConfig> CREATOR = new Parcelable.Creator<ImageParamsConfig>() {
-        @NonNull
         @Override
         public ImageParamsConfig createFromParcel(Parcel source) {
             return new ImageParamsConfig(source);
         }
 
-        @NonNull
-        @org.jetbrains.annotations.Contract(pure = true)
         @Override
         public ImageParamsConfig[] newArray(int size) {
             return new ImageParamsConfig[size];
