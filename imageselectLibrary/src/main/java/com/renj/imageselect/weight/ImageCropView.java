@@ -30,34 +30,34 @@ import com.renj.imageselect.utils.ImageLoaderHelp;
  * <p>
  * ======================================================================
  */
-public class ImageClipView extends RelativeLayout {
+public class ImageCropView extends RelativeLayout {
 
     private PhotoView photoView;
-    private ClipView clipView;
+    private CropView cropView;
 
-    public ImageClipView(Context context) {
+    public ImageCropView(Context context) {
         this(context, null);
     }
 
-    public ImageClipView(Context context, AttributeSet attrs) {
+    public ImageCropView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ImageClipView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ImageCropView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public ImageClipView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ImageCropView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initView(context);
     }
 
     private void initView(Context context) {
-        View clipViewLayout = LayoutInflater.from(context).inflate(R.layout.image_clip_view, null);
+        View clipViewLayout = LayoutInflater.from(context).inflate(R.layout.image_crop_view, null);
         photoView = clipViewLayout.findViewById(R.id.photo_view);
-        clipView = clipViewLayout.findViewById(R.id.clip_view);
+        cropView = clipViewLayout.findViewById(R.id.crop_view);
 
         addView(clipViewLayout);
     }
@@ -89,10 +89,10 @@ public class ImageClipView extends RelativeLayout {
         CommonUtils.runOnNewThread(new Runnable() {
             @Override
             public void run() {
-                clipView.confirmClip(new ClipView.OnClipRangeListener() {
+                cropView.confirmCrop(new CropView.OnCropRangeListener() {
                     @Override
-                    public void clipRange(ClipView.ClipShape clipShape, RectF clipRectF) {
-                        ImageModel imageModel = photoView.clipBitmap(clipShape, clipRectF);
+                    public void cropRange(CropView.CropShape cropShape, RectF cropRectF) {
+                        ImageModel imageModel = photoView.cropBitmap(cropShape, cropRectF);
                         cutListener.cutFinish(imageModel);
                     }
                 });
@@ -105,9 +105,9 @@ public class ImageClipView extends RelativeLayout {
      *
      * @param imageParamsConfig
      */
-    public void setClipViewParams(@NonNull ImageParamsConfig imageParamsConfig) {
-        clipView.setClipViewParams(imageParamsConfig);
-        photoView.setClipViewParams(imageParamsConfig);
+    public void setCropViewParams(@NonNull ImageParamsConfig imageParamsConfig) {
+        cropView.setCropViewParams(imageParamsConfig);
+        photoView.setCropViewParams(imageParamsConfig);
     }
 
     public interface CutListener{

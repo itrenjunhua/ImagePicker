@@ -2,16 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ImageSelect.iml" filepath="$PROJECT_DIR$/ImageSelect.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ImageSelect-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ImageSelect-app.iml" group="ImageSelect/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/glidelibrary/ImageSelect-glidelibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/glidelibrary/ImageSelect-glidelibrary.iml" group="ImageSelect/glidelibrary" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imageloaderlibrary/ImageSelect-imageloaderlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/imageloaderlibrary/ImageSelect-imageloaderlibrary.iml" group="ImageSelect/imageloaderlibrary" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imageselectLibrary/ImageSelect-imageselectLibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/imageselectLibrary/ImageSelect-imageselectLibrary.iml" group="ImageSelect/imageselectLibrary" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MyCodeLibrary-ImageSelect.iml" filepath="$PROJECT_DIR$/.idea/modules/MyCodeLibrary-ImageSelect.iml" group="ImageSelect" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/glidelibrary/glidelibrary.iml" filepath="$PROJECT_DIR$/glidelibrary/glidelibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/imageloaderlibrary/imageloaderlibrary.iml" filepath="$PROJECT_DIR$/imageloaderlibrary/imageloaderlibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/imageselectLibrary/imageselectLibrary.iml" filepath="$PROJECT_DIR$/imageselectLibrary/imageselectLibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ImageSelect.iml" filepath="$PROJECT_DIR$/.idea/ImageSelect.iml" group="ImageSelect" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="ImageSelect/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/glidelibrary/glidelibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/glidelibrary/glidelibrary.iml" group="ImageSelect/glidelibrary" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imageloaderlibrary/imageloaderlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/imageloaderlibrary/imageloaderlibrary.iml" group="ImageSelect/imageloaderlibrary" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/imageselectLibrary/imageselectLibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/imageselectLibrary/imageselectLibrary.iml" group="ImageSelect/imageselectLibrary" />
     </modules>
   </component>
 </project>

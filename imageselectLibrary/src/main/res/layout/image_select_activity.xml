@@ -5,14 +5,14 @@
     android:orientation="vertical">
 
     <!--裁剪单张图布局-->
-    <!--<include layout="@layout/image_clip_single_layout />-->
+    <!--<include layout="@layout/image_crop_single_layout />-->
     <ViewStub
         android:id="@+id/vs_clip_single"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <!--裁剪多张图布局-->
-    <!--<include layout="@layout/image_single_clip_more_layout" />-->
+    <!--<include layout="@layout/image_single_crop_more_layout" />-->
     <ViewStub
         android:id="@+id/vs_clip_more"
         android:layout_width="match_parent"

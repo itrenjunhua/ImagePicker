@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
-import com.renj.imageselect.listener.OnClipImageChange;
+import com.renj.imageselect.listener.OnCropImageChange;
 import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.DefaultConfigData;
@@ -36,8 +36,8 @@ import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.LoadSDImageUtils;
 import com.renj.imageselect.utils.CommonUtils;
 import com.renj.imageselect.utils.ImageFileUtils;
-import com.renj.imageselect.weight.ImageClipMoreLayout;
-import com.renj.imageselect.weight.ImageClipView;
+import com.renj.imageselect.weight.ImageCropMoreLayout;
+import com.renj.imageselect.weight.ImageCropView;
 import com.renj.imageselect.weight.ImageMenuDialog;
 import com.renj.imageselect.weight.LoadingDialog;
 
@@ -84,11 +84,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
     /***** 裁剪单张图片时使用到的控件 *****/
     private TextView tvCancel, tvClip;
-    private ImageClipView imageClipView;
+    private ImageCropView imageCropView;
     private LinearLayout clipLayout;
 
     /***** 裁剪多张图片时使用到的控件 *****/
-    private ImageClipMoreLayout clipMoreLayout;
+    private ImageCropMoreLayout clipMoreLayout;
 
     private ImageSelectAdapter imageSelectAdapter; // 图片展示的适配器
     private ImageParamsConfig imageParamsConfig;   // 保存图片选择配置信息的对象
@@ -164,7 +164,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 clipMoreLayout.setClipViewParams(imageParamsConfig);
             } else {
                 initClipSinglePage();
-                imageClipView.setClipViewParams(imageParamsConfig);
+                imageCropView.setCropViewParams(imageParamsConfig);
             }
         }
     }
@@ -219,12 +219,12 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         /***** 裁剪单张图片时使用到的控件 *****/
         tvClip = clipSingleView.findViewById(R.id.tv_clip);
         tvCancel = clipSingleView.findViewById(R.id.tv_cancel);
-        imageClipView = clipSingleView.findViewById(R.id.image_clip_view);
+        imageCropView = clipSingleView.findViewById(R.id.image_clip_view);
         clipLayout = clipSingleView.findViewById(R.id.clip_layout);
 
-        if (create(false).onClipImageChange != null) {
+        if (create(false).onCropImageChange != null) {
             // 单张裁剪，总数为 1
-            create(false).onClipImageChange.onDefault(tvClip, tvCancel, 1, 1);
+            create(false).onCropImageChange.onDefault(tvClip, tvCancel, 1, 1);
         }
 
         tvCancel.setOnClickListener(this);
@@ -235,9 +235,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 初始化裁剪多张图片页面
      */
     private void initClipMorePage() {
-        vsClipMore.setLayoutResource(R.layout.image_single_clip_more_layout);
-        clipMoreLayout = (ImageClipMoreLayout) vsClipMore.inflate();
-        clipMoreLayout.initView(create(false).clipMoreLayoutId, create(false).onClipImageChange);
+        vsClipMore.setLayoutResource(R.layout.image_single_crop_more_layout);
+        clipMoreLayout = (ImageCropMoreLayout) vsClipMore.inflate();
+        clipMoreLayout.initView(create(false).clipMoreLayoutId, create(false).onCropImageChange);
     }
 
     /**
@@ -360,7 +360,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         if (imageParamsConfig.isClip()) {
             if (CommonUtils.isShowLogger())
                 CommonUtils.i("单张图片裁剪");
-            imageClipView.setImage(imageModel.path);
+            imageCropView.setImage(imageModel.path);
             pageStatusChange(STATUS_CLIP_SINGLE_PAGE);
         } else {
             if (create(false).onResultCallBack != null) {
@@ -449,7 +449,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                     if (CommonUtils.isShowLogger())
                         CommonUtils.i("多张图片裁剪");
                     clipMoreLayout.setImageData(checkImages);
-                    clipMoreLayout.setOnImageClipMoreListener(new ImageClipMoreLayout.OnImageClipMoreListener() {
+                    clipMoreLayout.setOnImageCropMoreListener(new ImageCropMoreLayout.OnImageCropMoreListener() {
                         @Override
                         public void cancel() {
                             if (CommonUtils.isShowLogger())
@@ -533,7 +533,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             }
         } else if (R.id.tv_clip == vId) {
             loadingDialog.show();
-            imageClipView.cut(new ImageClipView.CutListener() {
+            imageCropView.cut(new ImageCropView.CutListener() {
                 @Override
                 public void cutFinish(final ImageModel imageModel) {
                     Handler handler = new Handler(Looper.getMainLooper());
@@ -543,9 +543,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                             ArrayList<ImageModel> selectResults = new ArrayList<>();
                             selectResults.add(imageModel);
 
-                            if (create(false).onClipImageChange != null) {
+                            if (create(false).onCropImageChange != null) {
                                 // 单张裁剪，总数为 1
-                                create(false).onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isCircleClip(), 1, 1);
+                                create(false).onCropImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isCircleClip(), 1, 1);
                             }
 
                             if (create(false).onResultCallBack != null) {
@@ -598,7 +598,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         int clipSingleLayoutId; // 裁剪单张图片页面布局资源 id
         @LayoutRes
         int clipMoreLayoutId; // 裁剪单张图片页面布局资源 id
-        OnClipImageChange onClipImageChange; // 图片发生裁剪时回调
+        OnCropImageChange onCropImageChange; // 图片发生裁剪时回调
 
         ImageSelectObservable() {
         }
@@ -611,9 +611,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             itemCameraLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_CAMERA_LAYOUT;
             itemImageLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_IMAGE_LAYOUT;
             onSelectedImageChange = null;
-            clipSingleLayoutId = DefaultConfigData.CLIP_SINGLE_LAYOUT;
-            clipMoreLayoutId = DefaultConfigData.CLIP_MORE_LAYOUT;
-            onClipImageChange = null;
+            clipSingleLayoutId = DefaultConfigData.CROP_SINGLE_LAYOUT;
+            clipMoreLayoutId = DefaultConfigData.CROP_MORE_LAYOUT;
+            onCropImageChange = null;
         }
 
         /**
@@ -680,10 +680,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         /**
          * 动态设置单张图片裁剪页面的布局。<br/>
-         * <b>注意：请参照 默认布局文件 image_clip_single_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * <b>注意：请参照 默认布局文件 image_crop_single_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
          * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
          *
-         * @param clipSingleLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_clip_single_layout.xml)
+         * @param clipSingleLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_crop_single_layout.xml)
          * @return {@link ImageSelectObservable} 对象
          */
         public ImageSelectObservable clipSingleLayoutId(@LayoutRes int clipSingleLayoutId) {
@@ -693,10 +693,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         /**
          * 动态设置多张图片裁剪页面的布局。<br/>
-         * <b>注意：请参照 默认布局文件 image_clip_more_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * <b>注意：请参照 默认布局文件 image_crop_more_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
          * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
          *
-         * @param clipMoreLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_clip_more_layout.xml)
+         * @param clipMoreLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_crop_more_layout.xml)
          * @return {@link ImageSelectObservable} 对象
          */
         public ImageSelectObservable clipMoreLayoutId(@LayoutRes int clipMoreLayoutId) {
@@ -707,11 +707,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         /**
          * 设置图片裁剪改变监听。<br/>
          *
-         * @param onClipImageChange 图片裁剪时回调
+         * @param onCropImageChange 图片裁剪时回调
          * @return {@link ImageSelectObservable} 对象
          */
-        public ImageSelectObservable onClipImageChange(@Nullable OnClipImageChange onClipImageChange) {
-            this.onClipImageChange = onClipImageChange;
+        public ImageSelectObservable onClipImageChange(@Nullable OnCropImageChange onCropImageChange) {
+            this.onCropImageChange = onCropImageChange;
             return this;
         }
 

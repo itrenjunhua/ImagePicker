@@ -7,12 +7,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.renj.imageselect.listener.OnClipImageChange;
+import com.renj.imageselect.listener.OnCropImageChange;
 import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.CommonUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
@@ -61,8 +60,8 @@ public class ClipSingleMyActivity extends BaseActivity {
                 .selectCount(1)
                 .isShowCamera(true)
                 .isClip(true)
-                .width(400)
-                .height(400)
+                .width(200)
+                .height(200)
                 .isCircleClip(false)
                 .clipBorderWidth(2)
                 .maskColor(Color.parseColor("#88000000"))
@@ -71,7 +70,7 @@ public class ClipSingleMyActivity extends BaseActivity {
         ImageSelectUtils.getInstance().create()
                 // .selectedLayoutId(R.layout.my_selected_layout) // 自定义选择图片布局
                 .clipSingleLayoutId(R.layout.my_clip_single_layout) // 自定义单张裁剪部分布局
-                .onClipImageChange(new OnClipImageChange() {
+                .onClipImageChange(new OnCropImageChange() {
                     @Override
                     public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
                                              @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,

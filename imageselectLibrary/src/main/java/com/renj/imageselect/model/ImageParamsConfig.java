@@ -116,14 +116,14 @@ public class ImageParamsConfig implements Parcelable {
         int width = DefaultConfigData.WIDTH; // 裁剪宽度
         int height = DefaultConfigData.HEIGHT; // 裁剪高度
         int selectCount = DefaultConfigData.SELECT_COUNT; // 选择图片张数
-        boolean isClip = DefaultConfigData.IS_CLIP; // 是否裁剪
-        boolean isCircleClip = DefaultConfigData.IS_CIRCLE_CLIP; // 是否裁剪成圆形图片
+        boolean isClip = DefaultConfigData.IS_CROP; // 是否裁剪
+        boolean isCircleClip = DefaultConfigData.IS_OVAL_CROP; // 是否裁剪成圆形图片
         float minScale = DefaultConfigData.MIN_SCALE; // 图片最小缩放倍数
         float maxScale = DefaultConfigData.MAX_SCALE; // 图片最大缩放倍数
         @FloatRange(from = 0, to = 1)
         float boundaryResistance = DefaultConfigData.BOUNDARY_RESISTANCE; // 边界滑动阻力系数
-        float clipBorderWidth = DefaultConfigData.CLIP_BORDER_WIDTH; // 裁剪线条宽度
-        int clipBorderColor = DefaultConfigData.CLIP_BORDER_COLOR; // 裁剪线条颜色
+        float clipBorderWidth = DefaultConfigData.CROP_BORDER_WIDTH; // 裁剪线条宽度
+        int clipBorderColor = DefaultConfigData.CROP_BORDER_COLOR; // 裁剪线条颜色
         int maskColor = DefaultConfigData.MASK_COLOR; // 遮罩层颜色
         boolean isContinuityEnlarge = DefaultConfigData.IS_CONTINUITY_ENLARGE; // 是否双击连续放大
         boolean isShowCamera = DefaultConfigData.IS_SHOW_CAMERA; // 是否显示打开相机按钮

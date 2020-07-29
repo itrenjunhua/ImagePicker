@@ -162,8 +162,6 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
                     getParent().requestDisallowInterceptTouchEvent(true);
                 break;
             case MotionEvent.ACTION_MOVE:
-
-
                 if (imageRect.width() > width || imageRect.height() > height)
                     getParent().requestDisallowInterceptTouchEvent(true);
 
@@ -236,14 +234,14 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     /**
      * 裁剪图片并保存到本地方法
      *
-     * @param clipShape 才加形状
+     * @param cropShape 裁剪形状
      * @param clipRectF 裁剪范围
      * @return 裁剪后的图片
      */
-    public ImageModel clipBitmap(@NonNull ClipView.ClipShape clipShape, @NonNull RectF clipRectF) {
+    public ImageModel cropBitmap(@NonNull CropView.CropShape cropShape, @NonNull RectF clipRectF) {
         setDrawingCacheEnabled(true);
         Bitmap source = getDrawingCache();
-        Bitmap bitmap = clipBitmap(clipShape, clipRectF, source);
+        Bitmap bitmap = cropBitmap(cropShape, clipRectF, source);
         setDrawingCacheEnabled(false);
         return ImageFileUtils.saveBitmap2File(ImageFileUtils.getName(), bitmap);
     }
@@ -251,21 +249,17 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
     /**
      * 裁剪图片方法
      */
-    private Bitmap clipBitmap(@NonNull ClipView.ClipShape clipShape, @NonNull RectF clipRectF, @NonNull Bitmap source) {
+    private Bitmap cropBitmap(@NonNull CropView.CropShape cropShape, @NonNull RectF cropRectF, @NonNull Bitmap source) {
         if (source == null) return null;
         Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(),
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        int saveLayer = canvas.saveLayer(clipRectF, null, ALL_SAVE_FLAG);
-        if (ClipView.ClipShape.CLIP_CIRCLE == clipShape) {
-            float centerX = (clipRectF.left + clipRectF.right) / 2;
-            float centerY = (clipRectF.top + clipRectF.bottom) / 2;
-            int radius = (int) ((Math.min(clipRectF.width(), clipRectF.height())) / 2);
-
+        int saveLayer = canvas.saveLayer(cropRectF, null, ALL_SAVE_FLAG);
+        if (CropView.CropShape.CROP_OVAL == cropShape) {
             paint.setStyle(Paint.Style.FILL);
-            canvas.drawCircle(centerX, centerY, radius, paint);
+            canvas.drawOval(cropRectF, paint);
             paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
             canvas.drawBitmap(source, 0, 0, paint);
             paint.setXfermode(null);
@@ -274,8 +268,8 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
         }
         canvas.restoreToCount(saveLayer);
 
-        bitmap = Bitmap.createBitmap(bitmap, (int) clipRectF.left,
-                (int) clipRectF.top, (int) clipRectF.width(), (int) clipRectF.height());
+        bitmap = Bitmap.createBitmap(bitmap, (int) cropRectF.left,
+                (int) cropRectF.top, (int) cropRectF.width(), (int) cropRectF.height());
         return bitmap;
     }
 
@@ -434,7 +428,7 @@ public class PhotoView extends AppCompatImageView implements View.OnTouchListene
      *
      * @param imageParamsConfig
      */
-    public void setClipViewParams(ImageParamsConfig imageParamsConfig) {
+    public void setCropViewParams(ImageParamsConfig imageParamsConfig) {
         this.minScale = imageParamsConfig.getMinScale();
         this.maxScale = imageParamsConfig.getMaxScale();
         this.boundaryResistance = imageParamsConfig.getBoundaryResistance();

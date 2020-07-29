@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.renj.imageselect.R;
-import com.renj.imageselect.listener.OnClipImageChange;
+import com.renj.imageselect.listener.OnCropImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.CommonUtils;
@@ -41,58 +41,58 @@ import java.util.List;
  * <p>
  * ======================================================================
  */
-public class ImageClipMoreLayout extends LinearLayout implements View.OnClickListener {
+public class ImageCropMoreLayout extends LinearLayout implements View.OnClickListener {
     private TextView tvCancel;
-    private TextView tvClip;
-    private NoScrollViewPager vpClipMore;
+    private TextView tvCrop;
+    private NoScrollViewPager vpCropMore;
 
     private int currentIndex = 0;
     private List<ImageModel> srcImages = new ArrayList<>();
     private List<ImageModel> resultImages = new ArrayList<>();
-    private ClipMorePagerAdapter clipMorePagerAdapter;
+    private CropMorePagerAdapter cropMorePagerAdapter;
     private ImageParamsConfig imageParamsConfig;
 
     private FixedSpeedScroller mScroller;
     private LoadingDialog loadingDialog;
 
-    private OnClipImageChange onClipImageChange;
+    private OnCropImageChange onCropImageChange;
 
-    public ImageClipMoreLayout(Context context) {
+    public ImageCropMoreLayout(Context context) {
         this(context, null);
     }
 
-    public ImageClipMoreLayout(Context context, @Nullable AttributeSet attrs) {
+    public ImageCropMoreLayout(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ImageClipMoreLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ImageCropMoreLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public ImageClipMoreLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ImageCropMoreLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void initView(@LayoutRes int clipMoreLayoutId, OnClipImageChange onClipImageChange) {
-        this.onClipImageChange = onClipImageChange;
+    public void initView(@LayoutRes int clipMoreLayoutId, OnCropImageChange onCropImageChange) {
+        this.onCropImageChange = onCropImageChange;
         View clipMoreLayout = LayoutInflater.from(getContext()).inflate(clipMoreLayoutId, null);
         tvCancel = clipMoreLayout.findViewById(R.id.tv_cancel_more);
-        tvClip = clipMoreLayout.findViewById(R.id.tv_clip_more);
-        vpClipMore = clipMoreLayout.findViewById(R.id.vp_clip_more);
+        tvCrop = clipMoreLayout.findViewById(R.id.tv_crop_more);
+        vpCropMore = clipMoreLayout.findViewById(R.id.vp_crop_more);
         addView(clipMoreLayout);
 
         setListener();
 
-        clipMorePagerAdapter = new ClipMorePagerAdapter();
-        vpClipMore.setAdapter(clipMorePagerAdapter);
+        cropMorePagerAdapter = new CropMorePagerAdapter();
+        vpCropMore.setAdapter(cropMorePagerAdapter);
 
         try {
             // 通过class文件获取mScroller属性
             Field mField = ViewPager.class.getDeclaredField("mScroller");
             mField.setAccessible(true);
-            mScroller = new FixedSpeedScroller(vpClipMore.getContext(), new AccelerateInterpolator());
-            mField.set(vpClipMore, mScroller);
+            mScroller = new FixedSpeedScroller(vpCropMore.getContext(), new AccelerateInterpolator());
+            mField.set(vpCropMore, mScroller);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,36 +101,36 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
 
     private void setListener() {
         tvCancel.setOnClickListener(this);
-        tvClip.setOnClickListener(this);
+        tvCrop.setOnClickListener(this);
     }
 
     public void setImageData(List<ImageModel> srcImages) {
         this.srcImages = srcImages;
         if (CommonUtils.isShowLogger())
             CommonUtils.i("裁剪：(" + (currentIndex + 1) + " / " + srcImages.size() + ")");
-        tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
-        if (onClipImageChange != null) {
-            onClipImageChange.onDefault(tvClip, tvCancel, currentIndex + 1, srcImages.size());
+        tvCrop.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
+        if (onCropImageChange != null) {
+            onCropImageChange.onDefault(tvCrop, tvCancel, currentIndex + 1, srcImages.size());
         }
-        clipMorePagerAdapter.notifyDataSetChanged();
+        cropMorePagerAdapter.notifyDataSetChanged();
     }
 
-    private OnImageClipMoreListener onImageClipMoreListener;
+    private OnImageCropMoreListener onImageCropMoreListener;
 
-    public void setOnImageClipMoreListener(OnImageClipMoreListener onImageClipMoreListener) {
-        this.onImageClipMoreListener = onImageClipMoreListener;
+    public void setOnImageCropMoreListener(OnImageCropMoreListener onImageCropMoreListener) {
+        this.onImageCropMoreListener = onImageCropMoreListener;
     }
 
     @Override
     public void onClick(View v) {
         int vId = v.getId();
         if (R.id.tv_cancel_more == vId) {
-            if (onImageClipMoreListener != null)
-                onImageClipMoreListener.cancel();
-        } else if (R.id.tv_clip_more == vId) {
+            if (onImageCropMoreListener != null)
+                onImageCropMoreListener.cancel();
+        } else if (R.id.tv_crop_more == vId) {
             currentIndex += 1;
-            ImageClipView focusedChild = clipMorePagerAdapter.getPrimaryItem();
-            focusedChild.cut(new ImageClipView.CutListener() {
+            ImageCropView focusedChild = cropMorePagerAdapter.getPrimaryItem();
+            focusedChild.cut(new ImageCropView.CutListener() {
                 @Override
                 public void cutFinish(final ImageModel imageModel) {
                     Handler handler = new Handler(Looper.getMainLooper());
@@ -141,9 +141,9 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
                             if (currentIndex < srcImages.size()) {
                                 if (CommonUtils.isShowLogger())
                                     CommonUtils.i("裁剪：(" + (currentIndex + 1) + " / " + srcImages.size() + ")");
-                                tvClip.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
-                                if (onClipImageChange != null) {
-                                    onClipImageChange.onClipChange(tvClip, tvCancel, imageModel, resultImages, imageParamsConfig.isCircleClip(), (currentIndex + 1), srcImages.size());
+                                tvCrop.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
+                                if (onCropImageChange != null) {
+                                    onCropImageChange.onClipChange(tvCrop, tvCancel, imageModel, resultImages, imageParamsConfig.isCircleClip(), (currentIndex + 1), srcImages.size());
                                 }
                             }
                         }
@@ -153,8 +153,8 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
                             @Override
                             public void run() {
                                 loadingDialog.dismiss();
-                                if (onImageClipMoreListener != null)
-                                    onImageClipMoreListener.finish(resultImages);
+                                if (onImageCropMoreListener != null)
+                                    onImageCropMoreListener.finish(resultImages);
                             }
                         });
                     }
@@ -163,13 +163,11 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
 
             if (currentIndex >= srcImages.size()) {
                 loadingDialog.show();
-                tvClip.setEnabled(false);
-//                    if (onImageClipMoreListener != null)
-//                        onImageClipMoreListener.finish(resultImages);
+                tvCrop.setEnabled(false);
                 return;
             }
             mScroller.setDuration(500);// 切换时间，毫秒值
-            vpClipMore.setCurrentItem(currentIndex);
+            vpCropMore.setCurrentItem(currentIndex);
         }
     }
 
@@ -183,21 +181,21 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
         this.imageParamsConfig = imageParamsConfig;
     }
 
-    public interface OnImageClipMoreListener {
+    public interface OnImageCropMoreListener {
         void cancel();
 
         void finish(List<ImageModel> clipResult);
     }
 
-    class ClipMorePagerAdapter extends PagerAdapter {
-        private ImageClipView mCurrentView;
+    class CropMorePagerAdapter extends PagerAdapter {
+        private ImageCropView mCurrentView;
 
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
-            mCurrentView = (ImageClipView) object;
+            mCurrentView = (ImageCropView) object;
         }
 
-        public ImageClipView getPrimaryItem() {
+        public ImageCropView getPrimaryItem() {
             return mCurrentView;
         }
 
@@ -214,11 +212,11 @@ public class ImageClipMoreLayout extends LinearLayout implements View.OnClickLis
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            ImageClipView imageClipView = new ImageClipView(getContext());
-            imageClipView.setClipViewParams(imageParamsConfig);
-            imageClipView.setImage(srcImages.get(position).path);
-            container.addView(imageClipView);
-            return imageClipView;
+            ImageCropView imageCropView = new ImageCropView(getContext());
+            imageCropView.setCropViewParams(imageParamsConfig);
+            imageCropView.setImage(srcImages.get(position).path);
+            container.addView(imageCropView);
+            return imageCropView;
         }
 
         @Override

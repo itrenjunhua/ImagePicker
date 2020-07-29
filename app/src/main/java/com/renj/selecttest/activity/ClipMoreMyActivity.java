@@ -9,13 +9,12 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.renj.imageselect.listener.OnClipImageChange;
+import com.renj.imageselect.listener.OnCropImageChange;
 import com.renj.imageselect.listener.OnResultCallBack;
 import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.CommonUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
 import com.renj.selecttest.utils.Utils;
@@ -77,8 +76,8 @@ public class ClipMoreMyActivity extends BaseActivity {
                 .selectCount(imageNum)
                 .isShowCamera(true)
                 .isClip(true)
-                .width(600)
-                .height(800)
+                .width(240)
+                .height(320)
                 .isCircleClip(true)
                 .clipBorderWidth(0.5f)
                 .maxScale(6f)
@@ -104,7 +103,7 @@ public class ClipMoreMyActivity extends BaseActivity {
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
                     }
                 })
-                .onClipImageChange(new OnClipImageChange() {
+                .onClipImageChange(new OnCropImageChange() {
                     @Override
                     public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
                                              @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
