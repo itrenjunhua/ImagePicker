@@ -59,13 +59,13 @@ public class ClipSingleMyActivity extends BaseActivity {
                 .Builder()
                 .selectCount(1)
                 .isShowCamera(true)
-                .isClip(true)
+                .isCrop(true)
                 .width(200)
                 .height(200)
-                .isCircleClip(false)
-                .clipBorderWidth(2)
+                .isOvalCrop(false)
+                .cropBorderWidth(2)
                 .maskColor(Color.parseColor("#88000000"))
-                .clipBorderColor(Color.parseColor("#ff0000"))
+                .cropBorderColor(Color.parseColor("#ff0000"))
                 .build();
         ImageSelectUtils.getInstance().create()
                 // .selectedLayoutId(R.layout.my_selected_layout) // 自定义选择图片布局

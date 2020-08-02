@@ -158,7 +158,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         isSelectMore(imageParamsConfig.getSelectCount() > 1);
         imageSelectAdapter.isOpenCamera(imageParamsConfig.isShowCamera());
 
-        if (imageParamsConfig.isClip()) {
+        if (imageParamsConfig.isCrop()) {
             if (imageParamsConfig.getSelectCount() > 1) {
                 initClipMorePage();
                 clipMoreLayout.setClipViewParams(imageParamsConfig);
@@ -339,7 +339,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             // 多张时，也直接判断是否需要裁剪然后返回
             List<ImageModel> checkImages = imageSelectAdapter.getCheckImages();
             checkImages.add(imageModel);
-            if (imageParamsConfig.isClip()) {
+            if (imageParamsConfig.isCrop()) {
                 pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
                 if (create(false).onResultCallBack != null)
@@ -357,7 +357,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * @param imageModel
      */
     private void selectSingle(@NonNull ImageModel imageModel) {
-        if (imageParamsConfig.isClip()) {
+        if (imageParamsConfig.isCrop()) {
             if (CommonUtils.isShowLogger())
                 CommonUtils.i("单张图片裁剪");
             imageCropView.setImage(imageModel.path);
@@ -522,7 +522,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                 CommonUtils.showToast(ImageSelectActivity.this, "没有选择图片");
                 return;
             }
-            if (imageParamsConfig.isClip()) {
+            if (imageParamsConfig.isCrop()) {
                 pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
                 if (create(false).onResultCallBack != null)
@@ -545,7 +545,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
                             if (create(false).onCropImageChange != null) {
                                 // 单张裁剪，总数为 1
-                                create(false).onCropImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isCircleClip(), 1, 1);
+                                create(false).onCropImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isOvalCrop(), 1, 1);
                             }
 
                             if (create(false).onResultCallBack != null) {

@@ -71,7 +71,7 @@ public class SelectedActivity extends BaseActivity {
                 .selectCount(imageNum)
                 .isShowCamera(true)
                 .isContinuityEnlarge(false)
-                .isClip(false)
+                .isCrop(false)
                 .build();
         ImageSelectUtils.getInstance().create()
                 .imageParamsConfig(imageParamsConfig)

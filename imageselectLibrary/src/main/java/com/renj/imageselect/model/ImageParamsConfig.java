@@ -26,34 +26,48 @@ public class ImageParamsConfig implements Parcelable {
     int width; // 裁剪宽度
     int height; // 裁剪高度
     int selectCount; // 选择图片张数
-    boolean isClip; // 是否裁剪
-    boolean isCircleClip; // 是否裁剪成圆形图片
+    boolean isCrop; // 是否裁剪
+    boolean isOvalCrop; // 是否裁剪成圆形图片
     float minScale; // 图片最小缩放倍数
     float maxScale; // 图片最大缩放倍数
     @FloatRange(from = 0, to = 1)
     float boundaryResistance; // 边界滑动阻力系数
-    float clipBorderWidth; // 裁剪线条宽度
-    int clipBorderColor; // 裁剪线条颜色
+    float cropBorderWidth; // 裁剪线条宽度
+    int cropBorderColor; // 裁剪线条颜色
     int maskColor; // 遮罩层颜色
     boolean isContinuityEnlarge; // 是否双击连续放大
     boolean isShowCamera; // 是否显示打开相机按钮
     String[] fileSuffix; // 过滤后缀名
+    int cellLineCount; // 需要绘制的分割线条数 小于1时表示不绘制
+    float cellBorderWidth; // 分割线条宽度
+    float scalePointRadius; // 缩放点半径
+    int touchHandlerType; // 触摸处理类型 移动/缩放/移动+缩放/不做处理
+    boolean autoRatioScale; // 改变裁剪范围时,是否按照比例改变
+    int widthRatio; // 改变裁剪范围的宽比例
+    int heightRadio; // 改变裁剪范围的高比例
 
     private ImageParamsConfig(Builder builder) {
         this.width = builder.width;
         this.height = builder.height;
         this.selectCount = builder.selectCount;
-        this.isClip = builder.isClip;
-        this.isCircleClip = builder.isCircleClip;
+        this.isCrop = builder.isCrop;
+        this.isOvalCrop = builder.isOvalCrop;
         this.minScale = builder.minScale;
         this.maxScale = builder.maxScale;
         this.boundaryResistance = builder.boundaryResistance;
-        this.clipBorderWidth = builder.clipBorderWidth;
-        this.clipBorderColor = builder.clipBorderColor;
+        this.cropBorderWidth = builder.cropBorderWidth;
+        this.cropBorderColor = builder.cropBorderColor;
         this.maskColor = builder.maskColor;
         this.isContinuityEnlarge = builder.isContinuityEnlarge;
         this.isShowCamera = builder.isShowCamera;
         this.fileSuffix = builder.fileSuffix;
+        this.cellLineCount = builder.cellLineCount;
+        this.cellBorderWidth = builder.cellBorderWidth;
+        this.scalePointRadius = builder.scalePointRadius;
+        this.touchHandlerType = builder.touchHandlerType;
+        this.autoRatioScale = builder.autoRatioScale;
+        this.widthRatio = builder.widthRatio;
+        this.heightRadio = builder.heightRadio;
     }
 
     public int getWidth() {
@@ -68,12 +82,12 @@ public class ImageParamsConfig implements Parcelable {
         return this.selectCount;
     }
 
-    public boolean isClip() {
-        return this.isClip;
+    public boolean isCrop() {
+        return this.isCrop;
     }
 
-    public boolean isCircleClip() {
-        return this.isCircleClip;
+    public boolean isOvalCrop() {
+        return this.isOvalCrop;
     }
 
     public float getMinScale() {
@@ -88,12 +102,12 @@ public class ImageParamsConfig implements Parcelable {
         return this.boundaryResistance;
     }
 
-    public float getClipBorderWidth() {
-        return this.clipBorderWidth;
+    public float getCropBorderWidth() {
+        return this.cropBorderWidth;
     }
 
-    public int getClipBorderColor() {
-        return this.clipBorderColor;
+    public int getCropBorderColor() {
+        return this.cropBorderColor;
     }
 
     public int getMaskColor() {
@@ -112,22 +126,57 @@ public class ImageParamsConfig implements Parcelable {
         return (fileSuffix == null || fileSuffix.length <= 0) ? null : Arrays.asList(fileSuffix);
     }
 
+    public int getCellLineCount() {
+        return cellLineCount;
+    }
+
+    public float getCellBorderWidth() {
+        return cellBorderWidth;
+    }
+
+    public float getScalePointRadius() {
+        return scalePointRadius;
+    }
+
+    public int getTouchHandlerType() {
+        return touchHandlerType;
+    }
+
+    public boolean isAutoRatioScale() {
+        return autoRatioScale;
+    }
+
+    public int getWidthRatio() {
+        return widthRatio;
+    }
+
+    public int getHeightRadio() {
+        return heightRadio;
+    }
+
     public static class Builder {
         int width = DefaultConfigData.WIDTH; // 裁剪宽度
         int height = DefaultConfigData.HEIGHT; // 裁剪高度
         int selectCount = DefaultConfigData.SELECT_COUNT; // 选择图片张数
-        boolean isClip = DefaultConfigData.IS_CROP; // 是否裁剪
-        boolean isCircleClip = DefaultConfigData.IS_OVAL_CROP; // 是否裁剪成圆形图片
+        boolean isCrop = DefaultConfigData.IS_CROP; // 是否裁剪
+        boolean isOvalCrop = DefaultConfigData.IS_OVAL_CROP; // 是否裁剪成圆形图片
         float minScale = DefaultConfigData.MIN_SCALE; // 图片最小缩放倍数
         float maxScale = DefaultConfigData.MAX_SCALE; // 图片最大缩放倍数
         @FloatRange(from = 0, to = 1)
         float boundaryResistance = DefaultConfigData.BOUNDARY_RESISTANCE; // 边界滑动阻力系数
-        float clipBorderWidth = DefaultConfigData.CROP_BORDER_WIDTH; // 裁剪线条宽度
-        int clipBorderColor = DefaultConfigData.CROP_BORDER_COLOR; // 裁剪线条颜色
+        float cropBorderWidth = DefaultConfigData.CROP_BORDER_WIDTH; // 裁剪线条宽度
+        int cropBorderColor = DefaultConfigData.CROP_BORDER_COLOR; // 裁剪线条颜色
         int maskColor = DefaultConfigData.MASK_COLOR; // 遮罩层颜色
         boolean isContinuityEnlarge = DefaultConfigData.IS_CONTINUITY_ENLARGE; // 是否双击连续放大
         boolean isShowCamera = DefaultConfigData.IS_SHOW_CAMERA; // 是否显示打开相机按钮
         String[] fileSuffix; // 后缀名
+        int cellLineCount = DefaultConfigData.CELL_LINE_COUNT; // 需要绘制的分割线条数 小于1时表示不绘制
+        float cellBorderWidth = DefaultConfigData.CROP_CELL_BORDER_WIDTH; // 分割线条宽度
+        float scalePointRadius = DefaultConfigData.CROP_SCALE_POINT_RADIUS; // 缩放点半径
+        int touchHandlerType = DefaultConfigData.TOUCH_HANDLER_TYPE; // 触摸处理类型 移动/缩放/移动+缩放/不做处理
+        boolean autoRatioScale = DefaultConfigData.AUTO_RATIO_SCALE; // 改变裁剪范围时,是否按照比例改变
+        int widthRatio = DefaultConfigData.SCALE_WIDTH_RATIO; // 改变裁剪范围的宽比例
+        int heightRadio = DefaultConfigData.SCALE_HEIGHT_RATIO; // 改变裁剪范围的高比例
 
         public Builder() {
         }
@@ -173,11 +222,11 @@ public class ImageParamsConfig implements Parcelable {
         /**
          * 设置是否需要裁剪
          *
-         * @param isClip true：需要；false：不需要
+         * @param isCrop true：需要；false：不需要
          * @return
          */
-        public Builder isClip(boolean isClip) {
-            this.isClip = isClip;
+        public Builder isCrop(boolean isCrop) {
+            this.isCrop = isCrop;
             return this;
         }
 
@@ -185,11 +234,11 @@ public class ImageParamsConfig implements Parcelable {
          * 设置是否需要裁剪成圆形<br/>
          * <b>注意：圆形的半径为裁剪宽度、裁剪高度较小值得一半</b>
          *
-         * @param isCircleClip true：需要；false：不需要
+         * @param isOvalCrop true：需要；false：不需要
          * @return
          */
-        public Builder isCircleClip(boolean isCircleClip) {
-            this.isCircleClip = isCircleClip;
+        public Builder isOvalCrop(boolean isOvalCrop) {
+            this.isOvalCrop = isOvalCrop;
             return this;
         }
 
@@ -229,22 +278,22 @@ public class ImageParamsConfig implements Parcelable {
         /**
          * 设置裁剪边框宽度
          *
-         * @param clipBorderWidth 裁剪边框宽度
+         * @param cropBorderWidth 裁剪边框宽度
          * @return
          */
-        public Builder clipBorderWidth(float clipBorderWidth) {
-            this.clipBorderWidth = clipBorderWidth;
+        public Builder cropBorderWidth(float cropBorderWidth) {
+            this.cropBorderWidth = cropBorderWidth;
             return this;
         }
 
         /**
          * 设置裁剪边框颜色
          *
-         * @param clipBorderColor 裁剪边框颜色
+         * @param cropBorderColor 裁剪边框颜色
          * @return
          */
-        public Builder clipBorderColor(int clipBorderColor) {
-            this.clipBorderColor = clipBorderColor;
+        public Builder cropBorderColor(int cropBorderColor) {
+            this.cropBorderColor = cropBorderColor;
             return this;
         }
 
@@ -293,6 +342,78 @@ public class ImageParamsConfig implements Parcelable {
         }
 
         /**
+         * 设置需要绘制的分割线条数 小于1时表示不绘制
+         *
+         * @param cellLineCount 需要绘制的分割线条数 小于1时表示不绘制
+         * @return
+         */
+        public Builder cellLineCount(int cellLineCount) {
+            this.cellLineCount = cellLineCount;
+            return this;
+        }
+
+        /**
+         * 设置分割线条宽度
+         *
+         * @param cellBorderWidth 分割线条宽度
+         * @return
+         */
+        public Builder cellBorderWidth(float cellBorderWidth) {
+            this.cellBorderWidth = cellBorderWidth;
+            return this;
+        }
+
+        /**
+         * 设置缩放点半径
+         *
+         * @param scalePointRadius 缩放点半径
+         * @return
+         */
+        public Builder scalePointRadius(float scalePointRadius) {
+            this.scalePointRadius = scalePointRadius;
+            return this;
+        }
+
+        /**
+         * 设置触摸处理类型 移动/缩放/移动+缩放/不做处理
+         *
+         * @param touchHandlerType 触摸处理类型 移动/缩放/移动+缩放/不做处理
+         *                         {@link CropConstants#TOUCH_OFFSET}
+         *                         /{@link CropConstants#TOUCH_OFFSET}
+         *                         /{@link CropConstants#TOUCH_OFFSET_AND_SCALE}
+         *                         /{@link CropConstants#TOUCH_NONE}
+         * @return
+         */
+        public Builder touchHandlerType(int touchHandlerType) {
+            this.touchHandlerType = touchHandlerType;
+            return this;
+        }
+
+        /**
+         * 设置 改变裁剪范围时,是否按照比例改变
+         *
+         * @param autoRatioScale 改变裁剪范围时,是否按照比例改变 true：是
+         * @return
+         */
+        public Builder autoRatioScale(boolean autoRatioScale) {
+            this.autoRatioScale = autoRatioScale;
+            return this;
+        }
+
+        /**
+         * 设置改变裁剪范围的宽高比例
+         *
+         * @param widthRatio  改变裁剪范围的宽比例
+         * @param heightRadio 改变裁剪范围的高比例
+         * @return
+         */
+        public Builder widthAndHeightRadio(int widthRatio, int heightRadio) {
+            this.widthRatio = widthRatio;
+            this.heightRadio = heightRadio;
+            return this;
+        }
+
+        /**
          * 构建 {@link ImageParamsConfig} 对象
          *
          * @return {@link ImageParamsConfig} 对象
@@ -312,13 +433,13 @@ public class ImageParamsConfig implements Parcelable {
         dest.writeInt(this.width);
         dest.writeInt(this.height);
         dest.writeInt(this.selectCount);
-        dest.writeByte(this.isClip ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.isCircleClip ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isCrop ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isOvalCrop ? (byte) 1 : (byte) 0);
         dest.writeFloat(this.minScale);
         dest.writeFloat(this.maxScale);
         dest.writeFloat(this.boundaryResistance);
-        dest.writeFloat(this.clipBorderWidth);
-        dest.writeInt(this.clipBorderColor);
+        dest.writeFloat(this.cropBorderWidth);
+        dest.writeInt(this.cropBorderColor);
         dest.writeInt(this.maskColor);
         dest.writeByte(this.isContinuityEnlarge ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isShowCamera ? (byte) 1 : (byte) 0);
@@ -329,13 +450,13 @@ public class ImageParamsConfig implements Parcelable {
         this.width = in.readInt();
         this.height = in.readInt();
         this.selectCount = in.readInt();
-        this.isClip = in.readByte() != 0;
-        this.isCircleClip = in.readByte() != 0;
+        this.isCrop = in.readByte() != 0;
+        this.isOvalCrop = in.readByte() != 0;
         this.minScale = in.readFloat();
         this.maxScale = in.readFloat();
         this.boundaryResistance = in.readFloat();
-        this.clipBorderWidth = in.readFloat();
-        this.clipBorderColor = in.readInt();
+        this.cropBorderWidth = in.readFloat();
+        this.cropBorderColor = in.readInt();
         this.maskColor = in.readInt();
         this.isContinuityEnlarge = in.readByte() != 0;
         this.isShowCamera = in.readByte() != 0;

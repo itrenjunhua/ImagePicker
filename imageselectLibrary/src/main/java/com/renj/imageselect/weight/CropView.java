@@ -44,6 +44,8 @@ public class CropView extends View {
     private int borderColor = DefaultConfigData.CROP_BORDER_COLOR;
     // 边框宽度
     private float borderWidth = dp2Px(DefaultConfigData.CROP_BORDER_WIDTH);
+    // 分割线宽度
+    private float cellBorderWidth = dp2Px(DefaultConfigData.CROP_CELL_BORDER_WIDTH);
     // 缩放点半径
     private float scalePointRadius = dp2Px(DefaultConfigData.CROP_SCALE_POINT_RADIUS);
     // 裁剪宽度
@@ -102,7 +104,7 @@ public class CropView extends View {
         borderPaint.setColor(borderColor);
         borderPaint.setStrokeWidth(borderWidth);
         cellPaint.setColor(borderColor);
-        cellPaint.setStrokeWidth(borderWidth / 2);
+        cellPaint.setStrokeWidth(cellBorderWidth);
     }
 
     @Override
@@ -189,9 +191,16 @@ public class CropView extends View {
         this.maskColor = imageParamsConfig.getMaskColor();
         this.cropWidth = dp2Px(imageParamsConfig.getWidth());
         this.cropHeight = dp2Px(imageParamsConfig.getHeight());
-        this.borderColor = imageParamsConfig.getClipBorderColor();
-        this.borderWidth = dp2Px(imageParamsConfig.getClipBorderWidth());
-        this.cropShape = imageParamsConfig.isCircleClip() ? CropShape.CROP_OVAL : CropShape.CROP_RECT;
+        this.borderColor = imageParamsConfig.getCropBorderColor();
+        this.borderWidth = dp2Px(imageParamsConfig.getCropBorderWidth());
+        this.cellLineCount = imageParamsConfig.getCellLineCount();
+        this.cellBorderWidth = dp2Px(imageParamsConfig.getCellBorderWidth());
+        this.scalePointRadius = dp2Px(imageParamsConfig.getScalePointRadius());
+        this.widthRatio = imageParamsConfig.getWidthRatio();
+        this.heightRadio = imageParamsConfig.getHeightRadio();
+        this.autoRatioScale = imageParamsConfig.isAutoRatioScale();
+        this.touchHandlerType = imageParamsConfig.getTouchHandlerType();
+        this.cropShape = imageParamsConfig.isOvalCrop() ? CropShape.CROP_OVAL : CropShape.CROP_RECT;
 
         setPaintInfo();
         float left = (viewRectF.width() - cropWidth) / 2;

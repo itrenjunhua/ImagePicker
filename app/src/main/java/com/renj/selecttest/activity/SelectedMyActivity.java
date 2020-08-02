@@ -13,7 +13,6 @@ import com.renj.imageselect.listener.OnSelectedImageChange;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
 import com.renj.imageselect.utils.ImageSelectUtils;
-import com.renj.imageselect.utils.CommonUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
 import com.renj.selecttest.utils.Utils;
@@ -75,7 +74,7 @@ public class SelectedMyActivity extends BaseActivity {
                 .selectCount(imageNum)
                 .isShowCamera(true)
                 .isContinuityEnlarge(false)
-                .isClip(false)
+                .isCrop(false)
                 .build();
         ImageSelectUtils.getInstance().create()
                 .selectedLayoutId(R.layout.my_selected_layout)

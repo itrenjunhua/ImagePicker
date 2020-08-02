@@ -88,6 +88,11 @@ public interface DefaultConfigData {
     float CROP_BORDER_WIDTH = 1;
 
     /**
+     * 分割线条宽度
+     */
+    float CROP_CELL_BORDER_WIDTH = 0.5f;
+
+    /**
      * 缩放点半径
      */
     float CROP_SCALE_POINT_RADIUS = 3;
