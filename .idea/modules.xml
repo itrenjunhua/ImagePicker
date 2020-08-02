@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ImageSelect.iml" filepath="$PROJECT_DIR$/.idea/ImageSelect.iml" group="ImageSelect" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ImageSelect.iml" filepath="$PROJECT_DIR$/.idea/modules/ImageSelect.iml" group="ImageSelect" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="ImageSelect/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/glidelibrary/glidelibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/glidelibrary/glidelibrary.iml" group="ImageSelect/glidelibrary" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/imageloaderlibrary/imageloaderlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/imageloaderlibrary/imageloaderlibrary.iml" group="ImageSelect/imageloaderlibrary" />

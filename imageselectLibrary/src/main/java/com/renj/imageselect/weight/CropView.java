@@ -9,16 +9,12 @@ import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.renj.imageselect.model.CropConstants;
 import com.renj.imageselect.model.DefaultConfigData;
 import com.renj.imageselect.model.ImageParamsConfig;
-
-import java.util.logging.Logger;
 
 import static android.graphics.Canvas.ALL_SAVE_FLAG;
 
@@ -48,6 +44,8 @@ public class CropView extends View {
     private int borderColor = DefaultConfigData.CROP_BORDER_COLOR;
     // 边框宽度
     private float borderWidth = dp2Px(DefaultConfigData.CROP_BORDER_WIDTH);
+    // 缩放点半径
+    private float scalePointRadius = dp2Px(DefaultConfigData.CROP_SCALE_POINT_RADIUS);
     // 裁剪宽度
     private int cropWidth = dp2Px(DefaultConfigData.WIDTH);
     // 裁剪高度
@@ -136,8 +134,32 @@ public class CropView extends View {
             }
         } else {
             canvas.drawRect(cropArea, bgPaint);
-            if (borderWidth > 0)
+            if (borderWidth > 0) {
+                borderPaint.setStyle(Paint.Style.STROKE);
                 canvas.drawRect(cropArea, borderPaint);
+                if (touchHandlerType != CropConstants.TOUCH_NONE) {
+                    borderPaint.setStyle(Paint.Style.FILL);
+                    // 绘制拖动点 四个角和四条边中点
+//                    canvas.drawPoints(new float[]{
+//                            cropArea.left, cropArea.top,
+//                            cropArea.right, cropArea.top,
+//                            cropArea.right, cropArea.bottom,
+//                            cropArea.left, cropArea.bottom,
+//                            cropArea.left, cropArea.centerY(),
+//                            cropArea.centerX(), cropArea.top,
+//                            cropArea.right, cropArea.centerY(),
+//                            cropArea.centerX(), cropArea.bottom
+//                    }, borderPaint);
+                    canvas.drawCircle(cropArea.left, cropArea.top, scalePointRadius, borderPaint);
+                    canvas.drawCircle(cropArea.right, cropArea.top, scalePointRadius, borderPaint);
+                    canvas.drawCircle(cropArea.right, cropArea.bottom, scalePointRadius, borderPaint);
+                    canvas.drawCircle(cropArea.left, cropArea.bottom, scalePointRadius, borderPaint);
+                    canvas.drawCircle(cropArea.left, cropArea.centerY(), scalePointRadius, borderPaint);
+                    canvas.drawCircle(cropArea.centerX(), cropArea.top, scalePointRadius, borderPaint);
+                    canvas.drawCircle(cropArea.right, cropArea.centerY(), scalePointRadius, borderPaint);
+                    canvas.drawCircle(cropArea.centerX(), cropArea.bottom, scalePointRadius, borderPaint);
+                }
+            }
         }
 
         if (cellLineCount > 0) {

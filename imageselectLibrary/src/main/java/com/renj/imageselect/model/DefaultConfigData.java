@@ -88,6 +88,11 @@ public interface DefaultConfigData {
     float CROP_BORDER_WIDTH = 1;
 
     /**
+     * 缩放点半径
+     */
+    float CROP_SCALE_POINT_RADIUS = 3;
+
+    /**
      * 裁剪线条边框颜色
      */
     int CROP_BORDER_COLOR = 0xFFFFFFFF;

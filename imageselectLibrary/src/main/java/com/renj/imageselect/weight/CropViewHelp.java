@@ -51,13 +51,17 @@ public class CropViewHelp {
         } else if ((downX >= rectF.left - CROP_VIEW_EVENT_OFFSET && downX <= rectF.left + CROP_VIEW_EVENT_OFFSET)
                 && (downY >= rectF.bottom - CROP_VIEW_EVENT_OFFSET && downY <= rectF.bottom + CROP_VIEW_EVENT_OFFSET)) {
             eventArea = CROP_VIEW_EVENT_AREA_LEFT_BOTTOM;
-        } else if (downX >= rectF.left - CROP_VIEW_EVENT_OFFSET && downX <= rectF.left + CROP_VIEW_EVENT_OFFSET) {
+        } else if ((downX >= rectF.left - CROP_VIEW_EVENT_OFFSET && downX <= rectF.left + CROP_VIEW_EVENT_OFFSET)
+                && (downY >= rectF.centerY() - CROP_VIEW_EVENT_OFFSET && downY <= rectF.centerY() + CROP_VIEW_EVENT_OFFSET)) {
             eventArea = CROP_VIEW_EVENT_AREA_LEFT;
-        } else if (downY >= rectF.top - CROP_VIEW_EVENT_OFFSET && downY <= rectF.top + CROP_VIEW_EVENT_OFFSET) {
+        } else if ((downY >= rectF.top - CROP_VIEW_EVENT_OFFSET && downY <= rectF.top + CROP_VIEW_EVENT_OFFSET)
+                && (downX >= rectF.centerX() - CROP_VIEW_EVENT_OFFSET && downX <= rectF.centerX() + CROP_VIEW_EVENT_OFFSET)) {
             eventArea = CROP_VIEW_EVENT_AREA_TOP;
-        } else if (downX >= rectF.right - CROP_VIEW_EVENT_OFFSET && downX <= rectF.right + CROP_VIEW_EVENT_OFFSET) {
+        } else if ((downX >= rectF.right - CROP_VIEW_EVENT_OFFSET && downX <= rectF.right + CROP_VIEW_EVENT_OFFSET)
+                && (downY >= rectF.centerY() - CROP_VIEW_EVENT_OFFSET && downY <= rectF.centerY() + CROP_VIEW_EVENT_OFFSET)) {
             eventArea = CROP_VIEW_EVENT_AREA_RIGHT;
-        } else if (downY >= rectF.bottom - CROP_VIEW_EVENT_OFFSET && downY <= rectF.bottom + CROP_VIEW_EVENT_OFFSET) {
+        } else if ((downY >= rectF.bottom - CROP_VIEW_EVENT_OFFSET && downY <= rectF.bottom + CROP_VIEW_EVENT_OFFSET)
+                && (downX >= rectF.centerX() - CROP_VIEW_EVENT_OFFSET && downX <= rectF.centerX() + CROP_VIEW_EVENT_OFFSET)) {
             eventArea = CROP_VIEW_EVENT_AREA_BOTTOM;
         } else if (rectF.contains(downX, downY)) {
             eventArea = CROP_VIEW_EVENT_AREA_CENTER;
