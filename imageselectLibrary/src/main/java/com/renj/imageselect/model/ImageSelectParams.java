@@ -52,12 +52,12 @@ public class ImageSelectParams {
     }
 
     public static class Builder {
-        File fileSavePath;
+        private File fileSavePath;
 
-        boolean showLogger;
-        String loggerTag;
+        private boolean showLogger;
+        private String loggerTag;
 
-        boolean center;
+        private boolean center;
 
         public Builder() {
             this.fileSavePath = getDefaultSaveDir();

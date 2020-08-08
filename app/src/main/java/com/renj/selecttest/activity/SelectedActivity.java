@@ -72,16 +72,14 @@ public class SelectedActivity extends BaseActivity {
                 .isShowCamera(true)
                 .isContinuityEnlarge(false)
                 .isCrop(false)
-                .build();
-        ImageSelectUtils.getInstance().create()
-                .imageParamsConfig(imageParamsConfig)
-                .openImageSelectPage(this)
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> resultList) {
                         imageShowAdapter.setDatas(resultList);
                     }
-                });
+                })
+                .build();
+        ImageSelectUtils.getInstance().start(this, imageParamsConfig);
     }
 
 }

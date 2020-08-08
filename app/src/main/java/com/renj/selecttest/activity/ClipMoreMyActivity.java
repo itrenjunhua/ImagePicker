@@ -85,10 +85,8 @@ public class ClipMoreMyActivity extends BaseActivity {
                 .isContinuityEnlarge(false)
                 .maskColor(Color.parseColor("#80000000"))
                 .cropBorderColor(Color.parseColor("#ffffff"))
-                .build();
-        ImageSelectUtils.getInstance().create()
                 .selectedLayoutId(R.layout.my_selected_layout)
-                .clipMoreLayoutId(R.layout.my_clip_more_layout)
+                .cropMoreLayoutId(R.layout.my_clip_more_layout)
                 .onSelectedImageChange(new OnSelectedImageChange() {
                     @Override
                     public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
@@ -103,21 +101,21 @@ public class ClipMoreMyActivity extends BaseActivity {
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
                     }
                 })
-                .onClipImageChange(new OnCropImageChange() {
+                .onCropImageChange(new OnCropImageChange() {
                     @Override
-                    public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
-                                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
-                                             boolean isCircleClip, int clipCount, int totalCount) {
-                        Log.i("ClipMoreMyActivity", "imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
+                    public void onCropChange(@NonNull TextView clipView, @NonNull TextView cancelView,
+                                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> cropResultList,
+                                             boolean isOvalCrop, int cropCount, int totalCount) {
+                        Log.i("ClipMoreMyActivity", "imageModel = [" + imageModel + "], clipResultList = [" + cropResultList + "], isCircleClip = [" + isOvalCrop + "], clipCount = [" + cropCount + "], totalCount = [" + totalCount + "]");
                     }
                 })
-                .imageParamsConfig(imageParamsConfig)
-                .openImageSelectPage(this)
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> resultList) {
                         imageShowAdapter.setDatas(resultList);
                     }
-                });
+                })
+                .build();
+        ImageSelectUtils.getInstance().start(this, imageParamsConfig);
     }
 }

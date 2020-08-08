@@ -63,16 +63,14 @@ public class ClipSingleActivity extends BaseActivity {
                 .cropBorderWidth(2)
                 .maskColor(Color.parseColor("#88000000"))
                 .cropBorderColor(Color.parseColor("#ff0000"))
-                .build();
-        ImageSelectUtils.getInstance().create()
-                .imageParamsConfig(imageParamsConfig)
-                .openImageSelectPage(this)
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> resultList) {
                         ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult);
                     }
-                });
+                })
+                .build();
+        ImageSelectUtils.getInstance().start(this, imageParamsConfig);
     }
 
 }

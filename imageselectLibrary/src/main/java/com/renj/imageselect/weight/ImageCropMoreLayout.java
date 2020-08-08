@@ -143,7 +143,7 @@ public class ImageCropMoreLayout extends LinearLayout implements View.OnClickLis
                                     CommonUtils.i("裁剪：(" + (currentIndex + 1) + " / " + srcImages.size() + ")");
                                 tvCrop.setText("(" + (currentIndex + 1) + " / " + srcImages.size() + ")裁剪");
                                 if (onCropImageChange != null) {
-                                    onCropImageChange.onClipChange(tvCrop, tvCancel, imageModel, resultImages, imageParamsConfig.isOvalCrop(), (currentIndex + 1), srcImages.size());
+                                    onCropImageChange.onCropChange(tvCrop, tvCancel, imageModel, resultImages, imageParamsConfig.isOvalCrop(), (currentIndex + 1), srcImages.size());
                                 }
                             }
                         }

@@ -3,8 +3,14 @@ package com.renj.imageselect.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.FloatRange;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.renj.imageselect.listener.OnCropImageChange;
 import com.renj.imageselect.listener.OnResultCallBack;
+import com.renj.imageselect.listener.OnSelectedImageChange;
+import com.renj.imageselect.utils.ImageLoaderHelp;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +29,7 @@ import java.util.List;
  * ======================================================================
  */
 public class ImageParamsConfig implements Parcelable {
+    /*********** 图片选择和裁剪参数 ***********/
     int width; // 裁剪宽度
     int height; // 裁剪高度
     int selectCount; // 选择图片张数
@@ -46,7 +53,24 @@ public class ImageParamsConfig implements Parcelable {
     int widthRatio; // 改变裁剪范围的宽比例
     int heightRadio; // 改变裁剪范围的高比例
 
+    /*********** 选择图片页面动态布局 ***********/
+    private int gridColNumbers; // 图片选择页面列数
+    @LayoutRes
+    private int selectedLayoutId; // 选择图片页面布局资源id
+    @LayoutRes
+    private int itemCameraLayoutId; // 选择图片条目布局资源文件(点击打开相机条目)
+    @LayoutRes
+    private int itemImageLayoutId; // 选择图片条目布局资源文件(图片显示条目)
+
+    /*********** 裁剪图片页面动态布局 ***********/
+    @LayoutRes
+    private int cropSingleLayoutId; // 裁剪单张图片页面布局资源 id
+    @LayoutRes
+    private int cropMoreLayoutId; // 裁剪单张图片页面布局资源 id
+
+
     private ImageParamsConfig(Builder builder) {
+        /*********** 图片选择和裁剪参数 ***********/
         this.width = builder.width;
         this.height = builder.height;
         this.selectCount = builder.selectCount;
@@ -68,6 +92,21 @@ public class ImageParamsConfig implements Parcelable {
         this.autoRatioScale = builder.autoRatioScale;
         this.widthRatio = builder.widthRatio;
         this.heightRadio = builder.heightRadio;
+
+        /*********** 选择图片页面动态布局和回调 ***********/
+        this.gridColNumbers = builder.gridColNumbers; // 图片选择页面列数
+        this.selectedLayoutId = builder.selectedLayoutId;
+        this.itemCameraLayoutId = builder.itemCameraLayoutId;
+        this.itemImageLayoutId = builder.itemImageLayoutId;
+        ImageLoaderHelp.getInstance().setOnSelectedImageChange(builder.onSelectedImageChange);
+
+        /*********** 裁剪图片页面动态布局和回调 ***********/
+        this.cropSingleLayoutId = builder.cropSingleLayoutId;
+        this.cropMoreLayoutId = builder.cropMoreLayoutId;
+        ImageLoaderHelp.getInstance().setOnCropImageChange(builder.onCropImageChange);
+
+        /*********** 结果回调 ***********/
+        ImageLoaderHelp.getInstance().setOnResultCallBack(builder.onResultCallBack);
     }
 
     public int getWidth() {
@@ -154,31 +193,114 @@ public class ImageParamsConfig implements Parcelable {
         return heightRadio;
     }
 
+    public int getGridColNumbers() {
+        return gridColNumbers;
+    }
+
+    public int getSelectedLayoutId() {
+        return selectedLayoutId;
+    }
+
+    public int getItemCameraLayoutId() {
+        return itemCameraLayoutId;
+    }
+
+    public int getItemImageLayoutId() {
+        return itemImageLayoutId;
+    }
+
+
+    public int getCropSingleLayoutId() {
+        return cropSingleLayoutId;
+    }
+
+    public int getCropMoreLayoutId() {
+        return cropMoreLayoutId;
+    }
+
     public static class Builder {
-        int width = DefaultConfigData.WIDTH; // 裁剪宽度
-        int height = DefaultConfigData.HEIGHT; // 裁剪高度
-        int selectCount = DefaultConfigData.SELECT_COUNT; // 选择图片张数
-        boolean isCrop = DefaultConfigData.IS_CROP; // 是否裁剪
-        boolean isOvalCrop = DefaultConfigData.IS_OVAL_CROP; // 是否裁剪成圆形图片
-        float minScale = DefaultConfigData.MIN_SCALE; // 图片最小缩放倍数
-        float maxScale = DefaultConfigData.MAX_SCALE; // 图片最大缩放倍数
+        /*********** 图片选择和裁剪参数 ***********/
+        private int width; // 裁剪宽度
+        private int height; // 裁剪高度
+        private int selectCount; // 选择图片张数
+        private boolean isCrop; // 是否裁剪
+        private boolean isOvalCrop; // 是否裁剪成圆形图片
+        private float minScale; // 图片最小缩放倍数
+        private float maxScale; // 图片最大缩放倍数
         @FloatRange(from = 0, to = 1)
-        float boundaryResistance = DefaultConfigData.BOUNDARY_RESISTANCE; // 边界滑动阻力系数
-        float cropBorderWidth = DefaultConfigData.CROP_BORDER_WIDTH; // 裁剪线条宽度
-        int cropBorderColor = DefaultConfigData.CROP_BORDER_COLOR; // 裁剪线条颜色
-        int maskColor = DefaultConfigData.MASK_COLOR; // 遮罩层颜色
-        boolean isContinuityEnlarge = DefaultConfigData.IS_CONTINUITY_ENLARGE; // 是否双击连续放大
-        boolean isShowCamera = DefaultConfigData.IS_SHOW_CAMERA; // 是否显示打开相机按钮
-        String[] fileSuffix; // 后缀名
-        int cellLineCount = DefaultConfigData.CELL_LINE_COUNT; // 需要绘制的分割线条数 小于1时表示不绘制
-        float cellBorderWidth = DefaultConfigData.CROP_CELL_BORDER_WIDTH; // 分割线条宽度
-        float scalePointRadius = DefaultConfigData.CROP_SCALE_POINT_RADIUS; // 缩放点半径
-        int touchHandlerType = DefaultConfigData.TOUCH_HANDLER_TYPE; // 触摸处理类型 移动/缩放/移动+缩放/不做处理
-        boolean autoRatioScale = DefaultConfigData.AUTO_RATIO_SCALE; // 改变裁剪范围时,是否按照比例改变
-        int widthRatio = DefaultConfigData.SCALE_WIDTH_RATIO; // 改变裁剪范围的宽比例
-        int heightRadio = DefaultConfigData.SCALE_HEIGHT_RATIO; // 改变裁剪范围的高比例
+        private float boundaryResistance; // 边界滑动阻力系数
+        private float cropBorderWidth; // 裁剪线条宽度
+        private int cropBorderColor; // 裁剪线条颜色
+        private int maskColor; // 遮罩层颜色
+        private boolean isContinuityEnlarge; // 是否双击连续放大
+        private boolean isShowCamera; // 是否显示打开相机按钮
+        private String[] fileSuffix; // 后缀名
+        private int cellLineCount; // 需要绘制的分割线条数 小于1时表示不绘制
+        private float cellBorderWidth; // 分割线条宽度
+        private float scalePointRadius; // 缩放点半径
+        private int touchHandlerType; // 触摸处理类型 移动/缩放/移动+缩放/不做处理
+        private boolean autoRatioScale; // 改变裁剪范围时,是否按照比例改变
+        private int widthRatio; // 改变裁剪范围的宽比例
+        private int heightRadio; // 改变裁剪范围的高比例
+
+        /*********** 选择图片页面动态布局和回调 ***********/
+        private int gridColNumbers; // 图片选择页面列数
+        @LayoutRes
+        private int selectedLayoutId; // 选择图片页面布局资源id
+        @LayoutRes
+        private int itemCameraLayoutId; // 选择图片条目布局资源文件(点击打开相机条目)
+        @LayoutRes
+        private int itemImageLayoutId; // 选择图片条目布局资源文件(图片显示条目)
+        private OnSelectedImageChange onSelectedImageChange;  // 图片选择页面，图片选择发生变化时回调
+
+        /*********** 裁剪图片页面动态布局和回调 ***********/
+        @LayoutRes
+        private int cropSingleLayoutId; // 裁剪单张图片页面布局资源 id
+        @LayoutRes
+        private int cropMoreLayoutId; // 裁剪单张图片页面布局资源 id
+        private OnCropImageChange onCropImageChange; // 图片发生裁剪时回调
+
+        /*********** 结果回调 ***********/
+        private OnResultCallBack onResultCallBack;
 
         public Builder() {
+            /*********** 图片选择和裁剪参数 ***********/
+            this.width = DefaultConfigData.WIDTH; // 裁剪宽度
+            this.height = DefaultConfigData.HEIGHT; // 裁剪高度
+            this.selectCount = DefaultConfigData.SELECT_COUNT; // 选择图片张数
+            this.isCrop = DefaultConfigData.IS_CROP; // 是否裁剪
+            this.isOvalCrop = DefaultConfigData.IS_OVAL_CROP; // 是否裁剪成圆形图片
+            this.minScale = DefaultConfigData.MIN_SCALE; // 图片最小缩放倍数
+            this.maxScale = DefaultConfigData.MAX_SCALE; // 图片最大缩放倍数
+            this.boundaryResistance = DefaultConfigData.BOUNDARY_RESISTANCE; // 边界滑动阻力系数
+            this.cropBorderWidth = DefaultConfigData.CROP_BORDER_WIDTH; // 裁剪线条宽度
+            this.cropBorderColor = DefaultConfigData.CROP_BORDER_COLOR; // 裁剪线条颜色
+            this.maskColor = DefaultConfigData.MASK_COLOR; // 遮罩层颜色
+            this.isContinuityEnlarge = DefaultConfigData.IS_CONTINUITY_ENLARGE; // 是否双击连续放大
+            this.isShowCamera = DefaultConfigData.IS_SHOW_CAMERA; // 是否显示打开相机按钮
+            this.fileSuffix = null; // 后缀名
+            this.cellLineCount = DefaultConfigData.CELL_LINE_COUNT; // 需要绘制的分割线条数 小于1时表示不绘制
+            this.cellBorderWidth = DefaultConfigData.CROP_CELL_BORDER_WIDTH; // 分割线条宽度
+            this.scalePointRadius = DefaultConfigData.CROP_SCALE_POINT_RADIUS; // 缩放点半径
+            this.touchHandlerType = DefaultConfigData.TOUCH_HANDLER_TYPE; // 触摸处理类型 移动/缩放/移动+缩放/不做处理
+            this.autoRatioScale = DefaultConfigData.AUTO_RATIO_SCALE; // 改变裁剪范围时,是否按照比例改变
+            this.widthRatio = DefaultConfigData.SCALE_WIDTH_RATIO; // 改变裁剪范围的宽比例
+            this.heightRadio = DefaultConfigData.SCALE_HEIGHT_RATIO; // 改变裁剪范围的高比例
+
+            /*********** 选择图片页面动态布局和回调 ***********/
+            this.gridColNumbers = DefaultConfigData.GRID_COL_NUMBERS; // 图片选择页面列数
+            this.selectedLayoutId = DefaultConfigData.SELECTED_IMAGE_LAYOUT;
+            this.itemCameraLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_CAMERA_LAYOUT;
+            this.itemImageLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_IMAGE_LAYOUT;
+            this.onSelectedImageChange = null;
+
+            /*********** 裁剪图片页面动态布局和回调 ***********/
+            this.cropSingleLayoutId = DefaultConfigData.CROP_SINGLE_LAYOUT;
+            this.cropMoreLayoutId = DefaultConfigData.CROP_MORE_LAYOUT;
+            this.onCropImageChange = null;
+
+            /*********** 结果回调 ***********/
+            this.onResultCallBack = null;
         }
 
         /**
@@ -414,6 +536,116 @@ public class ImageParamsConfig implements Parcelable {
         }
 
         /**
+         * 设置图片选择页面列数
+         *
+         * @param gridColNumbers 列数
+         * @return
+         */
+        public Builder gridColNumbers(int gridColNumbers) {
+            this.gridColNumbers = gridColNumbers;
+            return this;
+        }
+
+        /**
+         * 动态设置图片选择页面的布局。<br/>
+         * <b>注意：请参照 默认布局文件 image_select_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
+         *
+         * @param selectedLayoutId 布局文件资源id
+         * @return
+         */
+        public Builder selectedLayoutId(@LayoutRes int selectedLayoutId) {
+            this.selectedLayoutId = selectedLayoutId;
+            return this;
+        }
+
+        /**
+         * 动态设置选择图片条目布局资源文件(点击打开相机条目)。<br/>
+         * <b>注意：请参照 默认布局文件 image_select_camera_item.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
+         *
+         * @param itemCameraLayoutId 布局文件资源id
+         * @return
+         */
+        public Builder selectItemCameraLayoutId(@LayoutRes int itemCameraLayoutId) {
+            this.itemCameraLayoutId = itemCameraLayoutId;
+            return this;
+        }
+
+        /**
+         * 动态设置选择图片条目布局资源文件(图片显示条目)。<br/>
+         * <b>注意：请参照 默认布局文件 image_select_item.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
+         *
+         * @param itemImageLayoutId 布局文件资源id
+         * @return
+         */
+        public Builder selectItemImageLayoutId(@LayoutRes int itemImageLayoutId) {
+            this.itemImageLayoutId = itemImageLayoutId;
+            return this;
+        }
+
+        /**
+         * 设置图片选择改变监听。<br/>
+         * <b>注意：只有在选择多张图片时才会回调，单张图片并不会回调</b>
+         *
+         * @param onSelectedImageChange 图片选择页面，图片选择发生变化时回调
+         * @return
+         */
+        public Builder onSelectedImageChange(@Nullable OnSelectedImageChange onSelectedImageChange) {
+            this.onSelectedImageChange = onSelectedImageChange;
+            return this;
+        }
+
+        /**
+         * 动态设置单张图片裁剪页面的布局。<br/>
+         * <b>注意：请参照 默认布局文件 image_crop_single_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
+         *
+         * @param cropSingleLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_crop_single_layout.xml)
+         * @return
+         */
+        public Builder cropSingleLayoutId(@LayoutRes int cropSingleLayoutId) {
+            this.cropSingleLayoutId = cropSingleLayoutId;
+            return this;
+        }
+
+        /**
+         * 动态设置多张图片裁剪页面的布局。<br/>
+         * <b>注意：请参照 默认布局文件 image_crop_more_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
+         *
+         * @param cropMoreLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_crop_more_layout.xml)
+         * @return
+         */
+        public Builder cropMoreLayoutId(@LayoutRes int cropMoreLayoutId) {
+            this.cropMoreLayoutId = cropMoreLayoutId;
+            return this;
+        }
+
+        /**
+         * 设置图片裁剪改变监听。<br/>
+         *
+         * @param onCropImageChange 图片裁剪时回调
+         * @return
+         */
+        public Builder onCropImageChange(@Nullable OnCropImageChange onCropImageChange) {
+            this.onCropImageChange = onCropImageChange;
+            return this;
+        }
+
+        /**
+         * 获取返回结果的回调<br/>
+         * <b>{@link OnResultCallBack} 注意：当选择一张图片时，集合的大小为1</b>
+         *
+         * @param onResultCallBack 结果回调
+         */
+        public Builder onResult(@NonNull OnResultCallBack onResultCallBack) {
+            this.onResultCallBack = onResultCallBack;
+            return this;
+        }
+
+        /**
          * 构建 {@link ImageParamsConfig} 对象
          *
          * @return {@link ImageParamsConfig} 对象
@@ -444,6 +676,19 @@ public class ImageParamsConfig implements Parcelable {
         dest.writeByte(this.isContinuityEnlarge ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isShowCamera ? (byte) 1 : (byte) 0);
         dest.writeStringArray(this.fileSuffix);
+        dest.writeInt(this.cellLineCount);
+        dest.writeFloat(this.cellBorderWidth);
+        dest.writeFloat(this.scalePointRadius);
+        dest.writeInt(this.touchHandlerType);
+        dest.writeByte(this.autoRatioScale ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.widthRatio);
+        dest.writeInt(this.heightRadio);
+        dest.writeInt(this.gridColNumbers);
+        dest.writeInt(this.selectedLayoutId);
+        dest.writeInt(this.itemCameraLayoutId);
+        dest.writeInt(this.itemImageLayoutId);
+        dest.writeInt(this.cropSingleLayoutId);
+        dest.writeInt(this.cropMoreLayoutId);
     }
 
     protected ImageParamsConfig(Parcel in) {
@@ -461,6 +706,19 @@ public class ImageParamsConfig implements Parcelable {
         this.isContinuityEnlarge = in.readByte() != 0;
         this.isShowCamera = in.readByte() != 0;
         this.fileSuffix = in.createStringArray();
+        this.cellLineCount = in.readInt();
+        this.cellBorderWidth = in.readFloat();
+        this.scalePointRadius = in.readFloat();
+        this.touchHandlerType = in.readInt();
+        this.autoRatioScale = in.readByte() != 0;
+        this.widthRatio = in.readInt();
+        this.heightRadio = in.readInt();
+        this.gridColNumbers = in.readInt();
+        this.selectedLayoutId = in.readInt();
+        this.itemCameraLayoutId = in.readInt();
+        this.itemImageLayoutId = in.readInt();
+        this.cropSingleLayoutId = in.readInt();
+        this.cropMoreLayoutId = in.readInt();
     }
 
     public static final Parcelable.Creator<ImageParamsConfig> CREATOR = new Parcelable.Creator<ImageParamsConfig>() {

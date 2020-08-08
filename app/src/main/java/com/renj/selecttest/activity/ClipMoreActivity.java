@@ -82,15 +82,13 @@ public class ClipMoreActivity extends BaseActivity {
                 .isContinuityEnlarge(false)
                 .maskColor(Color.parseColor("#80000000"))
                 .cropBorderColor(Color.parseColor("#ffffff"))
-                .build();
-        ImageSelectUtils.getInstance().create()
-                .imageParamsConfig(imageParamsConfig)
-                .openImageSelectPage(this)
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> resultList) {
                         imageShowAdapter.setDatas(resultList);
                     }
-                });
+                })
+                .build();
+        ImageSelectUtils.getInstance().start(this, imageParamsConfig);
     }
 }

@@ -1,6 +1,7 @@
 package com.renj.imageselect.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -26,16 +26,13 @@ import android.widget.TextView;
 
 import com.renj.imageselect.R;
 import com.renj.imageselect.adapter.ImageSelectAdapter;
-import com.renj.imageselect.listener.OnCropImageChange;
-import com.renj.imageselect.listener.OnResultCallBack;
-import com.renj.imageselect.listener.OnSelectedImageChange;
-import com.renj.imageselect.model.DefaultConfigData;
 import com.renj.imageselect.model.FolderModel;
 import com.renj.imageselect.model.ImageModel;
 import com.renj.imageselect.model.ImageParamsConfig;
-import com.renj.imageselect.utils.LoadSDImageUtils;
 import com.renj.imageselect.utils.CommonUtils;
 import com.renj.imageselect.utils.ImageFileUtils;
+import com.renj.imageselect.utils.ImageLoaderHelp;
+import com.renj.imageselect.utils.LoadSDImageUtils;
 import com.renj.imageselect.weight.ImageCropMoreLayout;
 import com.renj.imageselect.weight.ImageCropView;
 import com.renj.imageselect.weight.ImageMenuDialog;
@@ -131,7 +128,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      */
     private void initSelectedImageView() {
         ViewStub vsSelect = findViewById(R.id.vs_select);
-        vsSelect.setLayoutResource(create(false).selectedLayoutId);
+        vsSelect.setLayoutResource(imageParamsConfig.getSelectedLayoutId());
 
         selectView = vsSelect.inflate();
         /***** 页面基本控件 *****/
@@ -143,8 +140,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
 
         imageMenuDialog = new ImageMenuDialog(this);
 
-        gvImages.setNumColumns(create(false).gridColNumbers);
-        imageSelectAdapter = new ImageSelectAdapter(this, create(false).itemCameraLayoutId, create(false).itemImageLayoutId);
+        gvImages.setNumColumns(imageParamsConfig.getGridColNumbers());
+        imageSelectAdapter = new ImageSelectAdapter(this, imageParamsConfig.getItemCameraLayoutId(), imageParamsConfig.getItemImageLayoutId());
         gvImages.setAdapter(imageSelectAdapter);
     }
 
@@ -197,8 +194,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             imageSelectAdapter.setMaxCount(imageParamsConfig.getSelectCount());
 
             tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageParamsConfig.getSelectCount() + ") 确定");
-            if (create(false).onSelectedImageChange != null) {
-                create(false).onSelectedImageChange.onDefault(tvConfirmSelect, tvCancelSelect, imageSelectAdapter.getCheckImages().size(), imageParamsConfig.getSelectCount());
+            if (ImageLoaderHelp.getInstance().getOnSelectedImageChange() != null) {
+                ImageLoaderHelp.getInstance().getOnSelectedImageChange().onDefault(tvConfirmSelect, tvCancelSelect, imageSelectAdapter.getCheckImages().size(), imageParamsConfig.getSelectCount());
             }
 
             tvConfirmSelect.setVisibility(View.VISIBLE);
@@ -212,7 +209,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
      * 初始化裁剪单张图片页面
      */
     private void initClipSinglePage() {
-        vsClipSingle.setLayoutResource(create(false).clipSingleLayoutId);
+        vsClipSingle.setLayoutResource(imageParamsConfig.getCropSingleLayoutId());
 
         View clipSingleView = vsClipSingle.inflate();
 
@@ -222,9 +219,9 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         imageCropView = clipSingleView.findViewById(R.id.image_clip_view);
         clipLayout = clipSingleView.findViewById(R.id.clip_layout);
 
-        if (create(false).onCropImageChange != null) {
+        if (ImageLoaderHelp.getInstance().getOnCropImageChange() != null) {
             // 单张裁剪，总数为 1
-            create(false).onCropImageChange.onDefault(tvClip, tvCancel, 1, 1);
+            ImageLoaderHelp.getInstance().getOnCropImageChange().onDefault(tvClip, tvCancel, 1, 1);
         }
 
         tvCancel.setOnClickListener(this);
@@ -237,7 +234,7 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
     private void initClipMorePage() {
         vsClipMore.setLayoutResource(R.layout.image_single_crop_more_layout);
         clipMoreLayout = (ImageCropMoreLayout) vsClipMore.inflate();
-        clipMoreLayout.initView(create(false).clipMoreLayoutId, create(false).onCropImageChange);
+        clipMoreLayout.initView(imageParamsConfig.getCropMoreLayoutId(), ImageLoaderHelp.getInstance().getOnCropImageChange());
     }
 
     /**
@@ -342,8 +339,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             if (imageParamsConfig.isCrop()) {
                 pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
-                if (create(false).onResultCallBack != null)
-                    create(false).onResultCallBack.onResult(checkImages);
+                if (ImageLoaderHelp.getInstance().getOnResultCallBack() != null)
+                    ImageLoaderHelp.getInstance().getOnResultCallBack().onResult(checkImages);
                 if (CommonUtils.isShowLogger())
                     CommonUtils.i("拍照成功，直接返回已选择和拍照图片");
                 finish();
@@ -363,10 +360,10 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             imageCropView.setImage(imageModel.path);
             pageStatusChange(STATUS_CLIP_SINGLE_PAGE);
         } else {
-            if (create(false).onResultCallBack != null) {
+            if (ImageLoaderHelp.getInstance().getOnResultCallBack() != null) {
                 ArrayList<ImageModel> selectResults = new ArrayList<>();
                 selectResults.add(imageModel);
-                create(false).onResultCallBack.onResult(selectResults);
+                ImageLoaderHelp.getInstance().getOnResultCallBack().onResult(selectResults);
             }
             if (CommonUtils.isShowLogger())
                 CommonUtils.i("单张图片选择完成");
@@ -386,8 +383,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             CommonUtils.i("已选择图片数：" + imageSelectAdapter.getCheckImages().size());
         }
         tvConfirmSelect.setText("(" + imageSelectAdapter.getCheckImages().size() + " / " + imageParamsConfig.getSelectCount() + ") 确定");
-        if (create(false).onSelectedImageChange != null) {
-            create(false).onSelectedImageChange.onSelectedChange(tvConfirmSelect, tvCancelSelect,
+        if (ImageLoaderHelp.getInstance().getOnSelectedImageChange() != null) {
+            ImageLoaderHelp.getInstance().getOnSelectedImageChange().onSelectedChange(tvConfirmSelect, tvCancelSelect,
                     imageModel, isSelected, imageSelectAdapter.getCheckImages(),
                     imageSelectAdapter.getCheckImages().size(), imageParamsConfig.getSelectCount());
         }
@@ -461,8 +458,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                         public void finish(List<ImageModel> clipResult) {
                             if (CommonUtils.isShowLogger())
                                 CommonUtils.i("多张图片裁剪完成");
-                            if (create(false).onResultCallBack != null)
-                                create(false).onResultCallBack.onResult(clipResult);
+                            if (ImageLoaderHelp.getInstance().getOnResultCallBack() != null)
+                                ImageLoaderHelp.getInstance().getOnResultCallBack().onResult(clipResult);
                             ImageSelectActivity.this.finish();
                         }
                     });
@@ -525,8 +522,8 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
             if (imageParamsConfig.isCrop()) {
                 pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
-                if (create(false).onResultCallBack != null)
-                    create(false).onResultCallBack.onResult(checkImages);
+                if (ImageLoaderHelp.getInstance().getOnResultCallBack() != null)
+                    ImageLoaderHelp.getInstance().getOnResultCallBack().onResult(checkImages);
                 if (CommonUtils.isShowLogger())
                     CommonUtils.i("选择图片完成");
                 finish();
@@ -543,13 +540,13 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
                             ArrayList<ImageModel> selectResults = new ArrayList<>();
                             selectResults.add(imageModel);
 
-                            if (create(false).onCropImageChange != null) {
+                            if (ImageLoaderHelp.getInstance().getOnCropImageChange() != null) {
                                 // 单张裁剪，总数为 1
-                                create(false).onCropImageChange.onClipChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isOvalCrop(), 1, 1);
+                                ImageLoaderHelp.getInstance().getOnCropImageChange().onCropChange(tvClip, tvCancel, imageModel, selectResults, imageParamsConfig.isOvalCrop(), 1, 1);
                             }
 
-                            if (create(false).onResultCallBack != null) {
-                                create(false).onResultCallBack.onResult(selectResults);
+                            if (ImageLoaderHelp.getInstance().getOnResultCallBack() != null) {
+                                ImageLoaderHelp.getInstance().getOnResultCallBack().onResult(selectResults);
                             }
                             loadingDialog.dismiss();
                             if (CommonUtils.isShowLogger())
@@ -562,199 +559,11 @@ public class ImageSelectActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private static ImageSelectObservable imageSelectObservable;
-
-    public static ImageSelectObservable create(boolean isInitObservableData) {
-        if (imageSelectObservable == null) {
-            synchronized (ImageSelectObservable.class) {
-                if (imageSelectObservable == null)
-                    imageSelectObservable = new ImageSelectObservable();
-            }
-        }
-        if (isInitObservableData)
-            imageSelectObservable.init();
-        return imageSelectObservable;
-    }
-
-    /**
-     * 提供动态布局配置、选择图片参数配置、打开图片选择界面的返回结果回调方法
-     */
-    public static class ImageSelectObservable {
-        OnResultCallBack onResultCallBack;
-        ImageParamsConfig imageParamsConfig;
-
-        /*********** 选择图片页面动态布局和回调 ***********/
-        int gridColNumbers; // 图片选择页面列数
-        @LayoutRes
-        int selectedLayoutId; // 选择图片页面布局资源id
-        @LayoutRes
-        private int itemCameraLayoutId; // 选择图片条目布局资源文件(点击打开相机条目)
-        @LayoutRes
-        private int itemImageLayoutId; // 选择图片条目布局资源文件(图片显示条目)
-        OnSelectedImageChange onSelectedImageChange;  // 图片选择页面，图片选择发生变化时回调
-
-        /*********** 裁剪图片页面动态布局和回调 ***********/
-        @LayoutRes
-        int clipSingleLayoutId; // 裁剪单张图片页面布局资源 id
-        @LayoutRes
-        int clipMoreLayoutId; // 裁剪单张图片页面布局资源 id
-        OnCropImageChange onCropImageChange; // 图片发生裁剪时回调
-
-        ImageSelectObservable() {
-        }
-
-        private void init() {
-            onResultCallBack = null;
-            imageParamsConfig = null;
-            gridColNumbers = DefaultConfigData.GRID_COL_NUMBERS; // 图片选择页面列数
-            selectedLayoutId = DefaultConfigData.SELECTED_IMAGE_LAYOUT;
-            itemCameraLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_CAMERA_LAYOUT;
-            itemImageLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_IMAGE_LAYOUT;
-            onSelectedImageChange = null;
-            clipSingleLayoutId = DefaultConfigData.CROP_SINGLE_LAYOUT;
-            clipMoreLayoutId = DefaultConfigData.CROP_MORE_LAYOUT;
-            onCropImageChange = null;
-        }
-
-        /**
-         * 设置图片选择页面列数
-         *
-         * @param gridColNumbers 列数
-         * @return
-         */
-        public ImageSelectObservable gridColNumbers(int gridColNumbers) {
-            this.gridColNumbers = gridColNumbers;
-            return this;
-        }
-
-        /**
-         * 动态设置图片选择页面的布局。<br/>
-         * <b>注意：请参照 默认布局文件 image_select_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
-         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
-         *
-         * @param selectedLayoutId 布局文件资源id
-         * @return {@link ImageSelectObservable} 对象
-         */
-        public ImageSelectObservable selectedLayoutId(@LayoutRes int selectedLayoutId) {
-            this.selectedLayoutId = selectedLayoutId;
-            return this;
-        }
-
-        /**
-         * 动态设置选择图片条目布局资源文件(点击打开相机条目)。<br/>
-         * <b>注意：请参照 默认布局文件 image_select_camera_item.xml ，在默认布局文件中有 id 的控件为必须控件，
-         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
-         *
-         * @param itemCameraLayoutId 布局文件资源id
-         * @return {@link ImageSelectObservable} 对象
-         */
-        public ImageSelectObservable selectItemCameraLayoutId(@LayoutRes int itemCameraLayoutId) {
-            this.itemCameraLayoutId = itemCameraLayoutId;
-            return this;
-        }
-
-        /**
-         * 动态设置选择图片条目布局资源文件(图片显示条目)。<br/>
-         * <b>注意：请参照 默认布局文件 image_select_item.xml ，在默认布局文件中有 id 的控件为必须控件，
-         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
-         *
-         * @param itemImageLayoutId 布局文件资源id
-         * @return {@link ImageSelectObservable} 对象
-         */
-        public ImageSelectObservable selectItemImageLayoutId(@LayoutRes int itemImageLayoutId) {
-            this.itemImageLayoutId = itemImageLayoutId;
-            return this;
-        }
-
-        /**
-         * 设置图片选择改变监听。<br/>
-         * <b>注意：只有在选择多张图片时才会回调，单张图片并不会回调</b>
-         *
-         * @param onSelectedImageChange 图片选择页面，图片选择发生变化时回调
-         * @return {@link ImageSelectObservable} 对象
-         */
-        public ImageSelectObservable onSelectedImageChange(@Nullable OnSelectedImageChange onSelectedImageChange) {
-            this.onSelectedImageChange = onSelectedImageChange;
-            return this;
-        }
-
-        /**
-         * 动态设置单张图片裁剪页面的布局。<br/>
-         * <b>注意：请参照 默认布局文件 image_crop_single_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
-         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
-         *
-         * @param clipSingleLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_crop_single_layout.xml)
-         * @return {@link ImageSelectObservable} 对象
-         */
-        public ImageSelectObservable clipSingleLayoutId(@LayoutRes int clipSingleLayoutId) {
-            this.clipSingleLayoutId = clipSingleLayoutId;
-            return this;
-        }
-
-        /**
-         * 动态设置多张图片裁剪页面的布局。<br/>
-         * <b>注意：请参照 默认布局文件 image_crop_more_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
-         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
-         *
-         * @param clipMoreLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_crop_more_layout.xml)
-         * @return {@link ImageSelectObservable} 对象
-         */
-        public ImageSelectObservable clipMoreLayoutId(@LayoutRes int clipMoreLayoutId) {
-            this.clipMoreLayoutId = clipMoreLayoutId;
-            return this;
-        }
-
-        /**
-         * 设置图片裁剪改变监听。<br/>
-         *
-         * @param onCropImageChange 图片裁剪时回调
-         * @return {@link ImageSelectObservable} 对象
-         */
-        public ImageSelectObservable onClipImageChange(@Nullable OnCropImageChange onCropImageChange) {
-            this.onCropImageChange = onCropImageChange;
-            return this;
-        }
-
-        /**
-         * 设置选择和裁剪配置参数<br/>
-         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #imageParamsConfig(ImageParamsConfig)} 方法，
-         * 在调用 {@link #openImageSelectPage(Context)} 方法。
-         * 如果不调用，将使用 {@link com.renj.imageselect.model.DefaultConfigData} 中的数据。
-         * 默认选择的张数为1。</b>
-         *
-         * @param imageParamsConfig {@link ImageParamsConfig} 对象
-         * @return {@link ImageSelectObservable} 对象
-         */
-        public ImageSelectObservable imageParamsConfig(@NonNull ImageParamsConfig imageParamsConfig) {
-            this.imageParamsConfig = imageParamsConfig;
-            return this;
-        }
-
-        /**
-         * 打开图片选择界面<br/>
-         * <b>注意：如果需要配置选择或裁剪参数，一定要先调用 {@link #imageParamsConfig(ImageParamsConfig)} 方法，
-         * 在调用 {@link #openImageSelectPage(Context)} 方法。
-         * 如果不调用，将使用 {@link com.renj.imageselect.model.DefaultConfigData} 中的数据。
-         * 默认选择的张数为1。</b>
-         *
-         * @param context 上下文
-         * @return {@link ImageSelectObservable} 对象
-         */
-        public ImageSelectObservable openImageSelectPage(@NonNull Context context) {
-            Intent intent = new Intent(context, ImageSelectActivity.class);
-            intent.putExtra("imageParamsConfig", imageParamsConfig);
-            context.startActivity(intent);
-            return this;
-        }
-
-        /**
-         * 获取返回结果的回调<br/>
-         * <b>{@link OnResultCallBack} 注意：当选择一张图片时，集合的大小为1</b>
-         *
-         * @param onResultCallBack 结果回调
-         */
-        public void onResult(@NonNull OnResultCallBack onResultCallBack) {
-            this.onResultCallBack = onResultCallBack;
-        }
+    public static void open(Context context, ImageParamsConfig imageParamsConfig) {
+        Intent intent = new Intent(context, ImageSelectActivity.class);
+        intent.putExtra("imageParamsConfig", imageParamsConfig);
+        if (!(context instanceof Activity))
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

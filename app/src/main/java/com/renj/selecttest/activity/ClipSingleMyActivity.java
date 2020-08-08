@@ -66,26 +66,24 @@ public class ClipSingleMyActivity extends BaseActivity {
                 .cropBorderWidth(2)
                 .maskColor(Color.parseColor("#88000000"))
                 .cropBorderColor(Color.parseColor("#ff0000"))
-                .build();
-        ImageSelectUtils.getInstance().create()
                 // .selectedLayoutId(R.layout.my_selected_layout) // 自定义选择图片布局
-                .clipSingleLayoutId(R.layout.my_clip_single_layout) // 自定义单张裁剪部分布局
-                .onClipImageChange(new OnCropImageChange() {
+                .cropSingleLayoutId(R.layout.my_clip_single_layout) // 自定义单张裁剪部分布局
+                .onCropImageChange(new OnCropImageChange() {
                     @Override
-                    public void onClipChange(@NonNull TextView clipView, @NonNull TextView cancelView,
-                                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
-                                             boolean isCircleClip, int clipCount, int totalCount) {
+                    public void onCropChange(@NonNull TextView clipView, @NonNull TextView cancelView,
+                                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> cropResultList,
+                                             boolean isOvalCrop, int cropCount, int totalCount) {
                         // clipView.setText(clipCount + "/" + totalCount + "裁剪");
-                        Log.i("ClipSingleMyActivity","imageModel = [" + imageModel + "], clipResultList = [" + clipResultList + "], isCircleClip = [" + isCircleClip + "], clipCount = [" + clipCount + "], totalCount = [" + totalCount + "]");
+                        Log.i("ClipSingleMyActivity", "imageModel = [" + imageModel + "], clipResultList = [" + cropResultList + "], isCircleClip = [" + isOvalCrop + "], clipCount = [" + cropCount + "], totalCount = [" + totalCount + "]");
                     }
                 })
-                .imageParamsConfig(imageParamsConfig)
-                .openImageSelectPage(this)
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> resultList) {
                         ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult);
                     }
-                });
+                })
+                .build();
+        ImageSelectUtils.getInstance().start(this, imageParamsConfig);
     }
 }

@@ -27,10 +27,10 @@ public class OnCropImageChange {
      *
      * @param cropView   裁剪按钮控件
      * @param cancelView 取消按钮控件
-     * @param clipCount  当前正在裁剪的张数，正常情况下为 1
+     * @param cropCount  当前正在裁剪的张数，正常情况下为 1
      * @param totalCount 需要的裁剪张数
      */
-    public void onDefault(@NonNull TextView cropView, @NonNull TextView cancelView, int clipCount, int totalCount) {
+    public void onDefault(@NonNull TextView cropView, @NonNull TextView cancelView, int cropCount, int totalCount) {
 
     }
 
@@ -40,13 +40,13 @@ public class OnCropImageChange {
      * @param cropView     裁剪按钮控件
      * @param cancelView   取消按钮控件
      * @param imageModel   当前裁剪完成的图片
-     * @param clipResultList     裁剪后的图片集合
-     * @param isCircleClip 是否圆形裁剪
-     * @param clipCount    当前已裁剪的张数
+     * @param cropResultList     裁剪后的图片集合
+     * @param isOvalCrop 是否圆形裁剪
+     * @param cropCount    当前已裁剪的张数
      * @param totalCount   共需要裁剪的张数
      */
-    public void onClipChange(@NonNull TextView cropView, @NonNull TextView cancelView,
-                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> clipResultList,
-                             boolean isCircleClip, int clipCount, int totalCount) {
+    public void onCropChange(@NonNull TextView cropView, @NonNull TextView cancelView,
+                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> cropResultList,
+                             boolean isOvalCrop, int cropCount, int totalCount) {
     }
 }

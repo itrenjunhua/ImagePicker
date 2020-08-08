@@ -75,8 +75,6 @@ public class SelectedMyActivity extends BaseActivity {
                 .isShowCamera(true)
                 .isContinuityEnlarge(false)
                 .isCrop(false)
-                .build();
-        ImageSelectUtils.getInstance().create()
                 .selectedLayoutId(R.layout.my_selected_layout)
                 .selectItemCameraLayoutId(R.layout.my_image_select_camera_item)
                 .selectItemImageLayoutId(R.layout.my_image_select_item)
@@ -89,17 +87,17 @@ public class SelectedMyActivity extends BaseActivity {
                     @Override
                     public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
                                                  @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
-                        Log.i("SelectedMyActivity","imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
+                        Log.i("SelectedMyActivity", "imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
                     }
                 })
-                .imageParamsConfig(imageParamsConfig)
-                .openImageSelectPage(this)
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> resultList) {
                         imageShowAdapter.setDatas(resultList);
                     }
-                });
+                })
+                .build();
+        ImageSelectUtils.getInstance().start(this, imageParamsConfig);
     }
 }
