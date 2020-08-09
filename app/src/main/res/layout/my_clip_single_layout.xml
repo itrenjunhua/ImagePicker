@@ -42,7 +42,7 @@
 
     </RelativeLayout>
 
-    <com.renj.imageselect.weight.ImageCropView
+    <com.renj.imagepicker.weight.ImageCropView
         android:id="@+id/image_clip_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

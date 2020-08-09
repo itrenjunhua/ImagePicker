@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:background="@color/color_white">
 
-    <com.renj.imageselect.weight.PhotoView
+    <com.renj.imagepicker.weight.PhotoView
         android:id="@+id/photo_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <com.renj.imageselect.weight.CropView
+    <com.renj.imagepicker.weight.CropView
         android:id="@+id/crop_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

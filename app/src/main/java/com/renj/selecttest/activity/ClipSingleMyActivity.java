@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.renj.imageselect.listener.OnCropImageChange;
-import com.renj.imageselect.listener.OnResultCallBack;
-import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.model.ImageParamsConfig;
-import com.renj.imageselect.utils.ImageSelectUtils;
+import com.renj.imagepicker.listener.OnCropImageChange;
+import com.renj.imagepicker.listener.OnResultCallBack;
+import com.renj.imagepicker.model.ImageModel;
+import com.renj.imagepicker.model.ImagePickerParams;
+import com.renj.imagepicker.utils.ImagePickerUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
@@ -55,7 +55,7 @@ public class ClipSingleMyActivity extends BaseActivity {
     }
 
     private void singleImage() {
-        ImageParamsConfig imageParamsConfig = new ImageParamsConfig
+        ImagePickerParams imagePickerParams = new ImagePickerParams
                 .Builder()
                 .selectCount(1)
                 .isShowCamera(true)
@@ -84,6 +84,6 @@ public class ClipSingleMyActivity extends BaseActivity {
                     }
                 })
                 .build();
-        ImageSelectUtils.getInstance().start(this, imageParamsConfig);
+        ImagePickerUtils.start(this, imagePickerParams);
     }
 }

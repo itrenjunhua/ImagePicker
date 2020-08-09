@@ -4,8 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
-import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.weight.AutoImageView;
+import com.renj.imagepicker.model.ImageModel;
+import com.renj.imagepicker.weight.SquareImageView;
 import com.renj.selecttest.R;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
@@ -37,7 +37,7 @@ public class ImageShowAdapter extends BaseListAdapter<ImageModel> {
 
     static class ImageShowHolder extends BaseListViewHolder<ImageModel> {
         @BindView(R.id.iv_item)
-        AutoImageView ivItem;
+        SquareImageView ivItem;
 
         public ImageShowHolder(Context context, ViewGroup parent) {
             super(context, parent);

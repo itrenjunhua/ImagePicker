@@ -9,12 +9,12 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.renj.imageselect.listener.OnCropImageChange;
-import com.renj.imageselect.listener.OnResultCallBack;
-import com.renj.imageselect.listener.OnSelectedImageChange;
-import com.renj.imageselect.model.ImageModel;
-import com.renj.imageselect.model.ImageParamsConfig;
-import com.renj.imageselect.utils.ImageSelectUtils;
+import com.renj.imagepicker.listener.OnCropImageChange;
+import com.renj.imagepicker.listener.OnResultCallBack;
+import com.renj.imagepicker.listener.OnSelectedImageChange;
+import com.renj.imagepicker.model.ImageModel;
+import com.renj.imagepicker.model.ImagePickerParams;
+import com.renj.imagepicker.utils.ImagePickerUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
 import com.renj.selecttest.utils.Utils;
@@ -71,7 +71,7 @@ public class ClipMoreMyActivity extends BaseActivity {
             return;
         }
         int imageNum = Utils.parseInteger(textViewContent);
-        ImageParamsConfig imageParamsConfig = new ImageParamsConfig
+        ImagePickerParams imagePickerParams = new ImagePickerParams
                 .Builder()
                 .selectCount(imageNum)
                 .isShowCamera(true)
@@ -116,6 +116,6 @@ public class ClipMoreMyActivity extends BaseActivity {
                     }
                 })
                 .build();
-        ImageSelectUtils.getInstance().start(this, imageParamsConfig);
+        ImagePickerUtils.start(this, imagePickerParams);
     }
 }
