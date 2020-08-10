@@ -7,14 +7,14 @@
     <!--裁剪单张图布局-->
     <!--<include layout="@layout/image_crop_single_layout />-->
     <ViewStub
-        android:id="@+id/vs_clip_single"
+        android:id="@+id/vs_crop_single"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <!--裁剪多张图布局-->
     <!--<include layout="@layout/image_single_crop_more_layout" />-->
     <ViewStub
-        android:id="@+id/vs_clip_more"
+        android:id="@+id/vs_crop_more"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

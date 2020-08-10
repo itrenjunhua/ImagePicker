@@ -72,20 +72,20 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
     private View selectView;
     private GridView gvImages;
     private TextView tvSelectMenu;
-    private ViewStub vsClipSingle; // 裁剪单张图片时加载
-    private ViewStub vsClipMore; // 裁剪多张图片时加载
+    private ViewStub vsCropSingle; // 裁剪单张图片时加载
+    private ViewStub vsCropMore; // 裁剪多张图片时加载
     private LinearLayout llSelectView;
 
     /***** 多选图片时的取消、确认(已选张数)等控件 *****/
     private TextView tvCancelSelect, tvConfirmSelect;
 
     /***** 裁剪单张图片时使用到的控件 *****/
-    private TextView tvCancel, tvClip;
+    private TextView tvCancel, tvCrop;
     private ImageCropView imageCropView;
-    private LinearLayout clipLayout;
+    private LinearLayout cropLayout;
 
     /***** 裁剪多张图片时使用到的控件 *****/
-    private ImageCropMoreLayout clipMoreLayout;
+    private ImageCropMoreLayout cropMoreLayout;
 
     private ImagePickerAdapter imagePickerAdapter; // 图片展示的适配器
     private ImagePickerParams imagePickerParams;   // 保存图片选择配置信息的对象
@@ -105,8 +105,8 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
         // 初始化选择图片界面
         initSelectedImageView();
 
-        vsClipSingle = findViewById(R.id.vs_clip_single);
-        vsClipMore = findViewById(R.id.vs_clip_more);
+        vsCropSingle = findViewById(R.id.vs_crop_single);
+        vsCropMore = findViewById(R.id.vs_crop_more);
 
         // 配置数据解析
         configDataParse();
@@ -158,7 +158,7 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
         if (imagePickerParams.isCrop()) {
             if (imagePickerParams.getSelectCount() > 1) {
                 initClipMorePage();
-                clipMoreLayout.setClipViewParams(imagePickerParams);
+                cropMoreLayout.setClipViewParams(imagePickerParams);
             } else {
                 initClipSinglePage();
                 imageCropView.setCropViewParams(imagePickerParams);
@@ -209,32 +209,32 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
      * 初始化裁剪单张图片页面
      */
     private void initClipSinglePage() {
-        vsClipSingle.setLayoutResource(imagePickerParams.getCropSingleLayoutId());
+        vsCropSingle.setLayoutResource(imagePickerParams.getCropSingleLayoutId());
 
-        View clipSingleView = vsClipSingle.inflate();
+        View clipSingleView = vsCropSingle.inflate();
 
         /***** 裁剪单张图片时使用到的控件 *****/
-        tvClip = clipSingleView.findViewById(R.id.tv_clip);
+        tvCrop = clipSingleView.findViewById(R.id.tv_crop);
         tvCancel = clipSingleView.findViewById(R.id.tv_cancel);
-        imageCropView = clipSingleView.findViewById(R.id.image_clip_view);
-        clipLayout = clipSingleView.findViewById(R.id.clip_layout);
+        imageCropView = clipSingleView.findViewById(R.id.image_crop_view);
+        cropLayout = clipSingleView.findViewById(R.id.crop_layout);
 
         if (ImagePickerHelp.getInstance().getOnCropImageChange() != null) {
             // 单张裁剪，总数为 1
-            ImagePickerHelp.getInstance().getOnCropImageChange().onDefault(tvClip, tvCancel, 1, 1);
+            ImagePickerHelp.getInstance().getOnCropImageChange().onDefault(tvCrop, tvCancel, 1, 1);
         }
 
         tvCancel.setOnClickListener(this);
-        tvClip.setOnClickListener(this);
+        tvCrop.setOnClickListener(this);
     }
 
     /**
      * 初始化裁剪多张图片页面
      */
     private void initClipMorePage() {
-        vsClipMore.setLayoutResource(R.layout.image_single_crop_more_layout);
-        clipMoreLayout = (ImageCropMoreLayout) vsClipMore.inflate();
-        clipMoreLayout.initView(imagePickerParams.getCropMoreLayoutId(), ImagePickerHelp.getInstance().getOnCropImageChange());
+        vsCropMore.setLayoutResource(R.layout.image_single_crop_more_layout);
+        cropMoreLayout = (ImageCropMoreLayout) vsCropMore.inflate();
+        cropMoreLayout.initView(imagePickerParams.getCropMoreLayoutId(), ImagePickerHelp.getInstance().getOnCropImageChange());
     }
 
     /**
@@ -422,31 +422,31 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
      * @param page
      */
     private void pageStatusChange(int page) {
-        if (clipLayout == null && clipMoreLayout == null) return;
+        if (cropLayout == null && cropMoreLayout == null) return;
         if (currentStatus != page) {
             if (STATUS_IMAGE_SELECT_PAGE == page) {
-                if (clipLayout != null)
-                    clipLayout.setVisibility(View.GONE);
-                if (clipMoreLayout != null)
-                    clipMoreLayout.setVisibility(View.GONE);
+                if (cropLayout != null)
+                    cropLayout.setVisibility(View.GONE);
+                if (cropMoreLayout != null)
+                    cropMoreLayout.setVisibility(View.GONE);
                 llSelectView.setVisibility(View.VISIBLE);
             } else if (STATUS_CLIP_SINGLE_PAGE == page) {
                 llSelectView.setVisibility(View.GONE);
-                if (clipMoreLayout != null)
-                    clipMoreLayout.setVisibility(View.GONE);
-                if (clipLayout != null)
-                    clipLayout.setVisibility(View.VISIBLE);
+                if (cropMoreLayout != null)
+                    cropMoreLayout.setVisibility(View.GONE);
+                if (cropLayout != null)
+                    cropLayout.setVisibility(View.VISIBLE);
             } else {
                 llSelectView.setVisibility(View.GONE);
-                if (clipLayout != null)
-                    clipLayout.setVisibility(View.GONE);
-                if (clipMoreLayout != null) {
-                    clipMoreLayout.setVisibility(View.VISIBLE);
+                if (cropLayout != null)
+                    cropLayout.setVisibility(View.GONE);
+                if (cropMoreLayout != null) {
+                    cropMoreLayout.setVisibility(View.VISIBLE);
                     List<ImageModel> checkImages = imagePickerAdapter.getCheckImages();
                     if (ConfigUtils.isShowLogger())
                         ConfigUtils.i("多张图片裁剪");
-                    clipMoreLayout.setImageData(checkImages);
-                    clipMoreLayout.setOnImageCropMoreListener(new ImageCropMoreLayout.OnImageCropMoreListener() {
+                    cropMoreLayout.setImageData(checkImages);
+                    cropMoreLayout.setOnImageCropMoreListener(new ImageCropMoreLayout.OnImageCropMoreListener() {
                         @Override
                         public void cancel() {
                             if (ConfigUtils.isShowLogger())
@@ -528,7 +528,7 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
                     ConfigUtils.i("选择图片完成");
                 finish();
             }
-        } else if (R.id.tv_clip == vId) {
+        } else if (R.id.tv_crop == vId) {
             loadingDialog.show();
             imageCropView.cut(new ImageCropView.CutListener() {
                 @Override
@@ -542,7 +542,7 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
 
                             if (ImagePickerHelp.getInstance().getOnCropImageChange() != null) {
                                 // 单张裁剪，总数为 1
-                                ImagePickerHelp.getInstance().getOnCropImageChange().onCropChange(tvClip, tvCancel, imageModel, selectResults, imagePickerParams.isOvalCrop(), 1, 1);
+                                ImagePickerHelp.getInstance().getOnCropImageChange().onCropChange(tvCrop, tvCancel, imageModel, selectResults, imagePickerParams.isOvalCrop(), 1, 1);
                             }
 
                             if (ImagePickerHelp.getInstance().getOnResultCallBack() != null) {

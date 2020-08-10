@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--裁剪单张图片布局-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/clip_layout"
+    android:id="@+id/crop_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -29,7 +29,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tv_clip"
+            android:id="@+id/tv_crop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -43,7 +43,7 @@
     </RelativeLayout>
 
     <com.renj.imagepicker.weight.ImageCropView
-        android:id="@+id/image_clip_view"
+        android:id="@+id/image_crop_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
