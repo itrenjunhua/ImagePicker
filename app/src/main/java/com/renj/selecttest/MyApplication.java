@@ -45,13 +45,13 @@ public class MyApplication extends Application {
             }
         });
 
-        ImagePickerUtils.init(new ImageLoaderModule() {
-            @Override
-            public void loadImage(String path, ImageView imageView) {
-                // 使用图片加载框架加载图片
-                ImageLoaderManager.loadImageForFile(path, imageView);
-            }
-        });
+//        ImagePickerUtils.init(new ImageLoaderModule() {
+//            @Override
+//            public void loadImage(String path, ImageView imageView) {
+//                // 使用图片加载框架加载图片
+//                ImageLoaderManager.loadImageForFile(path, imageView);
+//            }
+//        });
     }
 
 
