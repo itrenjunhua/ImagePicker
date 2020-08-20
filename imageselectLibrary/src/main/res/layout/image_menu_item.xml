@@ -20,9 +20,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="14dp"
         android:layout_weight="1"
+        android:ellipsize="end"
         android:maxLines="1"
         android:singleLine="true"
-        android:text="全部图片(100)"
+        android:text="(100)全部图片"
         android:textColor="@color/color_main_text"
         android:textSize="18sp" />
 
@@ -30,6 +31,7 @@
         android:id="@+id/rb_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
         android:checked="true"
         android:clickable="false" />
 

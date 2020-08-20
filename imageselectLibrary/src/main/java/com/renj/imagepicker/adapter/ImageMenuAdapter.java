@@ -104,7 +104,7 @@ public class ImageMenuAdapter extends BaseAdapter {
         public void setData(FolderModel folderModel, int position) {
             if (ConfigUtils.isShowLogger())
                 ConfigUtils.i("目录：" + folderModel.name + " => 图片数：" + folderModel.totalCount);
-            textView.setText(folderModel.name + "(" + folderModel.totalCount + ")");
+            textView.setText("(" + folderModel.totalCount + ")" + folderModel.name);
             ImagePickerHelp.getInstance().loadImage(folderModel.folders.get(0).path, imageView);
 
             if (position == selectPosition) {

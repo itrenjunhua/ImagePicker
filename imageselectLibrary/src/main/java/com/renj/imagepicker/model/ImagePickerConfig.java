@@ -62,7 +62,7 @@ public class ImagePickerConfig {
         public Builder() {
             this.fileSavePath = getDefaultSaveDir();
             this.showLogger = BuildConfig.DEBUG;
-            this.loggerTag = "ImageSelect-Logger";
+            this.loggerTag = "ImagePicker-Logger";
             this.center = true;
         }
 
@@ -97,7 +97,7 @@ public class ImagePickerConfig {
         }
 
         /**
-         * 日志信息的TAG，默认 "ImageSelect-Logger"
+         * 日志信息的TAG，默认 "ImagePicker-Logger"
          *
          * @param loggerTag
          */
@@ -114,7 +114,7 @@ public class ImagePickerConfig {
         @Nullable
         private File getDefaultSaveDir() {
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                File file = new File(Environment.getExternalStorageDirectory(), "image_select");
+                File file = new File(Environment.getExternalStorageDirectory(), "image_picker");
                 if (file == null || !file.exists() || !file.isDirectory())
                     file.mkdirs();
                 return file;

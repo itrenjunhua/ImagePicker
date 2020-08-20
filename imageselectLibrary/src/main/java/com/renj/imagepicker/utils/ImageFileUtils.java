@@ -58,7 +58,7 @@ public class ImageFileUtils {
      */
     @NonNull
     public static String getName() {
-        return "clip_" + System.currentTimeMillis() + ".png";
+        return "crop_" + System.currentTimeMillis() + ".png";
     }
 
     /**

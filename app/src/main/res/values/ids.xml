@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="img_picker_title_parent" type="id" />
+    <item name="img_picker_title" type="id" />
+    <item name="img_picker_cancel" type="id" />
+    <item name="img_picker_confirm" type="id" />
+    <item name="img_picker_list" type="id" />
+    <item name="img_picker_menu" type="id" />
+    <item name="img_picker_item_img" type="id" />
+    <item name="img_picker_item_check" type="id" />
+
+    <item name="img_crop_single_title" type="id" />
+    <item name="img_crop_single_cancel" type="id" />
+    <item name="img_crop_single_confirm" type="id" />
+    <item name="img_crop_single_view" type="id" />
+
+    <item name="img_crop_multi_title" type="id" />
+    <item name="img_crop_multi_cancel" type="id" />
+    <item name="img_crop_multi_confirm" type="id" />
+    <item name="img_crop_multi_view" type="id" />
+</resources>
