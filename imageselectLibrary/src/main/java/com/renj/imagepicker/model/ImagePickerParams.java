@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 
 import com.renj.imagepicker.listener.OnCropImageChange;
 import com.renj.imagepicker.listener.OnResultCallBack;
-import com.renj.imagepicker.listener.OnSelectedImageChange;
 import com.renj.imagepicker.utils.ImagePickerHelp;
 
 import java.util.Arrays;
@@ -54,7 +53,6 @@ public class ImagePickerParams implements Parcelable {
     int heightRadio; // 改变裁剪范围的高比例
 
     /*********** 选择图片页面动态布局 ***********/
-    private int gridColNumbers; // 图片选择页面列数
     @LayoutRes
     private int selectedLayoutId; // 选择图片页面布局资源id
     @LayoutRes
@@ -94,11 +92,9 @@ public class ImagePickerParams implements Parcelable {
         this.heightRadio = builder.heightRadio;
 
         /*********** 选择图片页面动态布局和回调 ***********/
-        this.gridColNumbers = builder.gridColNumbers; // 图片选择页面列数
         this.selectedLayoutId = builder.selectedLayoutId;
         this.itemCameraLayoutId = builder.itemCameraLayoutId;
         this.itemImageLayoutId = builder.itemImageLayoutId;
-        ImagePickerHelp.getInstance().setOnSelectedImageChange(builder.onSelectedImageChange);
 
         /*********** 裁剪图片页面动态布局和回调 ***********/
         this.cropSingleLayoutId = builder.cropSingleLayoutId;
@@ -193,10 +189,6 @@ public class ImagePickerParams implements Parcelable {
         return heightRadio;
     }
 
-    public int getGridColNumbers() {
-        return gridColNumbers;
-    }
-
     public int getSelectedLayoutId() {
         return selectedLayoutId;
     }
@@ -244,14 +236,12 @@ public class ImagePickerParams implements Parcelable {
         private int heightRadio; // 改变裁剪范围的高比例
 
         /*********** 选择图片页面动态布局和回调 ***********/
-        private int gridColNumbers; // 图片选择页面列数
         @LayoutRes
         private int selectedLayoutId; // 选择图片页面布局资源id
         @LayoutRes
         private int itemCameraLayoutId; // 选择图片条目布局资源文件(点击打开相机条目)
         @LayoutRes
         private int itemImageLayoutId; // 选择图片条目布局资源文件(图片显示条目)
-        private OnSelectedImageChange onSelectedImageChange;  // 图片选择页面，图片选择发生变化时回调
 
         /*********** 裁剪图片页面动态布局和回调 ***********/
         @LayoutRes
@@ -288,11 +278,9 @@ public class ImagePickerParams implements Parcelable {
             this.heightRadio = DefaultConfigData.SCALE_HEIGHT_RATIO; // 改变裁剪范围的高比例
 
             /*********** 选择图片页面动态布局和回调 ***********/
-            this.gridColNumbers = DefaultConfigData.GRID_COL_NUMBERS; // 图片选择页面列数
             this.selectedLayoutId = DefaultConfigData.SELECTED_IMAGE_LAYOUT;
             this.itemCameraLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_CAMERA_LAYOUT;
             this.itemImageLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_IMAGE_LAYOUT;
-            this.onSelectedImageChange = null;
 
             /*********** 裁剪图片页面动态布局和回调 ***********/
             this.cropSingleLayoutId = DefaultConfigData.CROP_SINGLE_LAYOUT;
@@ -536,19 +524,8 @@ public class ImagePickerParams implements Parcelable {
         }
 
         /**
-         * 设置图片选择页面列数
-         *
-         * @param gridColNumbers 列数
-         * @return
-         */
-        public Builder gridColNumbers(int gridColNumbers) {
-            this.gridColNumbers = gridColNumbers;
-            return this;
-        }
-
-        /**
          * 动态设置图片选择页面的布局。<br/>
-         * <b>注意：请参照 默认布局文件 image_select_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
+         * <b>注意：请参照 默认布局文件 image_picker_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
          * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
          *
          * @param selectedLayoutId 布局文件资源id
@@ -582,18 +559,6 @@ public class ImagePickerParams implements Parcelable {
          */
         public Builder selectItemImageLayoutId(@LayoutRes int itemImageLayoutId) {
             this.itemImageLayoutId = itemImageLayoutId;
-            return this;
-        }
-
-        /**
-         * 设置图片选择改变监听。<br/>
-         * <b>注意：只有在选择多张图片时才会回调，单张图片并不会回调</b>
-         *
-         * @param onSelectedImageChange 图片选择页面，图片选择发生变化时回调
-         * @return
-         */
-        public Builder onSelectedImageChange(@Nullable OnSelectedImageChange onSelectedImageChange) {
-            this.onSelectedImageChange = onSelectedImageChange;
             return this;
         }
 
@@ -683,7 +648,6 @@ public class ImagePickerParams implements Parcelable {
         dest.writeByte(this.autoRatioScale ? (byte) 1 : (byte) 0);
         dest.writeInt(this.widthRatio);
         dest.writeInt(this.heightRadio);
-        dest.writeInt(this.gridColNumbers);
         dest.writeInt(this.selectedLayoutId);
         dest.writeInt(this.itemCameraLayoutId);
         dest.writeInt(this.itemImageLayoutId);
@@ -713,7 +677,6 @@ public class ImagePickerParams implements Parcelable {
         this.autoRatioScale = in.readByte() != 0;
         this.widthRatio = in.readInt();
         this.heightRadio = in.readInt();
-        this.gridColNumbers = in.readInt();
         this.selectedLayoutId = in.readInt();
         this.itemCameraLayoutId = in.readInt();
         this.itemImageLayoutId = in.readInt();

@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.renj.imagepicker.listener.OnCropImageChange;
 import com.renj.imagepicker.listener.OnResultCallBack;
-import com.renj.imagepicker.listener.OnSelectedImageChange;
 import com.renj.imagepicker.model.ImageModel;
 import com.renj.imagepicker.model.ImagePickerParams;
 import com.renj.imagepicker.utils.ImagePickerUtils;
@@ -87,7 +86,7 @@ public class ClipMoreMyActivity extends BaseActivity {
                 .cropBorderColor(Color.parseColor("#ffffff"))
                 .selectedLayoutId(R.layout.my_selected_layout)
                 .cropMoreLayoutId(R.layout.my_clip_more_layout)
-                .onSelectedImageChange(new OnSelectedImageChange() {
+                .onSelectedImageChange(new OnPickerImageChange() {
                     @Override
                     public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
                         Log.i("ClipMoreMyActivity", "selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");

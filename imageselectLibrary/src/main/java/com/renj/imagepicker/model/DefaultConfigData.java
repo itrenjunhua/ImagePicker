@@ -123,7 +123,7 @@ public interface DefaultConfigData {
     /**
      * 默认选择图片布局资源文件
      */
-    int SELECTED_IMAGE_LAYOUT = R.layout.image_select_layout;
+    int SELECTED_IMAGE_LAYOUT = R.layout.image_picker_layout;
     /**
      * 默认选择图片条目布局资源文件(点击打开相机条目)
      */

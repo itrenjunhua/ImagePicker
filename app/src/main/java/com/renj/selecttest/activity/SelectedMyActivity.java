@@ -9,7 +9,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.renj.imagepicker.listener.OnResultCallBack;
-import com.renj.imagepicker.listener.OnSelectedImageChange;
 import com.renj.imagepicker.model.ImageModel;
 import com.renj.imagepicker.model.ImagePickerParams;
 import com.renj.imagepicker.utils.ImagePickerUtils;
@@ -78,7 +77,7 @@ public class SelectedMyActivity extends BaseActivity {
                 .selectedLayoutId(R.layout.my_selected_layout)
                 .selectItemCameraLayoutId(R.layout.my_image_select_camera_item)
                 .selectItemImageLayoutId(R.layout.my_image_select_item)
-                .onSelectedImageChange(new OnSelectedImageChange() {
+                .onSelectedImageChange(new OnPickerImageChange() {
                     @Override
                     public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
                         confirmView.setText(selectedCount + "/" + totalCount + "确定");
