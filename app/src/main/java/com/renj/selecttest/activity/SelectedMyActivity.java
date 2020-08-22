@@ -1,7 +1,5 @@
 package com.renj.selecttest.activity;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -77,19 +75,6 @@ public class SelectedMyActivity extends BaseActivity {
                 .selectedLayoutId(R.layout.my_selected_layout)
                 .selectItemCameraLayoutId(R.layout.my_image_select_camera_item)
                 .selectItemImageLayoutId(R.layout.my_image_select_item)
-                .onSelectedImageChange(new OnPickerImageChange() {
-                    @Override
-                    public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
-                        confirmView.setText(selectedCount + "/" + totalCount + "确定");
-                    }
-
-                    @Override
-                    public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
-                                                 @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
-                        Log.i("SelectedMyActivity", "imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
-                        confirmView.setText(selectedCount + "/" + totalCount + "确定");
-                    }
-                })
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> resultList) {

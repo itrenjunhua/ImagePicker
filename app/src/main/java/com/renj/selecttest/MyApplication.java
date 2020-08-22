@@ -4,11 +4,8 @@ import android.app.Application;
 import android.widget.ImageView;
 
 import com.renj.imagepicker.listener.ImageLoaderModule;
-import com.renj.imagepicker.model.ImagePickerConfig;
 import com.renj.imagepicker.utils.ImagePickerUtils;
 import com.renj.selecttest.utils.ImageLoaderManager;
-
-import java.io.File;
 
 /**
  * ======================================================================
@@ -31,27 +28,27 @@ public class MyApplication extends Application {
 
         ImageLoaderManager.init(this);
 
-        ImagePickerConfig pickerConfig = new ImagePickerConfig.Builder()
-                .loggerTag("MyCustomTag")
-                .fileSavePath(new File(""))
-                .showLogger(true)
-                .center(true)
-                .build();
-        ImagePickerUtils.init(pickerConfig, new ImageLoaderModule() {
-            @Override
-            public void loadImage(String path, ImageView imageView) {
-                // 使用图片加载框架加载图片
-                ImageLoaderManager.loadImageForFile(path, imageView);
-            }
-        });
-
-//        ImagePickerUtils.init(new ImageLoaderModule() {
+//        ImagePickerConfig pickerConfig = new ImagePickerConfig.Builder()
+//                .loggerTag("MyCustomTag")
+//                .fileSavePath(new File(""))
+//                .showLogger(true)
+//                .center(true)
+//                .build();
+//        ImagePickerUtils.init(pickerConfig, new ImageLoaderModule() {
 //            @Override
 //            public void loadImage(String path, ImageView imageView) {
 //                // 使用图片加载框架加载图片
 //                ImageLoaderManager.loadImageForFile(path, imageView);
 //            }
 //        });
+
+        ImagePickerUtils.init(new ImageLoaderModule() {
+            @Override
+            public void loadImage(String path, ImageView imageView) {
+                // 使用图片加载框架加载图片
+                ImageLoaderManager.loadImageForFile(path, imageView);
+            }
+        });
     }
 
 

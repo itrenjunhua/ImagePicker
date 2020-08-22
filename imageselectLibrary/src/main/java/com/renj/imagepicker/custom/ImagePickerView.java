@@ -9,18 +9,22 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.TextView;
 
 import com.renj.imagepicker.R;
-import com.renj.imagepicker.activity.IImagePickerOperator;
+import com.renj.imagepicker.activity.IImagePickerPage;
 import com.renj.imagepicker.adapter.ImagePickerAdapter;
 import com.renj.imagepicker.model.DefaultConfigData;
+import com.renj.imagepicker.model.FolderModel;
 import com.renj.imagepicker.model.ImageModel;
 import com.renj.imagepicker.model.ImagePickerParams;
+import com.renj.imagepicker.utils.ConfigUtils;
 import com.renj.imagepicker.weight.ImageMenuDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,17 +40,18 @@ import java.util.List;
  * <p>
  * ======================================================================
  */
-public class ImagePickerView extends FrameLayout implements IImagePickerOperator.PageCallPickerView {
+public class ImagePickerView extends FrameLayout {
 
     private GridView gvImages;
     private TextView tvSelectMenu;
     private TextView tvCancelSelect;
     private TextView tvConfirmSelect;
 
-    private IImagePickerOperator.PickerViewCallPage iImagePickerOperator;
-    private ImagePickerParams imagePickerParams;
     private ImagePickerAdapter imagePickerAdapter; // 图片展示的适配器
     private ImageMenuDialog imageMenuDialog; // 图片目录选择Dialog
+
+    protected IImagePickerPage iImagePickerPage;
+    protected ImagePickerParams imagePickerParams;
 
     public ImagePickerView(@NonNull Context context) {
         this(context, null);
@@ -77,7 +82,7 @@ public class ImagePickerView extends FrameLayout implements IImagePickerOperator
 
     @LayoutRes
     protected int getLayoutId() {
-        return R.layout.image_picker_layout;
+        return R.layout.custom_image_picker_layout;
     }
 
     protected void initView(View imagePickerView) {
@@ -90,11 +95,113 @@ public class ImagePickerView extends FrameLayout implements IImagePickerOperator
                 DefaultConfigData.SELECTED_IMAGE_ITEM_IMAGE_LAYOUT);
         gvImages.setAdapter(imagePickerAdapter);
 
-        imagePickerAdapter.setMaxCount(9);
-        imagePickerAdapter.isOpenCamera(false);
-
-
         imageMenuDialog = new ImageMenuDialog(getContext());
+        setItemListener();
+    }
+
+    /**
+     * 设置条目相关监听
+     */
+    private void setItemListener() {
+        // 目录监听
+        imageMenuDialog.setMenuClickListener(new ImageMenuDialog.MenuClickListener() {
+            @Override
+            public void menuClick(FolderModel folderModel) {
+                if (ConfigUtils.isShowLogger())
+                    ConfigUtils.i("选中图片目录：" + folderModel);
+                tvSelectMenu.setText(folderModel.name);
+                imagePickerAdapter.setImageModels(folderModel.folders);
+            }
+        });
+
+        // 图片点击监听
+        gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int selectCount = imagePickerParams.getSelectCount();
+                if (imagePickerParams.isShowCamera() && position == 0) {
+                    if (imagePickerAdapter.getCheckImages().size() >= selectCount) {
+                        if (ConfigUtils.isShowLogger())
+                            ConfigUtils.e("最多选择" + selectCount + "张图片");
+                        ConfigUtils.showToast(getContext(), "最多选择" + selectCount + "张图片");
+                    } else {
+                        if (ConfigUtils.isShowLogger())
+                            ConfigUtils.i("打开相机进行拍照");
+                        iImagePickerPage.openCamera();
+                    }
+                    return;
+                }
+
+                Object itemData = parent.getItemAtPosition(position);
+                if (itemData instanceof ImageModel) {
+                    // 判断是否选择单张还是多张
+                    if (selectCount > 1) {
+                        selectMore(position, (ImageModel) itemData);
+                    } else {
+                        ImageModel imageModel = (ImageModel) itemData;
+                        selectSingle(imageModel);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 处理相机照完之后的结果
+     *
+     * @param imageModel
+     */
+    public void handlerCameraResult(@NonNull ImageModel imageModel) {
+        if (ConfigUtils.isShowLogger())
+            ConfigUtils.i("拍照成功，处理结果中");
+        if (imagePickerParams.getSelectCount() == 1) {
+            // 如果是单张，判断是否需要裁剪或直接返回结果
+            selectSingle(imageModel);
+        } else {
+            // 多张时，也直接判断是否需要裁剪然后返回
+            List<ImageModel> checkImages = imagePickerAdapter.getCheckImages();
+            checkImages.add(imageModel);
+            if (imagePickerParams.isCrop()) {
+
+            } else {
+                if (ConfigUtils.isShowLogger())
+                    ConfigUtils.i("拍照成功，直接返回已选择和拍照图片");
+                iImagePickerPage.confirm(checkImages);
+            }
+        }
+    }
+
+    /**
+     * 选择单张图片完成
+     *
+     * @param imageModel
+     */
+    private void selectSingle(@NonNull ImageModel imageModel) {
+        if (imagePickerParams.isCrop()) {
+            if (ConfigUtils.isShowLogger())
+                ConfigUtils.i("单张图片裁剪");
+        } else {
+            ArrayList<ImageModel> selectResults = new ArrayList<>();
+            selectResults.add(imageModel);
+
+            if (ConfigUtils.isShowLogger())
+                ConfigUtils.i("单张图片选择完成");
+            iImagePickerPage.confirm(selectResults);
+        }
+    }
+
+    /**
+     * 选择多张图片时点击图片操作
+     *
+     * @param position
+     */
+    private void selectMore(int position, ImageModel imageModel) {
+        boolean isSelected = imagePickerAdapter.addOrClearCheckedPosition(position);
+        if (ConfigUtils.isShowLogger()) {
+            ConfigUtils.i("图片选择：" + imageModel + " 是否选中：" + isSelected);
+            ConfigUtils.i("已选择图片数：" + imagePickerAdapter.getCheckImages().size());
+        }
+        tvConfirmSelect.setText("(" + imagePickerAdapter.getCheckImages().size() + " / " + imagePickerParams.getSelectCount() + ") 确定");
     }
 
     protected void initListener() {
@@ -121,38 +228,30 @@ public class ImagePickerView extends FrameLayout implements IImagePickerOperator
     }
 
     protected void onCancel() {
-        cancel();
+        iImagePickerPage.cancel();
     }
 
     protected void onConfirm() {
-        confirm();
+        iImagePickerPage.confirm(imagePickerAdapter.getCheckImages());
     }
 
-    protected void onShowMenu() {
-        showMenu();
+    private void onShowMenu() {
+        imageMenuDialog.show();
     }
 
-    @Override
-    public void onImagePickerChange(int currentPickerCount, int maxPickerCount, List<ImageModel> pickerImageList) {
-        tvConfirmSelect.setText("(" + pickerImageList.size() + " / " + maxPickerCount + ") 确定");
-    }
-
-
-    private void cancel() {
-        iImagePickerOperator.cancel();
-    }
-
-    private void confirm() {
-        iImagePickerOperator.confirm();
-    }
-
-    private void showMenu() {
-        iImagePickerOperator.showMenu();
-    }
-
-    public final void setImagePickerOperator(IImagePickerOperator.PickerViewCallPage iImagePickerOperator,
+    public final void setImagePickerOperator(IImagePickerPage iImagePickerPage,
                                              ImagePickerParams imagePickerParams) {
-        this.iImagePickerOperator = iImagePickerOperator;
+        this.iImagePickerPage = iImagePickerPage;
         this.imagePickerParams = imagePickerParams;
+
+        tvConfirmSelect.setText("(0 / " + imagePickerParams.getSelectCount() + ") 确定");
+    }
+
+    public void onLoadImageFinish(List<ImageModel> imageModels, List<FolderModel> folderModelList) {
+        imagePickerAdapter.setImageModels(imageModels);
+        imageMenuDialog.setMenuData(folderModelList);
+
+        imagePickerAdapter.setMaxCount(imagePickerParams.getSelectCount());
+        imagePickerAdapter.isOpenCamera(imagePickerParams.isShowCamera());
     }
 }

@@ -86,20 +86,6 @@ public class ClipMoreMyActivity extends BaseActivity {
                 .cropBorderColor(Color.parseColor("#ffffff"))
                 .selectedLayoutId(R.layout.my_selected_layout)
                 .cropMoreLayoutId(R.layout.my_clip_more_layout)
-                .onSelectedImageChange(new OnPickerImageChange() {
-                    @Override
-                    public void onDefault(@NonNull TextView confirmView, @NonNull TextView cancelView, int selectedCount, int totalCount) {
-                        Log.i("ClipMoreMyActivity", "selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
-                        confirmView.setText(selectedCount + "/" + totalCount + "确定");
-                    }
-
-                    @Override
-                    public void onSelectedChange(@NonNull TextView confirmView, @NonNull TextView cancelView, @NonNull ImageModel imageModel, boolean isSelected,
-                                                 @NonNull List<ImageModel> selectedList, int selectedCount, int totalCount) {
-                        Log.i("ClipMoreMyActivity", "imageModel = [" + imageModel + "], isSelected = [" + isSelected + "], selectedList = [" + selectedList + "], selectedCount = [" + selectedCount + "], totalCount = [" + totalCount + "]");
-                        confirmView.setText(selectedCount + "/" + totalCount + "确定");
-                    }
-                })
                 .onCropImageChange(new OnCropImageChange() {
                     @Override
                     public void onCropChange(@NonNull TextView clipView, @NonNull TextView cancelView,

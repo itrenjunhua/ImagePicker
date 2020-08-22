@@ -38,7 +38,7 @@ public class ImagePickerUtils {
      */
     public static void init(ImagePickerConfig imagePickerConfig, ImageLoaderModule imageLoaderModule) {
         if (imagePickerConfig == null)
-            ConfigUtils.initParams(new ImagePickerConfig.Builder().build());
+            imagePickerConfig = new ImagePickerConfig.Builder().build();
         ConfigUtils.initParams(imagePickerConfig);
         ImagePickerHelp.getInstance().setImageLoaderModule(imageLoaderModule);
     }
