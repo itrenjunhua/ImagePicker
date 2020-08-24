@@ -72,9 +72,6 @@ public class SelectedMyActivity extends BaseActivity {
                 .isShowCamera(true)
                 .isContinuityEnlarge(false)
                 .isCrop(false)
-                .selectedLayoutId(R.layout.my_selected_layout)
-                .selectItemCameraLayoutId(R.layout.my_image_select_camera_item)
-                .selectItemImageLayoutId(R.layout.my_image_select_item)
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> resultList) {

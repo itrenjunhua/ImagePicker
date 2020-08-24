@@ -84,7 +84,6 @@ public class ClipMoreMyActivity extends BaseActivity {
                 .isContinuityEnlarge(false)
                 .maskColor(Color.parseColor("#80000000"))
                 .cropBorderColor(Color.parseColor("#ffffff"))
-                .selectedLayoutId(R.layout.my_selected_layout)
                 .cropMoreLayoutId(R.layout.my_clip_more_layout)
                 .onCropImageChange(new OnCropImageChange() {
                     @Override

@@ -1,7 +1,6 @@
 package com.renj.imagepicker.adapter;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,8 @@ import android.widget.ImageView;
 
 import com.renj.imagepicker.R;
 import com.renj.imagepicker.model.ImageModel;
-import com.renj.imagepicker.utils.ImagePickerHelp;
 import com.renj.imagepicker.utils.ConfigUtils;
+import com.renj.imagepicker.utils.ImagePickerHelp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,15 +39,9 @@ public class ImagePickerAdapter extends BaseAdapter {
     // 被选择的多张图片
     private List<ImageModel> checkImages = new ArrayList<>();
     private boolean showCamera;
-    @LayoutRes
-    private int itemCameraLayoutId;
-    @LayoutRes
-    private int itemImageLayoutId;
 
-    public ImagePickerAdapter(Context context, @LayoutRes int itemCameraLayoutId, @LayoutRes int itemImageLayoutId) {
+    public ImagePickerAdapter(Context context) {
         this.context = context;
-        this.itemCameraLayoutId = itemCameraLayoutId;
-        this.itemImageLayoutId = itemImageLayoutId;
     }
 
     public ImagePickerAdapter(@NonNull Context context, @NonNull List<ImageModel> imageModels) {
@@ -146,12 +139,12 @@ public class ImagePickerAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (CAMERA_VIEW == getItemViewType(position)) {
-            ImageView imageView = (ImageView) LayoutInflater.from(context).inflate(itemCameraLayoutId, parent, false);
+            ImageView imageView = (ImageView) LayoutInflater.from(context).inflate(R.layout.image_select_camera_item, parent, false);
             return imageView;
         } else {
             ViewHolder viewHolder;
             if (convertView == null || convertView instanceof ImageView) {
-                convertView = LayoutInflater.from(context).inflate(itemImageLayoutId, null);
+                convertView = LayoutInflater.from(context).inflate(R.layout.image_select_item, null);
                 viewHolder = new ViewHolder(convertView);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();

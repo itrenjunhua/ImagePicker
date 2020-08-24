@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.renj.imagepicker.R;
+import com.renj.imagepicker.custom.DefaultImagePickerView;
 import com.renj.imagepicker.custom.ImagePickerView;
 import com.renj.imagepicker.model.FolderModel;
 import com.renj.imagepicker.model.ImageModel;
@@ -65,7 +67,7 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
     // 当前页面
     private int currentStatus;
 
-    private ImagePickerView imagePickerView;// 选择图片控件
+    private ImagePickerView imagePickerView; // 选择图片控件
 
 
     private ViewStub vsCropSingle; // 裁剪单张图片时加载
@@ -120,10 +122,15 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
     private void initSelectedImageView() {
         ViewStub vsSelect = findViewById(R.id.vs_image_picker);
         ViewGroup viewGroup = (ViewGroup) vsSelect.inflate();
-        imagePickerView = new ImagePickerView(this);
-        viewGroup.addView(imagePickerView);
+        this.imagePickerView = getImagePickerView(this);
+        viewGroup.addView(this.imagePickerView);
 
-        imagePickerView.setImagePickerOperator(this, imagePickerParams);
+        this.imagePickerView.setImagePickerOperator(this, imagePickerParams);
+    }
+
+    @NonNull
+    protected ImagePickerView getImagePickerView(AppCompatActivity activity) {
+        return new DefaultImagePickerView(activity);
     }
 
     /**
@@ -236,7 +243,7 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
                     public void run() {
                         if (ConfigUtils.isShowLogger())
                             ConfigUtils.i("图片加载完成");
-                        imagePickerView.onLoadImageFinish(imageModels,folderModels);
+                        imagePickerView.onLoadImageFinish(imageModels, folderModels);
                         loadingDialog.dismiss();
                     }
                 });

@@ -1,11 +1,13 @@
 package com.renj.imagepicker.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.renj.imagepicker.activity.ImagePickerActivity;
 import com.renj.imagepicker.listener.ImageLoaderModule;
-import com.renj.imagepicker.model.ImagePickerParams;
 import com.renj.imagepicker.model.ImagePickerConfig;
+import com.renj.imagepicker.model.ImagePickerParams;
 
 /**
  * ======================================================================
@@ -50,5 +52,18 @@ public class ImagePickerUtils {
      */
     public static void start(Context context, ImagePickerParams paramsConfig) {
         ImagePickerActivity.open(context, paramsConfig);
+    }
+
+    /**
+     * 开始图片选择裁剪
+     *
+     * @return
+     */
+    public static <T extends ImagePickerActivity> void start(Context context, ImagePickerParams paramsConfig, Class<T> clazz) {
+        Intent intent = new Intent(context, clazz);
+        intent.putExtra("imageParamsConfig", paramsConfig);
+        if (!(context instanceof Activity))
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

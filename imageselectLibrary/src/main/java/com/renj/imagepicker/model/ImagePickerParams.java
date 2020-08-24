@@ -52,14 +52,6 @@ public class ImagePickerParams implements Parcelable {
     int widthRatio; // 改变裁剪范围的宽比例
     int heightRadio; // 改变裁剪范围的高比例
 
-    /*********** 选择图片页面动态布局 ***********/
-    @LayoutRes
-    private int selectedLayoutId; // 选择图片页面布局资源id
-    @LayoutRes
-    private int itemCameraLayoutId; // 选择图片条目布局资源文件(点击打开相机条目)
-    @LayoutRes
-    private int itemImageLayoutId; // 选择图片条目布局资源文件(图片显示条目)
-
     /*********** 裁剪图片页面动态布局 ***********/
     @LayoutRes
     private int cropSingleLayoutId; // 裁剪单张图片页面布局资源 id
@@ -90,11 +82,6 @@ public class ImagePickerParams implements Parcelable {
         this.autoRatioScale = builder.autoRatioScale;
         this.widthRatio = builder.widthRatio;
         this.heightRadio = builder.heightRadio;
-
-        /*********** 选择图片页面动态布局和回调 ***********/
-        this.selectedLayoutId = builder.selectedLayoutId;
-        this.itemCameraLayoutId = builder.itemCameraLayoutId;
-        this.itemImageLayoutId = builder.itemImageLayoutId;
 
         /*********** 裁剪图片页面动态布局和回调 ***********/
         this.cropSingleLayoutId = builder.cropSingleLayoutId;
@@ -189,19 +176,6 @@ public class ImagePickerParams implements Parcelable {
         return heightRadio;
     }
 
-    public int getSelectedLayoutId() {
-        return selectedLayoutId;
-    }
-
-    public int getItemCameraLayoutId() {
-        return itemCameraLayoutId;
-    }
-
-    public int getItemImageLayoutId() {
-        return itemImageLayoutId;
-    }
-
-
     public int getCropSingleLayoutId() {
         return cropSingleLayoutId;
     }
@@ -234,14 +208,6 @@ public class ImagePickerParams implements Parcelable {
         private boolean autoRatioScale; // 改变裁剪范围时,是否按照比例改变
         private int widthRatio; // 改变裁剪范围的宽比例
         private int heightRadio; // 改变裁剪范围的高比例
-
-        /*********** 选择图片页面动态布局和回调 ***********/
-        @LayoutRes
-        private int selectedLayoutId; // 选择图片页面布局资源id
-        @LayoutRes
-        private int itemCameraLayoutId; // 选择图片条目布局资源文件(点击打开相机条目)
-        @LayoutRes
-        private int itemImageLayoutId; // 选择图片条目布局资源文件(图片显示条目)
 
         /*********** 裁剪图片页面动态布局和回调 ***********/
         @LayoutRes
@@ -276,11 +242,6 @@ public class ImagePickerParams implements Parcelable {
             this.autoRatioScale = DefaultConfigData.AUTO_RATIO_SCALE; // 改变裁剪范围时,是否按照比例改变
             this.widthRatio = DefaultConfigData.SCALE_WIDTH_RATIO; // 改变裁剪范围的宽比例
             this.heightRadio = DefaultConfigData.SCALE_HEIGHT_RATIO; // 改变裁剪范围的高比例
-
-            /*********** 选择图片页面动态布局和回调 ***********/
-            this.selectedLayoutId = DefaultConfigData.SELECTED_IMAGE_LAYOUT;
-            this.itemCameraLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_CAMERA_LAYOUT;
-            this.itemImageLayoutId = DefaultConfigData.SELECTED_IMAGE_ITEM_IMAGE_LAYOUT;
 
             /*********** 裁剪图片页面动态布局和回调 ***********/
             this.cropSingleLayoutId = DefaultConfigData.CROP_SINGLE_LAYOUT;
@@ -524,45 +485,6 @@ public class ImagePickerParams implements Parcelable {
         }
 
         /**
-         * 动态设置图片选择页面的布局。<br/>
-         * <b>注意：请参照 默认布局文件 image_picker_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
-         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
-         *
-         * @param selectedLayoutId 布局文件资源id
-         * @return
-         */
-        public Builder selectedLayoutId(@LayoutRes int selectedLayoutId) {
-            this.selectedLayoutId = selectedLayoutId;
-            return this;
-        }
-
-        /**
-         * 动态设置选择图片条目布局资源文件(点击打开相机条目)。<br/>
-         * <b>注意：请参照 默认布局文件 image_select_camera_item.xml ，在默认布局文件中有 id 的控件为必须控件，
-         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
-         *
-         * @param itemCameraLayoutId 布局文件资源id
-         * @return
-         */
-        public Builder selectItemCameraLayoutId(@LayoutRes int itemCameraLayoutId) {
-            this.itemCameraLayoutId = itemCameraLayoutId;
-            return this;
-        }
-
-        /**
-         * 动态设置选择图片条目布局资源文件(图片显示条目)。<br/>
-         * <b>注意：请参照 默认布局文件 image_select_item.xml ，在默认布局文件中有 id 的控件为必须控件，
-         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
-         *
-         * @param itemImageLayoutId 布局文件资源id
-         * @return
-         */
-        public Builder selectItemImageLayoutId(@LayoutRes int itemImageLayoutId) {
-            this.itemImageLayoutId = itemImageLayoutId;
-            return this;
-        }
-
-        /**
          * 动态设置单张图片裁剪页面的布局。<br/>
          * <b>注意：请参照 默认布局文件 image_crop_single_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
          * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
@@ -648,9 +570,6 @@ public class ImagePickerParams implements Parcelable {
         dest.writeByte(this.autoRatioScale ? (byte) 1 : (byte) 0);
         dest.writeInt(this.widthRatio);
         dest.writeInt(this.heightRadio);
-        dest.writeInt(this.selectedLayoutId);
-        dest.writeInt(this.itemCameraLayoutId);
-        dest.writeInt(this.itemImageLayoutId);
         dest.writeInt(this.cropSingleLayoutId);
         dest.writeInt(this.cropMoreLayoutId);
     }
@@ -677,9 +596,6 @@ public class ImagePickerParams implements Parcelable {
         this.autoRatioScale = in.readByte() != 0;
         this.widthRatio = in.readInt();
         this.heightRadio = in.readInt();
-        this.selectedLayoutId = in.readInt();
-        this.itemCameraLayoutId = in.readInt();
-        this.itemImageLayoutId = in.readInt();
         this.cropSingleLayoutId = in.readInt();
         this.cropMoreLayoutId = in.readInt();
     }
