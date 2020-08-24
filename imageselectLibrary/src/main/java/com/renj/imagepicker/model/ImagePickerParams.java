@@ -54,8 +54,6 @@ public class ImagePickerParams implements Parcelable {
 
     /*********** 裁剪图片页面动态布局 ***********/
     @LayoutRes
-    private int cropSingleLayoutId; // 裁剪单张图片页面布局资源 id
-    @LayoutRes
     private int cropMoreLayoutId; // 裁剪单张图片页面布局资源 id
 
 
@@ -84,7 +82,6 @@ public class ImagePickerParams implements Parcelable {
         this.heightRadio = builder.heightRadio;
 
         /*********** 裁剪图片页面动态布局和回调 ***********/
-        this.cropSingleLayoutId = builder.cropSingleLayoutId;
         this.cropMoreLayoutId = builder.cropMoreLayoutId;
         ImagePickerHelp.getInstance().setOnCropImageChange(builder.onCropImageChange);
 
@@ -176,10 +173,6 @@ public class ImagePickerParams implements Parcelable {
         return heightRadio;
     }
 
-    public int getCropSingleLayoutId() {
-        return cropSingleLayoutId;
-    }
-
     public int getCropMoreLayoutId() {
         return cropMoreLayoutId;
     }
@@ -210,8 +203,6 @@ public class ImagePickerParams implements Parcelable {
         private int heightRadio; // 改变裁剪范围的高比例
 
         /*********** 裁剪图片页面动态布局和回调 ***********/
-        @LayoutRes
-        private int cropSingleLayoutId; // 裁剪单张图片页面布局资源 id
         @LayoutRes
         private int cropMoreLayoutId; // 裁剪单张图片页面布局资源 id
         private OnCropImageChange onCropImageChange; // 图片发生裁剪时回调
@@ -244,7 +235,6 @@ public class ImagePickerParams implements Parcelable {
             this.heightRadio = DefaultConfigData.SCALE_HEIGHT_RATIO; // 改变裁剪范围的高比例
 
             /*********** 裁剪图片页面动态布局和回调 ***********/
-            this.cropSingleLayoutId = DefaultConfigData.CROP_SINGLE_LAYOUT;
             this.cropMoreLayoutId = DefaultConfigData.CROP_MORE_LAYOUT;
             this.onCropImageChange = null;
 
@@ -485,19 +475,6 @@ public class ImagePickerParams implements Parcelable {
         }
 
         /**
-         * 动态设置单张图片裁剪页面的布局。<br/>
-         * <b>注意：请参照 默认布局文件 image_crop_single_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
-         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
-         *
-         * @param cropSingleLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_crop_single_layout.xml)
-         * @return
-         */
-        public Builder cropSingleLayoutId(@LayoutRes int cropSingleLayoutId) {
-            this.cropSingleLayoutId = cropSingleLayoutId;
-            return this;
-        }
-
-        /**
          * 动态设置多张图片裁剪页面的布局。<br/>
          * <b>注意：请参照 默认布局文件 image_crop_more_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
          * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
@@ -570,7 +547,6 @@ public class ImagePickerParams implements Parcelable {
         dest.writeByte(this.autoRatioScale ? (byte) 1 : (byte) 0);
         dest.writeInt(this.widthRatio);
         dest.writeInt(this.heightRadio);
-        dest.writeInt(this.cropSingleLayoutId);
         dest.writeInt(this.cropMoreLayoutId);
     }
 
@@ -596,7 +572,6 @@ public class ImagePickerParams implements Parcelable {
         this.autoRatioScale = in.readByte() != 0;
         this.widthRatio = in.readInt();
         this.heightRadio = in.readInt();
-        this.cropSingleLayoutId = in.readInt();
         this.cropMoreLayoutId = in.readInt();
     }
 

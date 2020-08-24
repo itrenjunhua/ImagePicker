@@ -118,10 +118,6 @@ public interface DefaultConfigData {
     boolean IS_SHOW_CAMERA = true;
 
     /**
-     * 默认裁剪单张图片布局资源文件
-     */
-    int CROP_SINGLE_LAYOUT = R.layout.image_crop_single_layout;
-    /**
      * 默认裁剪多张图片布局资源文件
      */
     int CROP_MORE_LAYOUT = R.layout.image_crop_more_layout;

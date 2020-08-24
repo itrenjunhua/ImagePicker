@@ -66,8 +66,6 @@ public class ClipSingleMyActivity extends BaseActivity {
                 .cropBorderWidth(2)
                 .maskColor(Color.parseColor("#88000000"))
                 .cropBorderColor(Color.parseColor("#ff0000"))
-                // .selectedLayoutId(R.layout.my_selected_layout) // 自定义选择图片布局
-                .cropSingleLayoutId(R.layout.my_clip_single_layout) // 自定义单张裁剪部分布局
                 .onCropImageChange(new OnCropImageChange() {
                     @Override
                     public void onCropChange(@NonNull TextView clipView, @NonNull TextView cancelView,

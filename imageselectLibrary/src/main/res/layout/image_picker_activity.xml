@@ -5,25 +5,27 @@
     android:orientation="vertical">
 
     <!--裁剪单张图布局-->
-    <!--<include layout="@layout/image_crop_single_layout />-->
+    <!--<include layout="@layout/default_image_crop_single_layout />-->
     <ViewStub
         android:id="@+id/vs_crop_single"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout="@layout/image_picker_frame_layout" />
 
     <!--裁剪多张图布局-->
     <!--<include layout="@layout/image_single_crop_more_layout" />-->
     <ViewStub
         android:id="@+id/vs_crop_more"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout="@layout/image_picker_frame_layout" />
 
     <!--图片选择布局-->
-    <!--<include layout="@layout/image_picker_layout" />-->
+    <!--<include layout="@layout/image_picker_frame_layout" />-->
     <ViewStub
         android:id="@+id/vs_image_picker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout="@layout/image_picker_layout" />
+        android:layout="@layout/image_picker_frame_layout" />
 
 </FrameLayout>

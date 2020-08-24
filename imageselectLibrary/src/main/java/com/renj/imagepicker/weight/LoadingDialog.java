@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.widget.TextView;
 
 import com.renj.imagepicker.R;
 
@@ -21,6 +22,10 @@ import com.renj.imagepicker.R;
  * ======================================================================
  */
 public class LoadingDialog extends Dialog {
+
+    private String loadingText;
+    private TextView tvLoadingText;
+
     public LoadingDialog(@NonNull Context context) {
         super(context, R.style.loading_dialog_style);
     }
@@ -30,6 +35,17 @@ public class LoadingDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_dialog_view);
 
+        tvLoadingText = findViewById(R.id.tv_loading_text);
+        setLoadingText(loadingText);
         setCanceledOnTouchOutside(false);
+    }
+
+    public void setLoadingText(String loadingText) {
+        if (loadingText == null) loadingText = "加载中...";
+
+        this.loadingText = loadingText;
+        if (tvLoadingText != null) {
+            tvLoadingText.setText(loadingText);
+        }
     }
 }

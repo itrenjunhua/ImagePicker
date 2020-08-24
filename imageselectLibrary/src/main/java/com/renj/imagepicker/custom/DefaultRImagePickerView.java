@@ -32,7 +32,7 @@ import java.util.List;
  * <p>
  * ======================================================================
  */
-public class DefaultImagePickerView extends ImagePickerView {
+public class DefaultRImagePickerView extends RImagePickerView {
 
     private GridView gvImages;
     private TextView tvSelectMenu;
@@ -42,13 +42,13 @@ public class DefaultImagePickerView extends ImagePickerView {
     private ImagePickerAdapter imagePickerAdapter; // 图片展示的适配器
     private ImageMenuDialog imageMenuDialog; // 图片目录选择Dialog
 
-    public DefaultImagePickerView(@NonNull Context context) {
+    public DefaultRImagePickerView(@NonNull Context context) {
         super(context);
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.defaultimage_picker_layout;
+        return R.layout.default_image_picker_layout;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DefaultImagePickerView extends ImagePickerView {
         tvConfirmSelect.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                iImagePickerPage.confirm(imagePickerAdapter.getCheckImages());
+                iImagePickerPage.confirmPickerFinish(imagePickerAdapter.getCheckImages());
             }
         });
 
@@ -158,7 +158,7 @@ public class DefaultImagePickerView extends ImagePickerView {
             } else {
                 if (ConfigUtils.isShowLogger())
                     ConfigUtils.i("拍照成功，直接返回已选择和拍照图片");
-                iImagePickerPage.confirm(checkImages);
+                iImagePickerPage.confirmPickerFinish(checkImages);
             }
         }
     }
@@ -169,17 +169,11 @@ public class DefaultImagePickerView extends ImagePickerView {
      * @param imageModel
      */
     private void selectSingle(@NonNull ImageModel imageModel) {
-        if (imagePickerParams.isCrop()) {
-            if (ConfigUtils.isShowLogger())
-                ConfigUtils.i("单张图片裁剪");
-        } else {
-            ArrayList<ImageModel> selectResults = new ArrayList<>();
-            selectResults.add(imageModel);
-
-            if (ConfigUtils.isShowLogger())
-                ConfigUtils.i("单张图片选择完成");
-            iImagePickerPage.confirm(selectResults);
-        }
+        ArrayList<ImageModel> selectResults = new ArrayList<>();
+        selectResults.add(imageModel);
+        if (ConfigUtils.isShowLogger())
+            ConfigUtils.i("单张图片选择完成");
+        iImagePickerPage.confirmPickerFinish(selectResults);
     }
 
     /**

@@ -20,12 +20,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.renj.imagepicker.R;
-import com.renj.imagepicker.custom.DefaultImagePickerView;
-import com.renj.imagepicker.custom.ImagePickerView;
+import com.renj.imagepicker.custom.DefaultRImageCropSingleView;
+import com.renj.imagepicker.custom.DefaultRImagePickerView;
+import com.renj.imagepicker.custom.RImageCropView;
+import com.renj.imagepicker.custom.RImagePickerView;
 import com.renj.imagepicker.model.FolderModel;
 import com.renj.imagepicker.model.ImageModel;
 import com.renj.imagepicker.model.ImagePickerParams;
@@ -34,11 +34,9 @@ import com.renj.imagepicker.utils.ImageFileUtils;
 import com.renj.imagepicker.utils.ImagePickerHelp;
 import com.renj.imagepicker.utils.LoadSDImageUtils;
 import com.renj.imagepicker.weight.ImageCropMoreLayout;
-import com.renj.imagepicker.weight.ImageCropView;
 import com.renj.imagepicker.weight.LoadingDialog;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,7 +52,7 @@ import java.util.List;
  * <p>
  * ======================================================================
  */
-public class ImagePickerActivity extends AppCompatActivity implements View.OnClickListener, IImagePickerPage {
+public class ImagePickerActivity extends AppCompatActivity implements View.OnClickListener, IImagePickerPage, IImageCropPage {
     // 图片选择页面
     private final int STATUS_IMAGE_SELECT_PAGE = 0x01;
     // 裁剪单个图片页面
@@ -67,19 +65,13 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
     // 当前页面
     private int currentStatus;
 
-    private ImagePickerView imagePickerView; // 选择图片控件
+    private RImagePickerView rImagePickerView; // 选择图片控件
+    private RImageCropView rImageCropSingleView; // 裁剪单张图片控件
+
+    private List<ImageModel> imagePickerList;
 
 
-    private ViewStub vsCropSingle; // 裁剪单张图片时加载
     private ViewStub vsCropMore; // 裁剪多张图片时加载
-
-    /***** 多选图片时的取消、确认(已选张数)等控件 *****/
-    private TextView tvCancelSelect, tvConfirmSelect;
-
-    /***** 裁剪单张图片时使用到的控件 *****/
-    private TextView tvCancel, tvCrop;
-    private ImageCropView imageCropView;
-    private LinearLayout cropLayout;
 
     /***** 裁剪多张图片时使用到的控件 *****/
     private ImageCropMoreLayout cropMoreLayout;
@@ -100,7 +92,6 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
         // 初始化选择图片界面
         initSelectedImageView();
 
-        vsCropSingle = findViewById(R.id.vs_crop_single);
         vsCropMore = findViewById(R.id.vs_crop_more);
 
         // 配置数据解析
@@ -122,15 +113,10 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
     private void initSelectedImageView() {
         ViewStub vsSelect = findViewById(R.id.vs_image_picker);
         ViewGroup viewGroup = (ViewGroup) vsSelect.inflate();
-        this.imagePickerView = getImagePickerView(this);
-        viewGroup.addView(this.imagePickerView);
+        this.rImagePickerView = getImagePickerView(this);
+        viewGroup.addView(this.rImagePickerView);
 
-        this.imagePickerView.setImagePickerOperator(this, imagePickerParams);
-    }
-
-    @NonNull
-    protected ImagePickerView getImagePickerView(AppCompatActivity activity) {
-        return new DefaultImagePickerView(activity);
+        this.rImagePickerView.setImagePickerOperator(this, imagePickerParams);
     }
 
     /**
@@ -139,16 +125,6 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
     private void configDataParse() {
         if (imagePickerParams == null)
             defaultConfig();
-
-        if (imagePickerParams.isCrop()) {
-            if (imagePickerParams.getSelectCount() > 1) {
-                initClipMorePage();
-                cropMoreLayout.setClipViewParams(imagePickerParams);
-            } else {
-                initClipSinglePage();
-                imageCropView.setCropViewParams(imagePickerParams);
-            }
-        }
     }
 
     /**
@@ -164,23 +140,12 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
      * 初始化裁剪单张图片页面
      */
     private void initClipSinglePage() {
-        vsCropSingle.setLayoutResource(imagePickerParams.getCropSingleLayoutId());
+        ViewStub vsCropSingle = findViewById(R.id.vs_crop_single);
+        ViewGroup viewGroup = (ViewGroup) vsCropSingle.inflate();
+        rImageCropSingleView = getImageCropSingleView(this);
+        viewGroup.addView(this.rImageCropSingleView);
 
-        View clipSingleView = vsCropSingle.inflate();
-
-        /***** 裁剪单张图片时使用到的控件 *****/
-        tvCrop = clipSingleView.findViewById(R.id.tv_crop);
-        tvCancel = clipSingleView.findViewById(R.id.tv_cancel);
-        imageCropView = clipSingleView.findViewById(R.id.image_crop_view);
-        cropLayout = clipSingleView.findViewById(R.id.crop_layout);
-
-        if (ImagePickerHelp.getInstance().getOnCropImageChange() != null) {
-            // 单张裁剪，总数为 1
-            ImagePickerHelp.getInstance().getOnCropImageChange().onDefault(tvCrop, tvCancel, 1, 1);
-        }
-
-        tvCancel.setOnClickListener(this);
-        tvCrop.setOnClickListener(this);
+        this.rImageCropSingleView.setImageCropOperator(this, imagePickerParams, imagePickerList);
     }
 
     /**
@@ -192,39 +157,14 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
         cropMoreLayout.initView(imagePickerParams.getCropMoreLayoutId(), ImagePickerHelp.getInstance().getOnCropImageChange());
     }
 
-    /**
-     * 打开相机
-     */
-    public void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); // 启动系统相机
-        cameraSavePath = ImageFileUtils.getCameraSavePath();
-        if (cameraSavePath == null) return;
-        Uri photoUri;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            ContentValues contentValues = new ContentValues(1);
-            contentValues.put(MediaStore.Images.Media.DATA, cameraSavePath.getAbsolutePath());
-            photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-        } else {
-            photoUri = Uri.fromFile(cameraSavePath); // 传递路径
-        }
-
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri); // 更改系统默认存储路径
-        startActivityForResult(intent, REQUEST_CAMERA);
+    @NonNull
+    protected RImagePickerView getImagePickerView(AppCompatActivity activity) {
+        return new DefaultRImagePickerView(activity);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CAMERA) { // 如果返回数据
-            Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            Uri uri = Uri.fromFile(cameraSavePath);
-            intent1.setData(uri);
-            sendBroadcast(intent1);//这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了
-
-            ImageModel imageModel = new ImageModel(cameraSavePath.getAbsolutePath(), cameraSavePath.getName(), cameraSavePath.lastModified());
-            imagePickerView.handlerCameraResult(imageModel);
-        }
+    @NonNull
+    protected RImageCropView getImageCropSingleView(AppCompatActivity activity) {
+        return new DefaultRImageCropSingleView(activity);
     }
 
     /**
@@ -243,7 +183,7 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
                     public void run() {
                         if (ConfigUtils.isShowLogger())
                             ConfigUtils.i("图片加载完成");
-                        imagePickerView.onLoadImageFinish(imageModels, folderModels);
+                        rImagePickerView.onLoadImageFinish(imageModels, folderModels);
                         loadingDialog.dismiss();
                     }
                 });
@@ -257,24 +197,24 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
      * @param page
      */
     private void pageStatusChange(int page) {
-        if (cropLayout == null && cropMoreLayout == null) return;
+        if (rImageCropSingleView == null && cropMoreLayout == null) return;
         if (currentStatus != page) {
             if (STATUS_IMAGE_SELECT_PAGE == page) {
-                if (cropLayout != null)
-                    cropLayout.setVisibility(View.GONE);
+                if (rImageCropSingleView != null)
+                    rImageCropSingleView.setVisibility(View.GONE);
                 if (cropMoreLayout != null)
                     cropMoreLayout.setVisibility(View.GONE);
-                imagePickerView.setVisibility(View.VISIBLE);
+                rImagePickerView.setVisibility(View.VISIBLE);
             } else if (STATUS_CLIP_SINGLE_PAGE == page) {
-                imagePickerView.setVisibility(View.GONE);
+                rImagePickerView.setVisibility(View.GONE);
                 if (cropMoreLayout != null)
                     cropMoreLayout.setVisibility(View.GONE);
-                if (cropLayout != null)
-                    cropLayout.setVisibility(View.VISIBLE);
+                if (rImageCropSingleView != null)
+                    rImageCropSingleView.setVisibility(View.VISIBLE);
             } else {
-                imagePickerView.setVisibility(View.GONE);
-                if (cropLayout != null)
-                    cropLayout.setVisibility(View.GONE);
+                rImagePickerView.setVisibility(View.GONE);
+                if (rImageCropSingleView != null)
+                    rImageCropSingleView.setVisibility(View.GONE);
                 if (cropMoreLayout != null) {
                     cropMoreLayout.setVisibility(View.VISIBLE);
 //                    List<ImageModel> checkImages = imagePickerAdapter.getCheckImages();
@@ -314,15 +254,8 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 12);
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 12);
-            }
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 12);
         } else {
             startLoadImage();
         }
@@ -344,37 +277,8 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
             if (ConfigUtils.isShowLogger())
                 ConfigUtils.i("取消");
             finish();
-        } else if (R.id.tv_crop == vId) {
-            loadingDialog.show();
-            imageCropView.cut(new ImageCropView.CutListener() {
-                @Override
-                public void cutFinish(final ImageModel imageModel) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ArrayList<ImageModel> selectResults = new ArrayList<>();
-                            selectResults.add(imageModel);
-
-                            if (ImagePickerHelp.getInstance().getOnCropImageChange() != null) {
-                                // 单张裁剪，总数为 1
-                                ImagePickerHelp.getInstance().getOnCropImageChange().onCropChange(tvCrop, tvCancel, imageModel, selectResults, imagePickerParams.isOvalCrop(), 1, 1);
-                            }
-
-                            if (ImagePickerHelp.getInstance().getOnResultCallBack() != null) {
-                                ImagePickerHelp.getInstance().getOnResultCallBack().onResult(selectResults);
-                            }
-                            loadingDialog.dismiss();
-                            if (ConfigUtils.isShowLogger())
-                                ConfigUtils.i("单张裁剪图片完成");
-                            finish();
-                        }
-                    });
-                }
-            });
         }
     }
-
 
     @Override
     public void cancel() {
@@ -382,7 +286,89 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void confirm(List<ImageModel> imagePickerList) {
+    public void showLoading() {
+        if (loadingDialog == null)
+            loadingDialog = new LoadingDialog(this);
+        if (!loadingDialog.isShowing()) {
+            loadingDialog.show();
+        }
+    }
+
+    @Override
+    public void showLoading(String loadingText) {
+        if (loadingDialog == null)
+            loadingDialog = new LoadingDialog(this);
+        loadingDialog.setLoadingText(loadingText);
+        if (!loadingDialog.isShowing()) {
+            loadingDialog.show();
+        }
+    }
+
+    @Override
+    public void closeLoading() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+        }
+    }
+
+    /**
+     * 打开相机
+     */
+    @Override
+    public void openCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); // 启动系统相机
+        cameraSavePath = ImageFileUtils.getCameraSavePath();
+        if (cameraSavePath == null) return;
+        Uri photoUri;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            ContentValues contentValues = new ContentValues(1);
+            contentValues.put(MediaStore.Images.Media.DATA, cameraSavePath.getAbsolutePath());
+            photoUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+        } else {
+            photoUri = Uri.fromFile(cameraSavePath); // 传递路径
+        }
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri); // 更改系统默认存储路径
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CAMERA) { // 如果返回数据
+            Intent intent1 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri uri = Uri.fromFile(cameraSavePath);
+            intent1.setData(uri);
+            sendBroadcast(intent1);//这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了
+
+            ImageModel imageModel = new ImageModel(cameraSavePath.getAbsolutePath(), cameraSavePath.getName(), cameraSavePath.lastModified());
+            rImagePickerView.handlerCameraResult(imageModel);
+        }
+    }
+
+    @Override
+    public void confirmPickerFinish(List<ImageModel> imagePickerList) {
+        this.imagePickerList = imagePickerList;
+
+        if (imagePickerParams.isCrop()) {
+            if (imagePickerParams.getSelectCount() > 1) {
+                initClipMorePage();
+                cropMoreLayout.setClipViewParams(imagePickerParams);
+                pageStatusChange(STATUS_CLIP_MORE_PAGE);
+            } else {
+                initClipSinglePage();
+                pageStatusChange(STATUS_CLIP_SINGLE_PAGE);
+            }
+        } else {
+            if (ImagePickerHelp.getInstance().getOnResultCallBack() != null)
+                ImagePickerHelp.getInstance().getOnResultCallBack().onResult(imagePickerList);
+            finish();
+        }
+    }
+
+    @Override
+    public void confirmCropFinish(List<ImageModel> imagePickerList) {
         if (ImagePickerHelp.getInstance().getOnResultCallBack() != null)
             ImagePickerHelp.getInstance().getOnResultCallBack().onResult(imagePickerList);
         finish();

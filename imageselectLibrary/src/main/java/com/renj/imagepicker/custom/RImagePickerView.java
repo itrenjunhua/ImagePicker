@@ -31,25 +31,25 @@ import java.util.List;
  * <p>
  * ======================================================================
  */
-public abstract class ImagePickerView extends FrameLayout {
+public abstract class RImagePickerView extends FrameLayout {
     protected IImagePickerPage iImagePickerPage;
     protected ImagePickerParams imagePickerParams;
 
-    public ImagePickerView(@NonNull Context context) {
+    public RImagePickerView(@NonNull Context context) {
         this(context, null);
     }
 
-    public ImagePickerView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public RImagePickerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ImagePickerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RImagePickerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public ImagePickerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public RImagePickerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
