@@ -3,11 +3,8 @@ package com.renj.imagepicker.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.FloatRange;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.renj.imagepicker.listener.OnCropImageChange;
 import com.renj.imagepicker.listener.OnResultCallBack;
 import com.renj.imagepicker.utils.ImagePickerHelp;
 
@@ -52,10 +49,6 @@ public class ImagePickerParams implements Parcelable {
     int widthRatio; // 改变裁剪范围的宽比例
     int heightRadio; // 改变裁剪范围的高比例
 
-    /*********** 裁剪图片页面动态布局 ***********/
-    @LayoutRes
-    private int cropMoreLayoutId; // 裁剪单张图片页面布局资源 id
-
 
     private ImagePickerParams(Builder builder) {
         /*********** 图片选择和裁剪参数 ***********/
@@ -80,10 +73,6 @@ public class ImagePickerParams implements Parcelable {
         this.autoRatioScale = builder.autoRatioScale;
         this.widthRatio = builder.widthRatio;
         this.heightRadio = builder.heightRadio;
-
-        /*********** 裁剪图片页面动态布局和回调 ***********/
-        this.cropMoreLayoutId = builder.cropMoreLayoutId;
-        ImagePickerHelp.getInstance().setOnCropImageChange(builder.onCropImageChange);
 
         /*********** 结果回调 ***********/
         ImagePickerHelp.getInstance().setOnResultCallBack(builder.onResultCallBack);
@@ -173,10 +162,6 @@ public class ImagePickerParams implements Parcelable {
         return heightRadio;
     }
 
-    public int getCropMoreLayoutId() {
-        return cropMoreLayoutId;
-    }
-
     public static class Builder {
         /*********** 图片选择和裁剪参数 ***********/
         private int width; // 裁剪宽度
@@ -201,11 +186,6 @@ public class ImagePickerParams implements Parcelable {
         private boolean autoRatioScale; // 改变裁剪范围时,是否按照比例改变
         private int widthRatio; // 改变裁剪范围的宽比例
         private int heightRadio; // 改变裁剪范围的高比例
-
-        /*********** 裁剪图片页面动态布局和回调 ***********/
-        @LayoutRes
-        private int cropMoreLayoutId; // 裁剪单张图片页面布局资源 id
-        private OnCropImageChange onCropImageChange; // 图片发生裁剪时回调
 
         /*********** 结果回调 ***********/
         private OnResultCallBack onResultCallBack;
@@ -233,10 +213,6 @@ public class ImagePickerParams implements Parcelable {
             this.autoRatioScale = DefaultConfigData.AUTO_RATIO_SCALE; // 改变裁剪范围时,是否按照比例改变
             this.widthRatio = DefaultConfigData.SCALE_WIDTH_RATIO; // 改变裁剪范围的宽比例
             this.heightRadio = DefaultConfigData.SCALE_HEIGHT_RATIO; // 改变裁剪范围的高比例
-
-            /*********** 裁剪图片页面动态布局和回调 ***********/
-            this.cropMoreLayoutId = DefaultConfigData.CROP_MORE_LAYOUT;
-            this.onCropImageChange = null;
 
             /*********** 结果回调 ***********/
             this.onResultCallBack = null;
@@ -475,30 +451,6 @@ public class ImagePickerParams implements Parcelable {
         }
 
         /**
-         * 动态设置多张图片裁剪页面的布局。<br/>
-         * <b>注意：请参照 默认布局文件 image_crop_more_layout.xml ，在默认布局文件中有 id 的控件为必须控件，
-         * 在自定义的布局文件中必须存在，并且要保证控件类型和id与默认布局文件中的一致，否则抛出异常。</b>
-         *
-         * @param cropMoreLayoutId 布局文件资源id(如果异常，使用默认布局文件 image_crop_more_layout.xml)
-         * @return
-         */
-        public Builder cropMoreLayoutId(@LayoutRes int cropMoreLayoutId) {
-            this.cropMoreLayoutId = cropMoreLayoutId;
-            return this;
-        }
-
-        /**
-         * 设置图片裁剪改变监听。<br/>
-         *
-         * @param onCropImageChange 图片裁剪时回调
-         * @return
-         */
-        public Builder onCropImageChange(@Nullable OnCropImageChange onCropImageChange) {
-            this.onCropImageChange = onCropImageChange;
-            return this;
-        }
-
-        /**
          * 获取返回结果的回调<br/>
          * <b>{@link OnResultCallBack} 注意：当选择一张图片时，集合的大小为1</b>
          *
@@ -547,7 +499,6 @@ public class ImagePickerParams implements Parcelable {
         dest.writeByte(this.autoRatioScale ? (byte) 1 : (byte) 0);
         dest.writeInt(this.widthRatio);
         dest.writeInt(this.heightRadio);
-        dest.writeInt(this.cropMoreLayoutId);
     }
 
     protected ImagePickerParams(Parcel in) {
@@ -572,7 +523,6 @@ public class ImagePickerParams implements Parcelable {
         this.autoRatioScale = in.readByte() != 0;
         this.widthRatio = in.readInt();
         this.heightRadio = in.readInt();
-        this.cropMoreLayoutId = in.readInt();
     }
 
     public static final Parcelable.Creator<ImagePickerParams> CREATOR = new Parcelable.Creator<ImagePickerParams>() {

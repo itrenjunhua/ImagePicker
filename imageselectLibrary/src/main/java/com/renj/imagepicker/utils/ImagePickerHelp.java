@@ -3,7 +3,6 @@ package com.renj.imagepicker.utils;
 import android.widget.ImageView;
 
 import com.renj.imagepicker.listener.ImageLoaderModule;
-import com.renj.imagepicker.listener.OnCropImageChange;
 import com.renj.imagepicker.listener.OnResultCallBack;
 
 import org.jetbrains.annotations.Contract;
@@ -53,16 +52,7 @@ public class ImagePickerHelp {
 
     /*********************监听************************/
 
-    private OnCropImageChange onCropImageChange; // 图片发生裁剪时回调
     private OnResultCallBack onResultCallBack; // 结果回调
-
-    public OnCropImageChange getOnCropImageChange() {
-        return onCropImageChange;
-    }
-
-    public void setOnCropImageChange(OnCropImageChange onCropImageChange) {
-        this.onCropImageChange = onCropImageChange;
-    }
 
     public OnResultCallBack getOnResultCallBack() {
         return onResultCallBack;

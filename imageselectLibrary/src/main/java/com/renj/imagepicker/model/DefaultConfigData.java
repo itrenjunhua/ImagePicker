@@ -2,8 +2,6 @@ package com.renj.imagepicker.model;
 
 import android.support.annotation.FloatRange;
 
-import com.renj.imagepicker.R;
-
 /**
  * ======================================================================
  * <p>
@@ -116,9 +114,4 @@ public interface DefaultConfigData {
      * 是否显示打开相机按钮
      */
     boolean IS_SHOW_CAMERA = true;
-
-    /**
-     * 默认裁剪多张图片布局资源文件
-     */
-    int CROP_MORE_LAYOUT = R.layout.image_crop_more_layout;
 }

@@ -49,7 +49,7 @@ public class ImageMenuDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.image_menu_view);
+        setContentView(R.layout.default_image_menu_view);
 
         lvMenu = findViewById(R.id.lv_menu);
 

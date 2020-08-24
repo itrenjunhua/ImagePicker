@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 
 import com.renj.imagepicker.R;
+import com.renj.imagepicker.custom.DefaultRImageCropMultiView;
 import com.renj.imagepicker.custom.DefaultRImageCropSingleView;
 import com.renj.imagepicker.custom.DefaultRImagePickerView;
 import com.renj.imagepicker.custom.RImageCropView;
@@ -33,7 +34,6 @@ import com.renj.imagepicker.utils.ConfigUtils;
 import com.renj.imagepicker.utils.ImageFileUtils;
 import com.renj.imagepicker.utils.ImagePickerHelp;
 import com.renj.imagepicker.utils.LoadSDImageUtils;
-import com.renj.imagepicker.weight.ImageCropMoreLayout;
 import com.renj.imagepicker.weight.LoadingDialog;
 
 import java.io.File;
@@ -67,15 +67,9 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
 
     private RImagePickerView rImagePickerView; // 选择图片控件
     private RImageCropView rImageCropSingleView; // 裁剪单张图片控件
+    private RImageCropView rImageCropMultiView; // 裁剪多张图片控件
 
     private List<ImageModel> imagePickerList;
-
-
-    private ViewStub vsCropMore; // 裁剪多张图片时加载
-
-    /***** 裁剪多张图片时使用到的控件 *****/
-    private ImageCropMoreLayout cropMoreLayout;
-
     private ImagePickerParams imagePickerParams;   // 保存图片选择配置信息的对象
     private File cameraSavePath; // 相机照片保存路径
     private LoadingDialog loadingDialog;
@@ -91,8 +85,6 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
         imagePickerParams = getIntent().getParcelableExtra("imageParamsConfig");
         // 初始化选择图片界面
         initSelectedImageView();
-
-        vsCropMore = findViewById(R.id.vs_crop_more);
 
         // 配置数据解析
         configDataParse();
@@ -152,9 +144,12 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
      * 初始化裁剪多张图片页面
      */
     private void initClipMorePage() {
-        vsCropMore.setLayoutResource(R.layout.image_single_crop_more_layout);
-        cropMoreLayout = (ImageCropMoreLayout) vsCropMore.inflate();
-        cropMoreLayout.initView(imagePickerParams.getCropMoreLayoutId(), ImagePickerHelp.getInstance().getOnCropImageChange());
+        ViewStub vsCropMulti = findViewById(R.id.vs_crop_more);
+        ViewGroup viewGroup = (ViewGroup) vsCropMulti.inflate();
+        rImageCropMultiView = getImageCropMultiView(this);
+        viewGroup.addView(this.rImageCropMultiView);
+
+        this.rImageCropMultiView.setImageCropOperator(this, imagePickerParams, imagePickerList);
     }
 
     @NonNull
@@ -165,6 +160,11 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
     @NonNull
     protected RImageCropView getImageCropSingleView(AppCompatActivity activity) {
         return new DefaultRImageCropSingleView(activity);
+    }
+
+    @NonNull
+    protected RImageCropView getImageCropMultiView(AppCompatActivity activity) {
+        return new DefaultRImageCropMultiView(activity);
     }
 
     /**
@@ -197,47 +197,26 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
      * @param page
      */
     private void pageStatusChange(int page) {
-        if (rImageCropSingleView == null && cropMoreLayout == null) return;
+        if (rImageCropSingleView == null && rImageCropMultiView == null) return;
         if (currentStatus != page) {
             if (STATUS_IMAGE_SELECT_PAGE == page) {
                 if (rImageCropSingleView != null)
                     rImageCropSingleView.setVisibility(View.GONE);
-                if (cropMoreLayout != null)
-                    cropMoreLayout.setVisibility(View.GONE);
+                if (rImageCropMultiView != null)
+                    rImageCropMultiView.setVisibility(View.GONE);
                 rImagePickerView.setVisibility(View.VISIBLE);
             } else if (STATUS_CLIP_SINGLE_PAGE == page) {
                 rImagePickerView.setVisibility(View.GONE);
-                if (cropMoreLayout != null)
-                    cropMoreLayout.setVisibility(View.GONE);
+                if (rImageCropMultiView != null)
+                    rImageCropMultiView.setVisibility(View.GONE);
                 if (rImageCropSingleView != null)
                     rImageCropSingleView.setVisibility(View.VISIBLE);
             } else {
                 rImagePickerView.setVisibility(View.GONE);
                 if (rImageCropSingleView != null)
                     rImageCropSingleView.setVisibility(View.GONE);
-                if (cropMoreLayout != null) {
-                    cropMoreLayout.setVisibility(View.VISIBLE);
-//                    List<ImageModel> checkImages = imagePickerAdapter.getCheckImages();
-//                    if (ConfigUtils.isShowLogger())
-//                        ConfigUtils.i("多张图片裁剪");
-//                    cropMoreLayout.setImageData(checkImages);
-//                    cropMoreLayout.setOnImageCropMoreListener(new ImageCropMoreLayout.OnImageCropMoreListener() {
-//                        @Override
-//                        public void cancel() {
-//                            if (ConfigUtils.isShowLogger())
-//                                ConfigUtils.i("取消图片裁剪");
-//                            ImagePickerActivity.this.finish();
-//                        }
-//
-//                        @Override
-//                        public void finish(List<ImageModel> clipResult) {
-//                            if (ConfigUtils.isShowLogger())
-//                                ConfigUtils.i("多张图片裁剪完成");
-//                            if (ImagePickerHelp.getInstance().getOnResultCallBack() != null)
-//                                ImagePickerHelp.getInstance().getOnResultCallBack().onResult(clipResult);
-//                            ImagePickerActivity.this.finish();
-//                        }
-//                    });
+                if (rImageCropMultiView != null) {
+                    rImageCropMultiView.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -354,7 +333,6 @@ public class ImagePickerActivity extends AppCompatActivity implements View.OnCli
         if (imagePickerParams.isCrop()) {
             if (imagePickerParams.getSelectCount() > 1) {
                 initClipMorePage();
-                cropMoreLayout.setClipViewParams(imagePickerParams);
                 pageStatusChange(STATUS_CLIP_MORE_PAGE);
             } else {
                 initClipSinglePage();

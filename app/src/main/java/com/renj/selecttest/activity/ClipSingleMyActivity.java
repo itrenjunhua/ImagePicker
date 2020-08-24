@@ -1,13 +1,10 @@
 package com.renj.selecttest.activity;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.renj.imagepicker.listener.OnCropImageChange;
 import com.renj.imagepicker.listener.OnResultCallBack;
 import com.renj.imagepicker.model.ImageModel;
 import com.renj.imagepicker.model.ImagePickerParams;
@@ -66,15 +63,6 @@ public class ClipSingleMyActivity extends BaseActivity {
                 .cropBorderWidth(2)
                 .maskColor(Color.parseColor("#88000000"))
                 .cropBorderColor(Color.parseColor("#ff0000"))
-                .onCropImageChange(new OnCropImageChange() {
-                    @Override
-                    public void onCropChange(@NonNull TextView clipView, @NonNull TextView cancelView,
-                                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> cropResultList,
-                                             boolean isOvalCrop, int cropCount, int totalCount) {
-                        // clipView.setText(clipCount + "/" + totalCount + "裁剪");
-                        Log.i("ClipSingleMyActivity", "imageModel = [" + imageModel + "], clipResultList = [" + cropResultList + "], isCircleClip = [" + isOvalCrop + "], clipCount = [" + cropCount + "], totalCount = [" + totalCount + "]");
-                    }
-                })
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> resultList) {

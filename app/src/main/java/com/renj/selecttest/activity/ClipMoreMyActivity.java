@@ -1,15 +1,12 @@
 package com.renj.selecttest.activity;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.renj.imagepicker.listener.OnCropImageChange;
 import com.renj.imagepicker.listener.OnResultCallBack;
 import com.renj.imagepicker.model.ImageModel;
 import com.renj.imagepicker.model.ImagePickerParams;
@@ -84,15 +81,6 @@ public class ClipMoreMyActivity extends BaseActivity {
                 .isContinuityEnlarge(false)
                 .maskColor(Color.parseColor("#80000000"))
                 .cropBorderColor(Color.parseColor("#ffffff"))
-                .cropMoreLayoutId(R.layout.my_clip_more_layout)
-                .onCropImageChange(new OnCropImageChange() {
-                    @Override
-                    public void onCropChange(@NonNull TextView clipView, @NonNull TextView cancelView,
-                                             @NonNull ImageModel imageModel, @NonNull List<ImageModel> cropResultList,
-                                             boolean isOvalCrop, int cropCount, int totalCount) {
-                        Log.i("ClipMoreMyActivity", "imageModel = [" + imageModel + "], clipResultList = [" + cropResultList + "], isCircleClip = [" + isOvalCrop + "], clipCount = [" + cropCount + "], totalCount = [" + totalCount + "]");
-                    }
-                })
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImageModel> resultList) {

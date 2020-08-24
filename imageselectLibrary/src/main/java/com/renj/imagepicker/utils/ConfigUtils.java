@@ -1,6 +1,8 @@
 package com.renj.imagepicker.utils;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -33,7 +35,7 @@ public class ConfigUtils {
         return imagePickerConfig.getFileSavePath();
     }
 
-    public static boolean isShowLogger(){
+    public static boolean isShowLogger() {
         return imagePickerConfig.isShowLogger();
     }
 
@@ -78,5 +80,15 @@ public class ConfigUtils {
     public static void runOnNewThread(Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.start();
+    }
+
+    /**
+     * 开启新线程执行任务
+     *
+     * @param runnable
+     */
+    public static void runOnMainThread(Runnable runnable) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(runnable);
     }
 }

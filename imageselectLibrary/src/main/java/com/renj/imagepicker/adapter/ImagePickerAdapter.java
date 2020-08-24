@@ -139,12 +139,12 @@ public class ImagePickerAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (CAMERA_VIEW == getItemViewType(position)) {
-            ImageView imageView = (ImageView) LayoutInflater.from(context).inflate(R.layout.image_select_camera_item, parent, false);
+            ImageView imageView = (ImageView) LayoutInflater.from(context).inflate(R.layout.default_image_picker_camera_item, parent, false);
             return imageView;
         } else {
             ViewHolder viewHolder;
             if (convertView == null || convertView instanceof ImageView) {
-                convertView = LayoutInflater.from(context).inflate(R.layout.image_select_item, null);
+                convertView = LayoutInflater.from(context).inflate(R.layout.default_image_picker_item, null);
                 viewHolder = new ViewHolder(convertView);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();

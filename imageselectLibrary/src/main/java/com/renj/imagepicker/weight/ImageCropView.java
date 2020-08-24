@@ -92,8 +92,13 @@ public class ImageCropView extends RelativeLayout {
                 cropView.confirmCrop(new CropView.OnCropRangeListener() {
                     @Override
                     public void cropRange(CropView.CropShape cropShape, RectF cropRectF) {
-                        ImageModel imageModel = photoView.cropBitmap(cropShape, cropRectF);
-                        cutListener.cutFinish(imageModel);
+                        final ImageModel imageModel = photoView.cropBitmap(cropShape, cropRectF);
+                        ConfigUtils.runOnMainThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                cutListener.cutFinish(imageModel);
+                            }
+                        });
                     }
                 });
             }
@@ -110,7 +115,7 @@ public class ImageCropView extends RelativeLayout {
         photoView.setCropViewParams(imagePickerParams);
     }
 
-    public interface CutListener{
+    public interface CutListener {
         void cutFinish(ImageModel imageModel);
     }
 }

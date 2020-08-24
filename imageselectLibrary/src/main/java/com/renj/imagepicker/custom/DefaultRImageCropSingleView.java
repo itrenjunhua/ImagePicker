@@ -1,11 +1,8 @@
 package com.renj.imagepicker.custom;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.renj.imagepicker.R;
@@ -33,7 +30,6 @@ import java.util.List;
  */
 public class DefaultRImageCropSingleView extends RImageCropView {
 
-    private LinearLayout cropLayout;
     private TextView tvCancel;
     private TextView tvCrop;
     private ImageCropView imageCropView;
@@ -49,7 +45,6 @@ public class DefaultRImageCropSingleView extends RImageCropView {
 
     @Override
     protected void initView(View singleCropView) {
-        cropLayout = singleCropView.findViewById(R.id.crop_layout);
         tvCancel = singleCropView.findViewById(R.id.tv_cancel);
         tvCrop = singleCropView.findViewById(R.id.tv_crop);
         imageCropView = singleCropView.findViewById(R.id.image_crop_view);
@@ -71,19 +66,13 @@ public class DefaultRImageCropSingleView extends RImageCropView {
                 imageCropView.cut(new ImageCropView.CutListener() {
                     @Override
                     public void cutFinish(final ImageModel imageModel) {
-                        Handler handler = new Handler(Looper.getMainLooper());
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                ArrayList<ImageModel> selectResults = new ArrayList<>();
-                                selectResults.add(imageModel);
+                        ArrayList<ImageModel> selectResults = new ArrayList<>();
+                        selectResults.add(imageModel);
 
-                                imageCropPage.closeLoading();
-                                if (ConfigUtils.isShowLogger())
-                                    ConfigUtils.i("单张裁剪图片完成");
-                                imageCropPage.confirmCropFinish(selectResults);
-                            }
-                        });
+                        imageCropPage.closeLoading();
+                        if (ConfigUtils.isShowLogger())
+                            ConfigUtils.i("单张裁剪图片完成");
+                        imageCropPage.confirmCropFinish(selectResults);
                     }
                 });
             }

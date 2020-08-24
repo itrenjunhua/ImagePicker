@@ -33,7 +33,7 @@ import java.util.List;
 public abstract class RImageCropView extends FrameLayout {
     protected IImageCropPage imageCropPage;
     protected ImagePickerParams imagePickerParams;
-    private List<ImageModel> imagePickerList;
+    protected List<ImageModel> imagePickerList;
 
     public RImageCropView(@NonNull Context context) {
         this(context, null);

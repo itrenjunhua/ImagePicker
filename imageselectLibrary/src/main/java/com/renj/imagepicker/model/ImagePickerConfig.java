@@ -33,6 +33,10 @@ public class ImagePickerConfig {
         this.showLogger = builder.showLogger;
         this.loggerTag = builder.loggerTag;
         this.center = builder.center;
+
+        if (fileSavePath == null) fileSavePath = builder.getDefaultSaveDir();
+        if (!fileSavePath.exists() || !fileSavePath.isDirectory())
+            fileSavePath.mkdirs();
     }
 
     public File getFileSavePath() {
@@ -115,7 +119,7 @@ public class ImagePickerConfig {
         private File getDefaultSaveDir() {
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                 File file = new File(Environment.getExternalStorageDirectory(), "image_picker");
-                if (file == null || !file.exists() || !file.isDirectory())
+                if (!file.exists() || !file.isDirectory())
                     file.mkdirs();
                 return file;
             }
