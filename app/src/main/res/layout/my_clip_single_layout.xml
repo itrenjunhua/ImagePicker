@@ -17,7 +17,7 @@
             android:background="@drawable/my_selector_main_bt"
             android:padding="12dp"
             android:text="取消"
-            android:textColor="@color/color_white"
+            android:textColor="@color/image_picker_color_white"
             android:textSize="14sp" />
 
         <TextView
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="裁剪图片"
-            android:textColor="@color/title_color"
+            android:textColor="@color/image_picker_title_color"
             android:textSize="16sp" />
 
         <TextView
@@ -37,12 +37,12 @@
             android:background="@drawable/my_selector_main_bt"
             android:padding="12dp"
             android:text="裁剪"
-            android:textColor="@color/color_white"
+            android:textColor="@color/image_picker_color_white"
             android:textSize="14sp" />
 
     </RelativeLayout>
 
-    <com.renj.imagepicker.weight.ImageCropView
+    <com.renj.imagepicker.weight.IPImageCropView
         android:id="@+id/image_clip_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

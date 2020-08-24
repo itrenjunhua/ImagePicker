@@ -3,6 +3,6 @@
     android:id="@+id/lv_menu"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_white"
-    android:divider="@color/color_slip_line"
+    android:background="@color/image_picker_color_white"
+    android:divider="@color/image_picker_color_slip_line"
     android:dividerHeight="0.5dp" />

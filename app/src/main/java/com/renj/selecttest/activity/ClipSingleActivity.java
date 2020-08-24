@@ -6,9 +6,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.renj.imagepicker.listener.OnResultCallBack;
-import com.renj.imagepicker.model.ImageModel;
-import com.renj.imagepicker.model.ImagePickerParams;
-import com.renj.imagepicker.utils.ImagePickerUtils;
+import com.renj.imagepicker.model.ImagePickerModel;
+import com.renj.imagepicker.ImagePickerParams;
+import com.renj.imagepicker.ImagePickerUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
@@ -20,7 +20,6 @@ import butterknife.BindView;
  * ======================================================================
  * <p>
  * 作者：Renj
- * 邮箱：renjunhua@anlovek.com
  * <p>
  * 创建时间：2019-04-26   11:02
  * <p>
@@ -65,7 +64,7 @@ public class ClipSingleActivity extends BaseActivity {
                 .cropBorderColor(Color.parseColor("#ff0000"))
                 .onResult(new OnResultCallBack() {
                     @Override
-                    public void onResult(List<ImageModel> resultList) {
+                    public void onResult(List<ImagePickerModel> resultList) {
                         ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult);
                     }
                 })

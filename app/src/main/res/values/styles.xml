@@ -20,8 +20,8 @@
     </style>
 
     <style name="dialog_anim">
-        <item name="android:windowEnterAnimation">@anim/bottom_dialog_anim_in</item>
-        <item name="android:windowExitAnimation">@anim/bottom_dialog_anim_out</item>
+        <item name="android:windowEnterAnimation">@anim/image_picker_bottom_dialog_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/image_picker_bottom_dialog_anim_out</item>
     </style>
 
     <style name="loading_dialog_style" parent="android:style/Theme.Dialog">
@@ -36,7 +36,7 @@
     </style>
 
     <style name="loading_progress_style">
-        <item name="android:indeterminateDrawable">@drawable/shape_loading_progress</item>
+        <item name="android:indeterminateDrawable">@drawable/image_picker_shape_loading_progress</item>
         <item name="android:minWidth">48dp</item>
         <item name="android:maxWidth">48dp</item>
         <item name="android:minHeight">48dp</item>

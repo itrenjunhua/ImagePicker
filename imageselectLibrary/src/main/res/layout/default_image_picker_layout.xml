@@ -14,10 +14,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/selector_main_bt"
+            android:background="@drawable/image_picker_selector_main_bt"
             android:padding="12dp"
             android:text="取消"
-            android:textColor="@color/main_bt_color"
+            android:textColor="@color/image_picker_main_bt_color"
             android:textSize="14sp" />
 
         <TextView
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="选择图片"
-            android:textColor="@color/title_color"
+            android:textColor="@color/image_picker_title_color"
             android:textSize="16sp" />
 
         <TextView
@@ -34,10 +34,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/selector_main_bt"
+            android:background="@drawable/image_picker_selector_main_bt"
             android:padding="12dp"
             android:text="(0 / 9)确定"
-            android:textColor="@color/main_bt_color"
+            android:textColor="@color/image_picker_main_bt_color"
             android:textSize="14sp" />
 
     </RelativeLayout>
@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/main_bg"
+        android:background="@color/image_picker_main_bg"
         android:horizontalSpacing="2dp"
         android:numColumns="3"
         android:verticalSpacing="2dp" />
@@ -55,21 +55,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_select_bottom"
+        android:background="@color/image_picker_color_select_bottom"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_select_menu"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:background="@drawable/shape_text_border"
+            android:background="@drawable/image_picker_shape_text_border"
             android:drawablePadding="18dp"
-            android:drawableRight="@mipmap/ic_select_menu"
+            android:drawableRight="@mipmap/image_picker_select_menu"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:text="全部图片"
-            android:textColor="@color/color_white"
+            android:textColor="@color/image_picker_color_white"
             android:textSize="18sp" />
 
     </LinearLayout>

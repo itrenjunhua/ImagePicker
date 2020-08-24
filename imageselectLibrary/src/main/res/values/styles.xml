@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="alert_dialog" parent="android:Theme.Dialog">
+    <style name="image_picker_alert_dialog" parent="android:Theme.Dialog">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowNoTitle">true</item>
@@ -19,12 +19,12 @@
         <item name="android:backgroundDimAmount">0.7</item>
     </style>
 
-    <style name="dialog_anim">
-        <item name="android:windowEnterAnimation">@anim/bottom_dialog_anim_in</item>
-        <item name="android:windowExitAnimation">@anim/bottom_dialog_anim_out</item>
+    <style name="image_picker_dialog_anim">
+        <item name="android:windowEnterAnimation">@anim/image_picker_bottom_dialog_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/image_picker_bottom_dialog_anim_out</item>
     </style>
 
-    <style name="loading_dialog_style" parent="android:style/Theme.Dialog">
+    <style name="image_picker_loading_dialog_style" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item><!-- 边框 -->
         <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->
         <item name="android:windowIsTranslucent">false</item><!-- 半透明 -->
@@ -35,8 +35,8 @@
         <item name="android:windowFullscreen">false</item>
     </style>
 
-    <style name="loading_progress_style">
-        <item name="android:indeterminateDrawable">@drawable/shape_loading_progress</item>
+    <style name="image_picker_loading_progress_style">
+        <item name="android:indeterminateDrawable">@drawable/image_picker_shape_loading_progress</item>
         <item name="android:minWidth">48dp</item>
         <item name="android:maxWidth">48dp</item>
         <item name="android:minHeight">48dp</item>

@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:hint="选择裁剪图片张数"
             android:inputType="number"
-            android:textColor="@color/color_main_text"
+            android:textColor="@color/image_picker_color_main_text"
             android:textSize="15sp" />
 
         <TextView
@@ -28,7 +28,7 @@
             android:background="@drawable/my_selector_main_bt"
             android:gravity="center"
             android:text="选择"
-            android:textColor="@color/color_white"
+            android:textColor="@color/image_picker_color_white"
             android:textSize="15sp" />
 
     </LinearLayout>

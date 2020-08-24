@@ -13,7 +13,6 @@ import java.security.MessageDigest;
  * ======================================================================
  * <p>
  * 作者：Renj
- * 邮箱：renjunhua@anlovek.com
  * <p>
  * 创建时间：2019-01-15   17:09
  * <p>

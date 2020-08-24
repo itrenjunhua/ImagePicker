@@ -8,9 +8,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.renj.imagepicker.listener.OnResultCallBack;
-import com.renj.imagepicker.model.ImageModel;
-import com.renj.imagepicker.model.ImagePickerParams;
-import com.renj.imagepicker.utils.ImagePickerUtils;
+import com.renj.imagepicker.model.ImagePickerModel;
+import com.renj.imagepicker.ImagePickerParams;
+import com.renj.imagepicker.ImagePickerUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
 import com.renj.selecttest.utils.Utils;
@@ -23,7 +23,6 @@ import butterknife.BindView;
  * ======================================================================
  * <p>
  * 作者：Renj
- * 邮箱：renjunhua@anlovek.com
  * <p>
  * 创建时间：2019-04-26   11:02
  * <p>
@@ -83,7 +82,7 @@ public class ClipMoreMyActivity extends BaseActivity {
                 .cropBorderColor(Color.parseColor("#ffffff"))
                 .onResult(new OnResultCallBack() {
                     @Override
-                    public void onResult(List<ImageModel> resultList) {
+                    public void onResult(List<ImagePickerModel> resultList) {
                         imageShowAdapter.setDatas(resultList);
                     }
                 })

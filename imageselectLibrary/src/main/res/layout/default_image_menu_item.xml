@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_list"
+    android:background="@drawable/image_picker_selector_list"
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -24,7 +24,7 @@
         android:maxLines="1"
         android:singleLine="true"
         android:text="(100)全部图片"
-        android:textColor="@color/color_main_text"
+        android:textColor="@color/image_picker_color_main_text"
         android:textSize="18sp" />
 
     <RadioButton

@@ -3,15 +3,14 @@ package com.renj.selecttest;
 import android.app.Application;
 import android.widget.ImageView;
 
-import com.renj.imagepicker.listener.ImageLoaderModule;
-import com.renj.imagepicker.utils.ImagePickerUtils;
+import com.renj.imagepicker.listener.ImagePickerLoaderModule;
+import com.renj.imagepicker.ImagePickerUtils;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
 /**
  * ======================================================================
  * <p>
  * 作者：Renj
- * 邮箱：renjunhua@anlovek.com
  * <p>
  * 创建时间：2018-07-24   18:06
  * <p>
@@ -42,7 +41,7 @@ public class MyApplication extends Application {
 //            }
 //        });
 
-        ImagePickerUtils.init(new ImageLoaderModule() {
+        ImagePickerUtils.init(new ImagePickerLoaderModule() {
             @Override
             public void loadImage(String path, ImageView imageView) {
                 // 使用图片加载框架加载图片

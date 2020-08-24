@@ -1,6 +1,6 @@
 package com.renj.imagepicker.listener;
 
-import com.renj.imagepicker.model.ImageModel;
+import com.renj.imagepicker.model.ImagePickerModel;
 
 import java.util.List;
 
@@ -26,5 +26,5 @@ public interface OnResultCallBack {
      *
      * @param resultList 当选择一张图片时，集合的大小为1
      */
-    void onResult(List<ImageModel> resultList);
+    void onResult(List<ImagePickerModel> resultList);
 }
