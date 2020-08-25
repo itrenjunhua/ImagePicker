@@ -24,7 +24,7 @@ import java.util.List;
  * <p>
  * 创建时间：2020-08-21   17:25
  * <p>
- * 描述：自定义图片选择页面
+ * 描述：默认图片选择控件
  * <p>
  * 修订历史：
  * <p>
@@ -105,7 +105,7 @@ public class DefaultImagePickerLayout extends ImagePickerLayout {
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int selectCount = imagePickerParams.getSelectCount();
+                int selectCount = imagePickerParams.getMaxCount();
                 if (imagePickerParams.isShowCamera() && position == 0) {
                     if (imagePickerAdapter.getCheckImages().size() >= selectCount) {
                         UIUtils.showToast(getContext(), "最多选择" + selectCount + "张图片");
@@ -120,7 +120,7 @@ public class DefaultImagePickerLayout extends ImagePickerLayout {
                     // 判断是否选择单张还是多张
                     if (selectCount > 1) {
                         imagePickerAdapter.addOrClearCheckedPosition(position);
-                        tvConfirmSelect.setText("(" + imagePickerAdapter.getCheckImages().size() + " / " + imagePickerParams.getSelectCount() + ") 确定");
+                        tvConfirmSelect.setText("(" + imagePickerAdapter.getCheckImages().size() + " / " + imagePickerParams.getMaxCount() + ") 确定");
                     } else {
                         ImagePickerModel imagePickerModel = (ImagePickerModel) itemData;
                         ArrayList<ImagePickerModel> selectResults = new ArrayList<>();
@@ -139,7 +139,7 @@ public class DefaultImagePickerLayout extends ImagePickerLayout {
      */
     @Override
     public void handlerCameraResult(@NonNull ImagePickerModel imagePickerModel) {
-        if (imagePickerParams.getSelectCount() == 1) {
+        if (imagePickerParams.getMaxCount() == 1) {
             // 如果是单张，判断是否需要裁剪或直接返回结果
             ArrayList<ImagePickerModel> selectResults = new ArrayList<>();
             selectResults.add(imagePickerModel);
@@ -154,11 +154,11 @@ public class DefaultImagePickerLayout extends ImagePickerLayout {
 
     @Override
     protected void onParamsInitFinish(IImagePickerPage iImagePickerPage, ImagePickerParams imagePickerParams) {
-        if (imagePickerParams.getSelectCount() == 1) {
+        if (imagePickerParams.getMaxCount() == 1) {
             tvConfirmSelect.setVisibility(GONE);
         } else {
             tvConfirmSelect.setVisibility(VISIBLE);
-            tvConfirmSelect.setText("(0 / " + imagePickerParams.getSelectCount() + ") 确定");
+            tvConfirmSelect.setText("(0 / " + imagePickerParams.getMaxCount() + ") 确定");
         }
     }
 
@@ -167,7 +167,7 @@ public class DefaultImagePickerLayout extends ImagePickerLayout {
         imagePickerAdapter.setImagePickerModels(imagePickerModels);
         imagePickerMenuDialog.setMenuData(imagePickerFolderModelList);
 
-        imagePickerAdapter.setMaxCount(imagePickerParams.getSelectCount());
+        imagePickerAdapter.setMaxCount(imagePickerParams.getMaxCount());
         imagePickerAdapter.isOpenCamera(imagePickerParams.isShowCamera());
     }
 }

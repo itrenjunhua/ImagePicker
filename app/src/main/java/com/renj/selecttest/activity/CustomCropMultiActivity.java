@@ -72,7 +72,7 @@ public class CustomCropMultiActivity extends BaseActivity {
         int imageNum = Utils.parseInteger(textViewContent);
         ImagePickerParams imagePickerParams = new ImagePickerParams
                 .Builder()
-                .selectCount(imageNum)
+                .maxCount(imageNum)
                 .isShowCamera(true)
                 .isCrop(true)
                 .width(240)
@@ -94,6 +94,7 @@ public class CustomCropMultiActivity extends BaseActivity {
         ImagePickerUtils.start(this, imagePickerParams, new ImagePickerViewModule() {
             @Override
             public ImagePickerCropLayout onCreateImagePickerCropMultiView(AppCompatActivity activity) {
+                // CustomImageCropMultiView extends ImagePickerCropLayout
                 return new CustomImageCropMultiView(activity);
             }
         });

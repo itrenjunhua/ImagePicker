@@ -283,7 +283,7 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
         this.imagePickerList = imagePickerList;
 
         if (imagePickerParams.isCrop()) {
-            if (imagePickerParams.getSelectCount() > 1) {
+            if (imagePickerParams.getMaxCount() > 1) {
                 initCropMultiPage();
                 pageStatusChange(STATUS_CROP_MORE_PAGE);
             } else {
@@ -302,6 +302,12 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
         if (RImagePickerHelp.getOnResultCallBack() != null)
             RImagePickerHelp.getOnResultCallBack().onResult(imagePickerList);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RImagePickerHelp.removeModule();
     }
 
     public static void open(Context context, ImagePickerParams imagePickerParams) {

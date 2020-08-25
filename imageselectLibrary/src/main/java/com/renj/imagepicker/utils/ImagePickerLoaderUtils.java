@@ -11,14 +11,13 @@ import com.renj.imagepicker.listener.ImagePickerLoaderModule;
  * <p>
  * 创建时间：2020-08-24   17:44
  * <p>
- * 描述：
+ * 描述：图片加载器
  * <p>
  * 修订历史：
  * <p>
  * ======================================================================
  */
 public class ImagePickerLoaderUtils {
-    /************************** 图片加载器  **************************/
     private static ImagePickerLoaderModule imagePickerLoaderModule; // 图片加载器
 
     public static void setImagePickerLoaderModule(ImagePickerLoaderModule imagePickerLoaderModule) {

@@ -53,7 +53,7 @@ public class CropSingleActivity extends BaseActivity {
     private void singleImage() {
         ImagePickerParams imagePickerParams = new ImagePickerParams
                 .Builder()
-                .selectCount(1)
+                .maxCount(1)
                 .isShowCamera(true)
                 .isCrop(true)
                 .width(200)

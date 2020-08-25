@@ -69,7 +69,7 @@ public class CropMultiActivity extends BaseActivity {
         int imageNum = Utils.parseInteger(textViewContent);
         ImagePickerParams imagePickerParams = new ImagePickerParams
                 .Builder()
-                .selectCount(imageNum)
+                .maxCount(imageNum)
                 .isShowCamera(true)
                 .isCrop(true)
                 .width(300)

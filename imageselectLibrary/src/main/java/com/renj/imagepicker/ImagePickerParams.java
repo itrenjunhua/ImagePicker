@@ -30,7 +30,7 @@ public class ImagePickerParams implements Parcelable {
     /*********** 图片选择和裁剪参数 ***********/
     int width; // 裁剪宽度
     int height; // 裁剪高度
-    int selectCount; // 选择图片张数
+    int maxCount; // 选择图片张数
     boolean isCrop; // 是否裁剪
     boolean isOvalCrop; // 是否裁剪成圆形图片
     float minScale; // 图片最小缩放倍数
@@ -51,12 +51,14 @@ public class ImagePickerParams implements Parcelable {
     int widthRatio; // 改变裁剪范围的宽比例
     int heightRadio; // 改变裁剪范围的高比例
 
+    /*********** 结果回调 ***********/
+    private OnResultCallBack onResultCallBack;
 
     private ImagePickerParams(Builder builder) {
         /*********** 图片选择和裁剪参数 ***********/
         this.width = builder.width;
         this.height = builder.height;
-        this.selectCount = builder.selectCount;
+        this.maxCount = builder.maxCount;
         this.isCrop = builder.isCrop;
         this.isOvalCrop = builder.isOvalCrop;
         this.minScale = builder.minScale;
@@ -75,9 +77,7 @@ public class ImagePickerParams implements Parcelable {
         this.autoRatioScale = builder.autoRatioScale;
         this.widthRatio = builder.widthRatio;
         this.heightRadio = builder.heightRadio;
-
-        /*********** 结果回调 ***********/
-        RImagePickerHelp.setOnResultCallBack(builder.onResultCallBack);
+        this.onResultCallBack = builder.onResultCallBack;
     }
 
     public int getWidth() {
@@ -88,8 +88,8 @@ public class ImagePickerParams implements Parcelable {
         return this.height;
     }
 
-    public int getSelectCount() {
-        return this.selectCount;
+    public int getMaxCount() {
+        return this.maxCount;
     }
 
     public boolean isCrop() {
@@ -164,11 +164,15 @@ public class ImagePickerParams implements Parcelable {
         return heightRadio;
     }
 
+    OnResultCallBack getOnResultCallBack() {
+        return onResultCallBack;
+    }
+
     public static class Builder {
         /*********** 图片选择和裁剪参数 ***********/
         private int width; // 裁剪宽度
         private int height; // 裁剪高度
-        private int selectCount; // 选择图片张数
+        private int maxCount; // 选择图片张数
         private boolean isCrop; // 是否裁剪
         private boolean isOvalCrop; // 是否裁剪成圆形图片
         private float minScale; // 图片最小缩放倍数
@@ -196,7 +200,7 @@ public class ImagePickerParams implements Parcelable {
             /*********** 图片选择和裁剪参数 ***********/
             this.width = RImagePickerConfigData.WIDTH; // 裁剪宽度
             this.height = RImagePickerConfigData.HEIGHT; // 裁剪高度
-            this.selectCount = RImagePickerConfigData.SELECT_COUNT; // 选择图片张数
+            this.maxCount = RImagePickerConfigData.SELECT_COUNT; // 选择图片张数
             this.isCrop = RImagePickerConfigData.IS_CROP; // 是否裁剪
             this.isOvalCrop = RImagePickerConfigData.IS_OVAL_CROP; // 是否裁剪成圆形图片
             this.minScale = RImagePickerConfigData.MIN_SCALE; // 图片最小缩放倍数
@@ -245,16 +249,16 @@ public class ImagePickerParams implements Parcelable {
         /**
          * 设置图片选择张数，默认1张
          *
-         * @param selectCount 需要选择的图片张数<br/>
+         * @param maxCount 需要选择的图片张数<br/>
          *                    <b>注意：该值与结果监听 {@link OnResultCallBack} 对象的泛型相关：</b>
          *                    <br/>&nbsp;&nbsp;&nbsp;&nbsp;
-         *                    <b>1.当选择或裁剪的只是单张图片(selectCount = 1)时，泛型应该为 {@link ImagePickerModel}</b>
+         *                    <b>1.当选择或裁剪的只是单张图片(maxCount = 1)时，泛型应该为 {@link ImagePickerModel}</b>
          *                    <br/>&nbsp;&nbsp;&nbsp;&nbsp;
-         *                    <b>2.当选择或裁剪的只是多张图片(selectCount > 1)时，泛型应该为 List<{@link ImagePickerModel}></{@link></b>
+         *                    <b>2.当选择或裁剪的只是多张图片(maxCount > 1)时，泛型应该为 List<{@link ImagePickerModel}></{@link></b>
          * @return
          */
-        public Builder selectCount(int selectCount) {
-            this.selectCount = selectCount;
+        public Builder maxCount(int maxCount) {
+            this.maxCount = maxCount;
             return this;
         }
 
@@ -482,7 +486,7 @@ public class ImagePickerParams implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.width);
         dest.writeInt(this.height);
-        dest.writeInt(this.selectCount);
+        dest.writeInt(this.maxCount);
         dest.writeByte(this.isCrop ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isOvalCrop ? (byte) 1 : (byte) 0);
         dest.writeFloat(this.minScale);
@@ -506,7 +510,7 @@ public class ImagePickerParams implements Parcelable {
     protected ImagePickerParams(Parcel in) {
         this.width = in.readInt();
         this.height = in.readInt();
-        this.selectCount = in.readInt();
+        this.maxCount = in.readInt();
         this.isCrop = in.readByte() != 0;
         this.isOvalCrop = in.readByte() != 0;
         this.minScale = in.readFloat();

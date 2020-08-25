@@ -57,7 +57,7 @@ public class CustomCropSingleActivity extends BaseActivity {
     private void singleImage() {
         ImagePickerParams imagePickerParams = new ImagePickerParams
                 .Builder()
-                .selectCount(1)
+                .maxCount(1)
                 .isShowCamera(true)
                 .isCrop(true)
                 .width(200)
@@ -76,6 +76,7 @@ public class CustomCropSingleActivity extends BaseActivity {
         ImagePickerUtils.start(this, imagePickerParams, new ImagePickerViewModule() {
             @Override
             public ImagePickerCropLayout onCreateImagePickerCropSingleView(AppCompatActivity activity) {
+                // CustomImageCropSingleView extends ImagePickerCropLayout
                 return new CustomImageCropSingleView(activity);
             }
         });

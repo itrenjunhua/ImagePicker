@@ -71,7 +71,7 @@ public class CustomImagePickerActivity extends BaseActivity {
         int imageNum = Utils.parseInteger(textViewContent);
         ImagePickerParams imagePickerParams = new ImagePickerParams
                 .Builder()
-                .selectCount(imageNum)
+                .maxCount(imageNum)
                 .isShowCamera(true)
                 .isContinuityEnlarge(false)
                 .isCrop(false)
@@ -82,6 +82,7 @@ public class CustomImagePickerActivity extends BaseActivity {
                     }
                 })
                 .build();
+        ImagePickerUtils.start(this, imagePickerParams);
         ImagePickerUtils.start(this, imagePickerParams, new ImagePickerViewModule() {
             @Override
             public ImagePickerLayout onCreateImagePickerView(AppCompatActivity activity) {

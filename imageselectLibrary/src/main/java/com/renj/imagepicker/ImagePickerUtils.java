@@ -73,7 +73,8 @@ public class ImagePickerUtils {
      */
     public static void start(Context context, ImagePickerParams paramsConfig, ImagePickerViewModule imagePickerViewModule) {
         if (imagePickerViewModule == null) imagePickerViewModule = new ImagePickerViewModule();
-        RImagePickerHelp.setImagePickerViewModule(imagePickerViewModule);
+
+        RImagePickerHelp.addModule(paramsConfig.getOnResultCallBack(), imagePickerViewModule);
         ImagePickerActivity.open(context, paramsConfig);
     }
 }

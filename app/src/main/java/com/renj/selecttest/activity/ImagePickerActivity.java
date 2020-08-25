@@ -67,7 +67,7 @@ public class ImagePickerActivity extends BaseActivity {
         int imageNum = Utils.parseInteger(textViewContent);
         ImagePickerParams imagePickerParams = new ImagePickerParams
                 .Builder()
-                .selectCount(imageNum)
+                .maxCount(imageNum)
                 .isShowCamera(true)
                 .isContinuityEnlarge(false)
                 .isCrop(false)

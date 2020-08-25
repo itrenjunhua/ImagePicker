@@ -3,8 +3,8 @@ package com.renj.selecttest;
 import android.app.Application;
 import android.widget.ImageView;
 
-import com.renj.imagepicker.listener.ImagePickerLoaderModule;
 import com.renj.imagepicker.ImagePickerUtils;
+import com.renj.imagepicker.listener.ImagePickerLoaderModule;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
 /**
@@ -27,19 +27,13 @@ public class MyApplication extends Application {
 
         ImageLoaderManager.init(this);
 
-//        ImagePickerConfig pickerConfig = new ImagePickerConfig.Builder()
-//                .loggerTag("MyCustomTag")
-//                .fileSavePath(new File(""))
-//                .showLogger(true)
-//                .center(true)
-//                .build();
-//        ImagePickerUtils.init(pickerConfig, new ImageLoaderModule() {
-//            @Override
-//            public void loadImage(String path, ImageView imageView) {
-//                // 使用图片加载框架加载图片
-//                ImageLoaderManager.loadImageForFile(path, imageView);
-//            }
-//        });
+        ImagePickerUtils.init("", new ImagePickerLoaderModule() {
+            @Override
+            public void loadImage(String path, ImageView imageView) {
+                // 使用图片加载框架加载图片
+                ImageLoaderManager.loadImageForFile(path, imageView);
+            }
+        });
 
         ImagePickerUtils.init(new ImagePickerLoaderModule() {
             @Override
