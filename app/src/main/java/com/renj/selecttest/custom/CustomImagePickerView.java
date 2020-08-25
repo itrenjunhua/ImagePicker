@@ -1,4 +1,4 @@
-package com.renj.imagepicker.custom;
+package com.renj.selecttest.custom;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,12 +7,15 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.renj.imagepicker.R;
+import com.renj.imagepicker.ImagePickerParams;
+import com.renj.imagepicker.custom.ImagePickerLayout;
+import com.renj.imagepicker.custom.ImagePickerMenuDialog;
+import com.renj.imagepicker.custom.UIUtils;
 import com.renj.imagepicker.custom.adapter.ImagePickerAdapter;
 import com.renj.imagepicker.listener.IImagePickerPage;
 import com.renj.imagepicker.model.ImagePickerFolderModel;
 import com.renj.imagepicker.model.ImagePickerModel;
-import com.renj.imagepicker.ImagePickerParams;
+import com.renj.selecttest.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +25,15 @@ import java.util.List;
  * <p>
  * 作者：Renj
  * <p>
- * 创建时间：2020-08-21   17:25
+ * 创建时间：2020-08-25   09:42
  * <p>
- * 描述：自定义图片选择页面
+ * 描述：
  * <p>
  * 修订历史：
  * <p>
  * ======================================================================
  */
-public class DefaultImagePickerLayout extends ImagePickerLayout {
-
+public class CustomImagePickerView extends ImagePickerLayout {
     private GridView gvImages;
     private TextView tvSelectMenu;
     private TextView tvCancelSelect;
@@ -40,21 +42,21 @@ public class DefaultImagePickerLayout extends ImagePickerLayout {
     private ImagePickerAdapter imagePickerAdapter; // 图片展示的适配器
     private ImagePickerMenuDialog imagePickerMenuDialog; // 图片目录选择Dialog
 
-    public DefaultImagePickerLayout(@NonNull Context context) {
+    public CustomImagePickerView(@NonNull Context context) {
         super(context);
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.default_image_picker_layout;
+        return R.layout.custom_image_picker_layout;
     }
 
     @Override
     protected void initView(View imagePickerView) {
-        gvImages = imagePickerView.findViewById(R.id.gv_images);
-        tvSelectMenu = imagePickerView.findViewById(R.id.tv_select_menu);
-        tvCancelSelect = imagePickerView.findViewById(R.id.tv_cancel_select);
-        tvConfirmSelect = imagePickerView.findViewById(R.id.tv_confirm_select);
+        gvImages = imagePickerView.findViewById(com.renj.imagepicker.R.id.gv_images);
+        tvSelectMenu = imagePickerView.findViewById(com.renj.imagepicker.R.id.tv_select_menu);
+        tvCancelSelect = imagePickerView.findViewById(com.renj.imagepicker.R.id.tv_cancel_select);
+        tvConfirmSelect = imagePickerView.findViewById(com.renj.imagepicker.R.id.tv_confirm_select);
 
         imagePickerAdapter = new ImagePickerAdapter(getContext());
         gvImages.setAdapter(imagePickerAdapter);

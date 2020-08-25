@@ -1,5 +1,6 @@
 package com.renj.selecttest.activity;
 
+
 import android.graphics.Color;
 import android.view.View;
 import android.widget.EditText;
@@ -32,7 +33,7 @@ import butterknife.BindView;
  * <p>
  * ======================================================================
  */
-public class ClipMoreMyActivity extends BaseActivity {
+public class CropMultiActivity extends BaseActivity {
     @BindView(R.id.et_count)
     EditText etCount;
     @BindView(R.id.tv_select)
@@ -43,7 +44,7 @@ public class ClipMoreMyActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.clip_more_activity;
+        return R.layout.crop_multi_activity;
     }
 
     @Override
@@ -62,7 +63,7 @@ public class ClipMoreMyActivity extends BaseActivity {
     private void moreImages() {
         String textViewContent = Utils.getTextViewContent(etCount);
         if (Utils.isEmpty(textViewContent)) {
-            Toast.makeText(ClipMoreMyActivity.this, "请输入张数", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CropMultiActivity.this, "请输入张数", Toast.LENGTH_SHORT).show();
             return;
         }
         int imageNum = Utils.parseInteger(textViewContent);
@@ -71,8 +72,8 @@ public class ClipMoreMyActivity extends BaseActivity {
                 .selectCount(imageNum)
                 .isShowCamera(true)
                 .isCrop(true)
-                .width(240)
-                .height(320)
+                .width(300)
+                .height(300)
                 .isOvalCrop(true)
                 .cropBorderWidth(0.5f)
                 .maxScale(6f)

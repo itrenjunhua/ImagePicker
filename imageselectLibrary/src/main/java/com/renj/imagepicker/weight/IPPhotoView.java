@@ -235,13 +235,13 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
      * 裁剪图片并保存到本地方法
      *
      * @param cropShape 裁剪形状
-     * @param clipRectF 裁剪范围
+     * @param croRectF 裁剪范围
      * @return 裁剪后的图片
      */
-    public ImagePickerModel cropBitmap(@NonNull IPCropDrawView.CropShape cropShape, @NonNull RectF clipRectF) {
+    public ImagePickerModel cropBitmap(@NonNull IPCropDrawView.CropShape cropShape, @NonNull RectF croRectF) {
         setDrawingCacheEnabled(true);
         Bitmap source = getDrawingCache();
-        Bitmap bitmap = cropBitmap(cropShape, clipRectF, source);
+        Bitmap bitmap = cropBitmap(cropShape, croRectF, source);
         setDrawingCacheEnabled(false);
         return RImageFileUtils.saveBitmap2File(RImageFileUtils.getName(), bitmap);
     }

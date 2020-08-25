@@ -14,14 +14,14 @@ public class MainActivity extends BaseActivity {
     Button btSelected;
     @BindView(R.id.bt_selected_my)
     Button btSelectedMy;
-    @BindView(R.id.bt_clip_single)
-    Button btClipSingle;
-    @BindView(R.id.bt_clip_single_my)
-    Button btClipSingleMy;
-    @BindView(R.id.bt_clip_more)
-    Button btClipMore;
-    @BindView(R.id.bt_clip_more_my)
-    Button btClipMoreMy;
+    @BindView(R.id.bt_crop_single)
+    Button btCropSingle;
+    @BindView(R.id.bt_crop_single_my)
+    Button btCropSingleMy;
+    @BindView(R.id.bt_crop_more)
+    Button btCropMore;
+    @BindView(R.id.bt_crop_more_my)
+    Button btCropMoreMy;
 
     @Override
     protected int getLayoutId() {
@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity {
         btSelected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SelectedActivity.class);
+                Intent intent = new Intent(MainActivity.this, ImagePickerActivity.class);
                 startActivity(intent);
             }
         });
@@ -41,39 +41,39 @@ public class MainActivity extends BaseActivity {
         btSelectedMy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SelectedMyActivity.class);
+                Intent intent = new Intent(MainActivity.this, CustomImagePickerActivity.class);
                 startActivity(intent);
             }
         });
 
-        btClipSingle.setOnClickListener(new View.OnClickListener() {
+        btCropSingle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ClipSingleActivity.class);
+                Intent intent = new Intent(MainActivity.this, CropSingleActivity.class);
                 startActivity(intent);
             }
         });
 
-        btClipSingleMy.setOnClickListener(new View.OnClickListener() {
+        btCropSingleMy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ClipSingleMyActivity.class);
+                Intent intent = new Intent(MainActivity.this, CustomCropSingleActivity.class);
                 startActivity(intent);
             }
         });
 
-        btClipMore.setOnClickListener(new View.OnClickListener() {
+        btCropMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ClipMoreActivity.class);
+                Intent intent = new Intent(MainActivity.this, CropMultiActivity.class);
                 startActivity(intent);
             }
         });
 
-        btClipMoreMy.setOnClickListener(new View.OnClickListener() {
+        btCropMoreMy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ClipMoreMyActivity.class);
+                Intent intent = new Intent(MainActivity.this, CustomCropMultiActivity.class);
                 startActivity(intent);
             }
         });

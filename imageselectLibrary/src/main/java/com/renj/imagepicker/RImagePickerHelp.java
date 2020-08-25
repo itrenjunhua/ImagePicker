@@ -1,5 +1,6 @@
 package com.renj.imagepicker;
 
+import com.renj.imagepicker.listener.ImagePickerViewModule;
 import com.renj.imagepicker.listener.OnResultCallBack;
 
 /**
@@ -17,10 +18,17 @@ import com.renj.imagepicker.listener.OnResultCallBack;
  */
 class RImagePickerHelp {
     private static OnResultCallBack onResultCallBack; // 结果回调
-
-    /************************** 自定义布局  **************************/
+    private static ImagePickerViewModule imagePickerViewModule; // 各种自定义页面
 
     private RImagePickerHelp() {
+    }
+
+    static ImagePickerViewModule getImagePickerViewModule() {
+        return imagePickerViewModule;
+    }
+
+    static void setImagePickerViewModule(ImagePickerViewModule imagePickerViewModule) {
+        RImagePickerHelp.imagePickerViewModule = imagePickerViewModule;
     }
 
     /************************** 选择/裁剪结果回调  **************************/

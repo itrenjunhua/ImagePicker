@@ -56,11 +56,11 @@ public class IPImageCropView extends RelativeLayout {
     }
 
     private void initView(Context context) {
-        View clipViewLayout = LayoutInflater.from(context).inflate(R.layout.image_picker_image_crop_view, null);
-        photoView = clipViewLayout.findViewById(R.id.photo_view);
-        cropDrawView = clipViewLayout.findViewById(R.id.crop_view);
+        View cropViewLayout = LayoutInflater.from(context).inflate(R.layout.image_picker_image_crop_view, null);
+        photoView = cropViewLayout.findViewById(R.id.photo_view);
+        cropDrawView = cropViewLayout.findViewById(R.id.crop_view);
 
-        addView(clipViewLayout);
+        addView(cropViewLayout);
     }
 
     /**

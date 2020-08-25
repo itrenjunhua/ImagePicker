@@ -4,8 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.renj.imagepicker.listener.ImagePickerLoaderModule;
-import com.renj.imagepicker.utils.RImageFileUtils;
+import com.renj.imagepicker.listener.ImagePickerViewModule;
 import com.renj.imagepicker.utils.ImagePickerLoaderUtils;
+import com.renj.imagepicker.utils.RImageFileUtils;
 
 import java.io.File;
 
@@ -62,6 +63,17 @@ public class ImagePickerUtils {
      * @return
      */
     public static void start(Context context, ImagePickerParams paramsConfig) {
+        start(context, paramsConfig, new ImagePickerViewModule());
+    }
+
+    /**
+     * 开始图片选择裁剪
+     *
+     * @return
+     */
+    public static void start(Context context, ImagePickerParams paramsConfig, ImagePickerViewModule imagePickerViewModule) {
+        if (imagePickerViewModule == null) imagePickerViewModule = new ImagePickerViewModule();
+        RImagePickerHelp.setImagePickerViewModule(imagePickerViewModule);
         ImagePickerActivity.open(context, paramsConfig);
     }
 }

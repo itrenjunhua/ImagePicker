@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><!--裁剪多张图片的控件，使用ViewPager-->
+<?xml version="1.0" encoding="utf-8"?><!--裁剪单张图片布局-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/image_picker_color_white"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -10,7 +9,7 @@
         android:layout_height="48dp">
 
         <TextView
-            android:id="@+id/tv_cancel_more"
+            android:id="@+id/tv_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -29,7 +28,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/tv_clip_more"
+            android:id="@+id/tv_crop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -42,11 +41,9 @@
 
     </RelativeLayout>
 
-    <com.renj.imagepicker.weight.IPNoScrollViewPager
-        android:id="@+id/vp_clip_more"
+    <com.renj.imagepicker.weight.IPImageCropView
+        android:id="@+id/image_crop_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/image_picker_color_white" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

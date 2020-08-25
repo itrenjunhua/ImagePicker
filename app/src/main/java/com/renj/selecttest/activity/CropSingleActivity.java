@@ -29,15 +29,15 @@ import butterknife.BindView;
  * <p>
  * ======================================================================
  */
-public class ClipSingleActivity extends BaseActivity {
+public class CropSingleActivity extends BaseActivity {
     @BindView(R.id.tv_select)
     TextView tvSelect;
-    @BindView(R.id.iv_clip_result)
-    ImageView ivClipResult;
+    @BindView(R.id.iv_crop_result)
+    ImageView ivCropResult;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.clip_single_activity;
+        return R.layout.crop_single_activity;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ClipSingleActivity extends BaseActivity {
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImagePickerModel> resultList) {
-                        ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult);
+                        ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivCropResult);
                     }
                 })
                 .build();

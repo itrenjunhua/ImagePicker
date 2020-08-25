@@ -31,7 +31,7 @@ import butterknife.BindView;
  * <p>
  * ======================================================================
  */
-public class SelectedMyActivity extends BaseActivity {
+public class ImagePickerActivity extends BaseActivity {
     @BindView(R.id.et_count)
     EditText etCount;
     @BindView(R.id.tv_select)
@@ -42,7 +42,7 @@ public class SelectedMyActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.selected_activity;
+        return R.layout.image_picker_result_activity;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class SelectedMyActivity extends BaseActivity {
     private void selectedImage() {
         String textViewContent = Utils.getTextViewContent(etCount);
         if (Utils.isEmpty(textViewContent)) {
-            Toast.makeText(SelectedMyActivity.this, "请输入张数", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ImagePickerActivity.this, "请输入张数", Toast.LENGTH_SHORT).show();
             return;
         }
         int imageNum = Utils.parseInteger(textViewContent);
@@ -80,4 +80,5 @@ public class SelectedMyActivity extends BaseActivity {
                 .build();
         ImagePickerUtils.start(this, imagePickerParams);
     }
+
 }

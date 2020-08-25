@@ -15,30 +15,30 @@
         android:id="@+id/bt_selected_my"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/image_selected_my" />
+        android:text="@string/image_selected_custom" />
 
     <Button
-        android:id="@+id/bt_clip_single"
+        android:id="@+id/bt_crop_single"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/image_clip_single" />
+        android:text="@string/image_crop_single" />
 
     <Button
-        android:id="@+id/bt_clip_single_my"
+        android:id="@+id/bt_crop_single_my"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/image_clip_single_my" />
+        android:text="@string/image_crop_single_custom" />
 
     <Button
-        android:id="@+id/bt_clip_more"
+        android:id="@+id/bt_crop_more"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/image_clip_more" />
+        android:text="@string/image_crop_more" />
 
     <Button
-        android:id="@+id/bt_clip_more_my"
+        android:id="@+id/bt_crop_more_my"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/image_clip_more_my" />
+        android:text="@string/image_crop_more_custom" />
 
 </LinearLayout>

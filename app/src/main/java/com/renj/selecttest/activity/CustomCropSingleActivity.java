@@ -1,15 +1,19 @@
 package com.renj.selecttest.activity;
 
 import android.graphics.Color;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.renj.imagepicker.custom.ImagePickerCropLayout;
+import com.renj.imagepicker.listener.ImagePickerViewModule;
 import com.renj.imagepicker.listener.OnResultCallBack;
 import com.renj.imagepicker.model.ImagePickerModel;
 import com.renj.imagepicker.ImagePickerParams;
 import com.renj.imagepicker.ImagePickerUtils;
 import com.renj.selecttest.R;
+import com.renj.selecttest.custom.CustomImageCropSingleView;
 import com.renj.selecttest.utils.ImageLoaderManager;
 
 import java.util.List;
@@ -29,15 +33,15 @@ import butterknife.BindView;
  * <p>
  * ======================================================================
  */
-public class ClipSingleMyActivity extends BaseActivity {
+public class CustomCropSingleActivity extends BaseActivity {
     @BindView(R.id.tv_select)
     TextView tvSelect;
-    @BindView(R.id.iv_clip_result)
-    ImageView ivClipResult;
+    @BindView(R.id.iv_crop_result)
+    ImageView ivCropResult;
 
     @Override
     protected int getLayoutId() {
-        return R.layout.clip_single_activity;
+        return R.layout.crop_single_activity;
     }
 
     @Override
@@ -65,10 +69,15 @@ public class ClipSingleMyActivity extends BaseActivity {
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImagePickerModel> resultList) {
-                        ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivClipResult);
+                        ImageLoaderManager.loadImageForFile(resultList.get(0).path, ivCropResult);
                     }
                 })
                 .build();
-        ImagePickerUtils.start(this, imagePickerParams);
+        ImagePickerUtils.start(this, imagePickerParams, new ImagePickerViewModule() {
+            @Override
+            public ImagePickerCropLayout onCreateImagePickerCropSingleView(AppCompatActivity activity) {
+                return new CustomImageCropSingleView(activity);
+            }
+        });
     }
 }

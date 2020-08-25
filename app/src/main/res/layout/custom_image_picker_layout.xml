@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?><!--图片选择布局-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_select_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/rl_select_more"
         android:layout_width="match_parent"
         android:layout_height="48dp">
 

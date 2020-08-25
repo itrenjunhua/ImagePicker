@@ -17,7 +17,7 @@
         android:textSize="15sp" />
 
     <ImageView
-        android:id="@+id/iv_clip_result"
+        android:id="@+id/iv_crop_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp" />

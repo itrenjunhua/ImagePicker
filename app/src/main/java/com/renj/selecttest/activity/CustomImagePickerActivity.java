@@ -1,19 +1,21 @@
 package com.renj.selecttest.activity;
 
-
-import android.graphics.Color;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.renj.imagepicker.custom.ImagePickerLayout;
+import com.renj.imagepicker.listener.ImagePickerViewModule;
 import com.renj.imagepicker.listener.OnResultCallBack;
 import com.renj.imagepicker.model.ImagePickerModel;
 import com.renj.imagepicker.ImagePickerParams;
 import com.renj.imagepicker.ImagePickerUtils;
 import com.renj.selecttest.R;
 import com.renj.selecttest.adapter.ImageShowAdapter;
+import com.renj.selecttest.custom.CustomImagePickerView;
 import com.renj.selecttest.utils.Utils;
 
 import java.util.List;
@@ -25,7 +27,7 @@ import butterknife.BindView;
  * <p>
  * 作者：Renj
  * <p>
- * 创建时间：2019-04-26   11:02
+ * 创建时间：2019-04-26   11:01
  * <p>
  * 描述：
  * <p>
@@ -33,7 +35,7 @@ import butterknife.BindView;
  * <p>
  * ======================================================================
  */
-public class ClipMoreActivity extends BaseActivity {
+public class CustomImagePickerActivity extends BaseActivity {
     @BindView(R.id.et_count)
     EditText etCount;
     @BindView(R.id.tv_select)
@@ -44,7 +46,7 @@ public class ClipMoreActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.clip_more_activity;
+        return R.layout.image_picker_result_activity;
     }
 
     @Override
@@ -55,15 +57,15 @@ public class ClipMoreActivity extends BaseActivity {
         tvSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moreImages();
+                selectedImage();
             }
         });
     }
 
-    private void moreImages() {
+    private void selectedImage() {
         String textViewContent = Utils.getTextViewContent(etCount);
         if (Utils.isEmpty(textViewContent)) {
-            Toast.makeText(ClipMoreActivity.this, "请输入张数", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CustomImagePickerActivity.this, "请输入张数", Toast.LENGTH_SHORT).show();
             return;
         }
         int imageNum = Utils.parseInteger(textViewContent);
@@ -71,16 +73,8 @@ public class ClipMoreActivity extends BaseActivity {
                 .Builder()
                 .selectCount(imageNum)
                 .isShowCamera(true)
-                .isCrop(true)
-                .width(300)
-                .height(300)
-                .isOvalCrop(true)
-                .cropBorderWidth(0.5f)
-                .maxScale(6f)
-                .minScale(0.8f)
                 .isContinuityEnlarge(false)
-                .maskColor(Color.parseColor("#80000000"))
-                .cropBorderColor(Color.parseColor("#ffffff"))
+                .isCrop(false)
                 .onResult(new OnResultCallBack() {
                     @Override
                     public void onResult(List<ImagePickerModel> resultList) {
@@ -88,6 +82,11 @@ public class ClipMoreActivity extends BaseActivity {
                     }
                 })
                 .build();
-        ImagePickerUtils.start(this, imagePickerParams);
+        ImagePickerUtils.start(this, imagePickerParams, new ImagePickerViewModule() {
+            @Override
+            public ImagePickerLayout onCreateImagePickerView(AppCompatActivity activity) {
+                return new CustomImagePickerView(activity);
+            }
+        });
     }
 }

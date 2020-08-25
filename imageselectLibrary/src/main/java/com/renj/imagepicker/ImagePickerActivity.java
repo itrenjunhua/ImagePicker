@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,9 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 
-import com.renj.imagepicker.custom.DefaultImageCropMultiLayout;
-import com.renj.imagepicker.custom.DefaultImageCropSingleLayout;
-import com.renj.imagepicker.custom.DefaultImagePickerLayout;
 import com.renj.imagepicker.custom.ImagePickerCropLayout;
 import com.renj.imagepicker.custom.ImagePickerLayout;
 import com.renj.imagepicker.listener.IImageCropPage;
@@ -54,9 +50,9 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
     // 图片选择页面
     private final int STATUS_IMAGE_SELECT_PAGE = 0x01;
     // 裁剪单个图片页面
-    private final int STATUS_CLIP_SINGLE_PAGE = 0x02;
+    private final int STATUS_CROP_SINGLE_PAGE = 0x02;
     // 裁剪多个图片页面
-    private final int STATUS_CLIP_MORE_PAGE = 0x03;
+    private final int STATUS_CROP_MORE_PAGE = 0x03;
     // 打开相机请求码
     private final int REQUEST_CAMERA = 0x04;
     // 请求权限码
@@ -152,7 +148,7 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
     private void initPickerImageView() {
         ViewStub vsSelect = findViewById(R.id.vs_image_picker);
         ViewGroup viewGroup = (ViewGroup) vsSelect.inflate();
-        this.imagePickerLayout = getImagePickerView(this);
+        this.imagePickerLayout = RImagePickerHelp.getImagePickerViewModule().onCreateImagePickerView(this);
         viewGroup.addView(this.imagePickerLayout);
 
         this.imagePickerLayout.setImagePickerOperator(this, imagePickerParams);
@@ -164,7 +160,7 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
     private void initCropSinglePage() {
         ViewStub vsCropSingle = findViewById(R.id.vs_crop_single);
         ViewGroup viewGroup = (ViewGroup) vsCropSingle.inflate();
-        rImageCropSingleView = getImageCropSingleView(this);
+        rImageCropSingleView = RImagePickerHelp.getImagePickerViewModule().onCreateImagePickerCropSingleView(this);
         viewGroup.addView(this.rImageCropSingleView);
 
         this.rImageCropSingleView.setImageCropOperator(this, imagePickerParams, imagePickerList);
@@ -176,25 +172,10 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
     private void initCropMultiPage() {
         ViewStub vsCropMulti = findViewById(R.id.vs_crop_more);
         ViewGroup viewGroup = (ViewGroup) vsCropMulti.inflate();
-        rImageCropMultiView = getImageCropMultiView(this);
+        rImageCropMultiView = RImagePickerHelp.getImagePickerViewModule().onCreateImagePickerCropMultiView(this);
         viewGroup.addView(this.rImageCropMultiView);
 
         this.rImageCropMultiView.setImageCropOperator(this, imagePickerParams, imagePickerList);
-    }
-
-    @NonNull
-    protected ImagePickerLayout getImagePickerView(AppCompatActivity activity) {
-        return new DefaultImagePickerLayout(activity);
-    }
-
-    @NonNull
-    protected ImagePickerCropLayout getImageCropSingleView(AppCompatActivity activity) {
-        return new DefaultImageCropSingleLayout(activity);
-    }
-
-    @NonNull
-    protected ImagePickerCropLayout getImageCropMultiView(AppCompatActivity activity) {
-        return new DefaultImageCropMultiLayout(activity);
     }
 
     /**
@@ -211,7 +192,7 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
                 if (rImageCropMultiView != null)
                     rImageCropMultiView.setVisibility(View.GONE);
                 imagePickerLayout.setVisibility(View.VISIBLE);
-            } else if (STATUS_CLIP_SINGLE_PAGE == page) {
+            } else if (STATUS_CROP_SINGLE_PAGE == page) {
                 imagePickerLayout.setVisibility(View.GONE);
                 if (rImageCropMultiView != null)
                     rImageCropMultiView.setVisibility(View.GONE);
@@ -304,10 +285,10 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
         if (imagePickerParams.isCrop()) {
             if (imagePickerParams.getSelectCount() > 1) {
                 initCropMultiPage();
-                pageStatusChange(STATUS_CLIP_MORE_PAGE);
+                pageStatusChange(STATUS_CROP_MORE_PAGE);
             } else {
                 initCropSinglePage();
-                pageStatusChange(STATUS_CLIP_SINGLE_PAGE);
+                pageStatusChange(STATUS_CROP_SINGLE_PAGE);
             }
         } else {
             if (RImagePickerHelp.getOnResultCallBack() != null)
