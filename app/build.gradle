@@ -27,6 +27,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // support
     implementation rootProject.ext.dependencies["androidSupportV7"]
+    implementation rootProject.ext.dependencies["recyclerView"]
     implementation rootProject.ext.dependencies["androidSupportConstraint"]
     // test
     testImplementation rootProject.ext.dependencies["junitSupport"]
@@ -41,5 +42,5 @@ dependencies {
     // 图片加载库Glide具体实现库
     implementation project(rootProject.ext.dependencies["glidelibrary"])
     // 图片选择库封装
-    implementation project(rootProject.ext.dependencies["imageselectLibrary"])
+    implementation project(rootProject.ext.dependencies["imagepickerLibrary"])
 }

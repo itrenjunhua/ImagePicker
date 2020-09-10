@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.renj.selecttest">
+    package="com.renj.pickertest">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="com.renj.selecttest.MyApplication"
+        android:name="com.renj.pickertest.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.renj.selecttest.activity.MainActivity"
+            android:name="com.renj.pickertest.activity.MainActivity"
             android:label="@string/image_selected_crop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,27 +25,27 @@
         </activity>
 
         <activity
-            android:name=".activity.ImagePickerActivity"
+            android:name="com.renj.pickertest.activity.ImagePickerActivity"
             android:label="@string/image_selected" />
 
         <activity
-            android:name=".activity.CustomImagePickerActivity"
+            android:name="com.renj.pickertest.activity.CustomImagePickerActivity"
             android:label="@string/image_selected_custom" />
 
         <activity
-            android:name=".activity.CropSingleActivity"
+            android:name="com.renj.pickertest.activity.CropSingleActivity"
             android:label="@string/image_crop_single" />
 
         <activity
-            android:name=".activity.CustomCropSingleActivity"
+            android:name="com.renj.pickertest.activity.CustomCropSingleActivity"
             android:label="@string/image_crop_single_custom" />
 
         <activity
-            android:name=".activity.CropMultiActivity"
+            android:name="com.renj.pickertest.activity.CropMultiActivity"
             android:label="@string/image_crop_more" />
 
         <activity
-            android:name=".activity.CustomCropMultiActivity"
+            android:name="com.renj.pickertest.activity.CustomCropMultiActivity"
             android:label="@string/image_crop_more_custom" />
     </application>
 
