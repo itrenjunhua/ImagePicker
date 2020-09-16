@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/image_picker_color_white"
+    android:background="@color/image_picker_color_black"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -15,17 +15,19 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:background="@drawable/image_picker_selector_main_bt"
-            android:padding="12dp"
+            android:gravity="center"
+            android:minWidth="58dp"
+            android:padding="8dp"
             android:text="取消"
-            android:textColor="@color/image_picker_main_bt_color"
-            android:textSize="14sp" />
+            android:textColor="@color/image_picker_color_white"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="裁剪图片"
-            android:textColor="@color/image_picker_title_color"
+            android:textColor="@color/image_picker_color_white"
             android:textSize="16sp" />
 
         <TextView
@@ -35,10 +37,12 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/image_picker_selector_main_bt"
-            android:padding="12dp"
+            android:gravity="center"
+            android:minWidth="58dp"
+            android:padding="8dp"
             android:text="(1 / 9)裁剪"
-            android:textColor="@color/image_picker_main_bt_color"
-            android:textSize="14sp" />
+            android:textColor="@color/image_picker_color_white"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
@@ -46,7 +50,6 @@
         android:id="@+id/vp_crop_more"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/image_picker_color_white" />
+        android:layout_weight="1" />
 
 </LinearLayout>

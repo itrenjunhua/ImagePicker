@@ -130,18 +130,20 @@ public class IPCropDrawView extends View {
         if (cropShape == CropShape.CROP_OVAL) {
             canvas.drawOval(cropArea, bgPaint);
             if (borderWidth > 0) {
+                borderPaint.setStyle(Paint.Style.STROKE);
                 canvas.drawOval(cropArea, borderPaint);
-                if (autoRatioScale)
-                    canvas.drawRect(cropArea, borderPaint);
             }
         } else {
             canvas.drawRect(cropArea, bgPaint);
             if (borderWidth > 0) {
                 borderPaint.setStyle(Paint.Style.STROKE);
                 canvas.drawRect(cropArea, borderPaint);
-                if (touchHandlerType != ImagePickerTouchType.TOUCH_NONE) {
-                    borderPaint.setStyle(Paint.Style.FILL);
-                    // 绘制拖动点 四个角和四条边中点
+            }
+        }
+
+        if (touchHandlerType != ImagePickerTouchType.TOUCH_NONE) {
+            borderPaint.setStyle(Paint.Style.FILL);
+            // 绘制拖动点 四个角和四条边中点
 //                    canvas.drawPoints(new float[]{
 //                            cropArea.left, cropArea.top,
 //                            cropArea.right, cropArea.top,
@@ -152,19 +154,21 @@ public class IPCropDrawView extends View {
 //                            cropArea.right, cropArea.centerY(),
 //                            cropArea.centerX(), cropArea.bottom
 //                    }, borderPaint);
-                    canvas.drawCircle(cropArea.left, cropArea.top, scalePointRadius, borderPaint);
-                    canvas.drawCircle(cropArea.right, cropArea.top, scalePointRadius, borderPaint);
-                    canvas.drawCircle(cropArea.right, cropArea.bottom, scalePointRadius, borderPaint);
-                    canvas.drawCircle(cropArea.left, cropArea.bottom, scalePointRadius, borderPaint);
-                    canvas.drawCircle(cropArea.left, cropArea.centerY(), scalePointRadius, borderPaint);
-                    canvas.drawCircle(cropArea.centerX(), cropArea.top, scalePointRadius, borderPaint);
-                    canvas.drawCircle(cropArea.right, cropArea.centerY(), scalePointRadius, borderPaint);
-                    canvas.drawCircle(cropArea.centerX(), cropArea.bottom, scalePointRadius, borderPaint);
-                }
-            }
+            canvas.drawCircle(cropArea.left, cropArea.top, scalePointRadius, borderPaint);
+            canvas.drawCircle(cropArea.right, cropArea.top, scalePointRadius, borderPaint);
+            canvas.drawCircle(cropArea.right, cropArea.bottom, scalePointRadius, borderPaint);
+            canvas.drawCircle(cropArea.left, cropArea.bottom, scalePointRadius, borderPaint);
+            canvas.drawCircle(cropArea.left, cropArea.centerY(), scalePointRadius, borderPaint);
+            canvas.drawCircle(cropArea.centerX(), cropArea.top, scalePointRadius, borderPaint);
+            canvas.drawCircle(cropArea.right, cropArea.centerY(), scalePointRadius, borderPaint);
+            canvas.drawCircle(cropArea.centerX(), cropArea.bottom, scalePointRadius, borderPaint);
         }
 
         if (cellLineCount > 0) {
+            borderPaint.setStyle(Paint.Style.STROKE);
+            if (cropShape == CropShape.CROP_OVAL)
+                canvas.drawRect(cropArea, borderPaint);
+
             float cellWidth = cropArea.width() / (cellLineCount + 1);
             float cellHeight = cropArea.height() / (cellLineCount + 1);
 
@@ -220,6 +224,9 @@ public class IPCropDrawView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (touchHandlerType == ImagePickerTouchType.TOUCH_NONE)
+            return super.onTouchEvent(event);
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 downX = (int) event.getX();
@@ -258,11 +265,14 @@ public class IPCropDrawView extends View {
                 return super.onTouchEvent(event);
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                if (touchHandlerType == ImagePickerTouchType.TOUCH_NONE)
+                    return super.onTouchEvent(event);
+
                 if (cropAreaChange && onCropAreaChangeListener != null) {
                     onCropAreaChangeListener.onCropAreaChange(cropArea);
                 }
                 cropAreaChange = false;
-                break;
+                return true;
         }
         return super.onTouchEvent(event);
     }

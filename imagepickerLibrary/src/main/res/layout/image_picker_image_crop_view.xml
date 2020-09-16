@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/image_picker_color_white">
+    android:background="@color/image_picker_color_black">
 
     <com.renj.imagepicker.weight.IPPhotoView
         android:id="@+id/photo_view"

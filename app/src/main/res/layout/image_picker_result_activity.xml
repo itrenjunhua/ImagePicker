@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:hint="选择图片张数"
             android:inputType="number"
-            android:textColor="@color/image_picker_color_main_text"
+            android:textColor="@color/color_black"
             android:textSize="15sp" />
 
         <TextView

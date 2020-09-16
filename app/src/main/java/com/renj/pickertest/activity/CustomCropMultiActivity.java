@@ -9,15 +9,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.renj.imagepicker.ImagePageStyle;
 import com.renj.imagepicker.ImagePickerParams;
 import com.renj.imagepicker.ImagePickerUtils;
 import com.renj.imagepicker.custom.ImagePickerCropLayout;
+import com.renj.imagepicker.custom.ImagePickerLayout;
 import com.renj.imagepicker.listener.ImagePickerViewModule;
 import com.renj.imagepicker.listener.OnResultCallBack;
 import com.renj.imagepicker.model.ImagePickerModel;
+import com.renj.imagepicker.model.ImagePickerTouchType;
 import com.renj.pickertest.R;
 import com.renj.pickertest.adapter.ImageShowAdapter;
 import com.renj.pickertest.custom.CustomImageCropMultiView;
+import com.renj.pickertest.custom.CustomImagePickerView;
 import com.renj.pickertest.utils.Utils;
 
 import java.util.List;
@@ -80,6 +84,8 @@ public class CustomCropMultiActivity extends BaseActivity {
                 .width(240)
                 .height(320)
                 .isOvalCrop(true)
+                .cellLineCount(0)
+                .touchHandlerType(ImagePickerTouchType.TOUCH_NONE)
                 .cropBorderWidth(0.5f)
                 .maxScale(6f)
                 .minScale(0.8f)
@@ -93,7 +99,16 @@ public class CustomCropMultiActivity extends BaseActivity {
                     }
                 })
                 .build();
-        ImagePickerUtils.start(this, imagePickerParams, new ImagePickerViewModule() {
+        ImagePageStyle pageStyle = new ImagePageStyle.Builder()
+                .statusBarDark(true)
+                .statusBarColor(Color.WHITE)
+                .build();
+        ImagePickerUtils.start(this, pageStyle, imagePickerParams, new ImagePickerViewModule() {
+            @Override
+            public ImagePickerLayout onCreateImagePickerView(AppCompatActivity activity) {
+                return new CustomImagePickerView(activity);
+            }
+
             @Override
             public ImagePickerCropLayout onCreateImagePickerCropMultiView(AppCompatActivity activity) {
                 // CustomImageCropMultiView extends ImagePickerCropLayout

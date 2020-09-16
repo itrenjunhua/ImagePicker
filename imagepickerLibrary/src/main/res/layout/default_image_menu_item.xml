@@ -24,7 +24,7 @@
         android:maxLines="1"
         android:singleLine="true"
         android:text="(100)全部图片"
-        android:textColor="@color/image_picker_color_main_text"
+        android:textColor="@color/image_picker_color_black"
         android:textSize="18sp" />
 
     <RadioButton

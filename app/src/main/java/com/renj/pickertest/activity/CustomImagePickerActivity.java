@@ -1,5 +1,6 @@
 package com.renj.pickertest.activity;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.renj.imagepicker.ImagePageStyle;
 import com.renj.imagepicker.ImagePickerParams;
 import com.renj.imagepicker.ImagePickerUtils;
 import com.renj.imagepicker.custom.ImagePickerLayout;
@@ -84,7 +86,11 @@ public class CustomImagePickerActivity extends BaseActivity {
                     }
                 })
                 .build();
-        ImagePickerUtils.start(this, imagePickerParams, new ImagePickerViewModule() {
+        ImagePageStyle pageStyle = new ImagePageStyle.Builder()
+                .statusBarDark(true)
+                .statusBarColor(Color.WHITE)
+                .build();
+        ImagePickerUtils.start(this, pageStyle, imagePickerParams, new ImagePickerViewModule() {
             @Override
             public ImagePickerLayout onCreateImagePickerView(AppCompatActivity activity) {
                 return new CustomImagePickerView(activity);

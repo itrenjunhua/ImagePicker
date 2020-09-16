@@ -14,6 +14,7 @@ import com.renj.imagepicker.custom.adapter.ImagePickerAdapter;
 import com.renj.imagepicker.listener.IImagePickerPage;
 import com.renj.imagepicker.model.ImagePickerFolderModel;
 import com.renj.imagepicker.model.ImagePickerModel;
+import com.renj.imagepicker.weight.draw.GridItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,7 @@ public class DefaultImagePickerLayout extends ImagePickerLayout {
         imagePickerAdapter = new ImagePickerAdapter(getContext());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
         rvImages.setLayoutManager(gridLayoutManager);
+        rvImages.addItemDecoration(new GridItemDecoration(LinearLayoutManager.VERTICAL).dividerHeight(4));
         rvImages.setAdapter(imagePickerAdapter);
 
         imagePickerMenuDialog = new ImagePickerMenuDialog(getContext());

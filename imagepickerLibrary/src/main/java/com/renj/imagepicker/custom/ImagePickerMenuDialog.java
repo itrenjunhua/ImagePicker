@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import com.renj.imagepicker.R;
 import com.renj.imagepicker.custom.adapter.ImagePickerMenuAdapter;
 import com.renj.imagepicker.model.ImagePickerFolderModel;
+import com.renj.imagepicker.weight.draw.LinearItemDecoration;
 
 import java.util.List;
 
@@ -62,6 +63,9 @@ public class ImagePickerMenuDialog extends Dialog {
 
         imagePickerMenuAdapter = new ImagePickerMenuAdapter(getContext());
         rvMenu.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        rvMenu.addItemDecoration(new LinearItemDecoration(LinearLayoutManager.VERTICAL)
+                .dividerDrawable(getContext().getResources()
+                        .getDrawable(R.drawable.item_decoration)));
         rvMenu.setAdapter(imagePickerMenuAdapter);
 
         setMenuData(imagePickerFolderModels);

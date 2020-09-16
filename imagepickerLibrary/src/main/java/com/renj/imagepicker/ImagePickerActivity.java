@@ -26,6 +26,7 @@ import com.renj.imagepicker.listener.IImageCropPage;
 import com.renj.imagepicker.listener.IImagePickerPage;
 import com.renj.imagepicker.model.ImagePickerFolderModel;
 import com.renj.imagepicker.model.ImagePickerModel;
+import com.renj.imagepicker.utils.PageStyleUtils;
 import com.renj.imagepicker.utils.RImageFileUtils;
 import com.renj.imagepicker.utils.RLoadSDImageUtils;
 import com.renj.imagepicker.weight.IPLoadingDialog;
@@ -65,6 +66,7 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
 
     private List<ImagePickerModel> imagePickerList; // 选择页面选择的图片集合
     private ImagePickerParams imagePickerParams;   // 图片配置信息
+    private ImagePageStyle imagePageStyle;   // 页面样式
     private File cameraSavePath; // 相机照片保存路径
     private IPLoadingDialog loadingDialog; // 加载对话框
 
@@ -75,11 +77,19 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
 
         // 获取配置参数
         imagePickerParams = getIntent().getParcelableExtra("imageParamsConfig");
+        imagePageStyle = getIntent().getParcelableExtra("imagePageStyle");
         if (imagePickerParams == null) {
             imagePickerParams = new ImagePickerParams
                     .Builder()
                     .build();
         }
+        if (imagePageStyle == null) {
+            imagePageStyle = new ImagePageStyle
+                    .Builder()
+                    .build();
+        }
+        PageStyleUtils.setStatusBarColor(this, imagePageStyle.getStatusBarColor());
+        PageStyleUtils.setStatusBarDark(this, imagePageStyle.isStatusBarDark());
         // 初始化选择图片界面
         initPickerImageView();
         // 显示图片选择界面
@@ -310,9 +320,12 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
         RImagePickerHelp.removeModule();
     }
 
-    public static void open(Context context, ImagePickerParams imagePickerParams) {
+    public static void open(Context context, ImagePageStyle imagePageStyle, ImagePickerParams imagePickerParams) {
         Intent intent = new Intent(context, ImagePickerActivity.class);
-        intent.putExtra("imageParamsConfig", imagePickerParams);
+        if (imagePageStyle != null)
+            intent.putExtra("imagePageStyle", imagePageStyle);
+        if (imagePickerParams != null)
+            intent.putExtra("imageParamsConfig", imagePickerParams);
         if (!(context instanceof Activity))
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

@@ -17,7 +17,7 @@ import android.graphics.RectF;
  */
 public class IPCropDrawViewHelp {
     public static final int CROP_VIEW_MIN_SIZE = 30;
-    public static final int CROP_VIEW_EVENT_OFFSET = 15;
+    public static final int CROP_VIEW_EVENT_OFFSET = 30;
     public static final int CROP_VIEW_EVENT_AREA_CENTER = 0;
     public static final int CROP_VIEW_EVENT_AREA_LEFT = 1;
     public static final int CROP_VIEW_EVENT_AREA_TOP = 2;

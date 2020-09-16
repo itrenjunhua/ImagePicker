@@ -6,14 +6,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.renj.imagepicker.ImagePageStyle;
+import com.renj.imagepicker.ImagePickerParams;
+import com.renj.imagepicker.ImagePickerUtils;
 import com.renj.imagepicker.custom.ImagePickerCropLayout;
+import com.renj.imagepicker.custom.ImagePickerLayout;
 import com.renj.imagepicker.listener.ImagePickerViewModule;
 import com.renj.imagepicker.listener.OnResultCallBack;
 import com.renj.imagepicker.model.ImagePickerModel;
-import com.renj.imagepicker.ImagePickerParams;
-import com.renj.imagepicker.ImagePickerUtils;
 import com.renj.pickertest.R;
 import com.renj.pickertest.custom.CustomImageCropSingleView;
+import com.renj.pickertest.custom.CustomImagePickerView;
 import com.renj.pickertest.utils.ImageLoaderManager;
 
 import java.util.List;
@@ -73,7 +76,16 @@ public class CustomCropSingleActivity extends BaseActivity {
                     }
                 })
                 .build();
-        ImagePickerUtils.start(this, imagePickerParams, new ImagePickerViewModule() {
+        ImagePageStyle pageStyle = new ImagePageStyle.Builder()
+                .statusBarDark(true)
+                .statusBarColor(Color.WHITE)
+                .build();
+        ImagePickerUtils.start(this, pageStyle, imagePickerParams, new ImagePickerViewModule() {
+            @Override
+            public ImagePickerLayout onCreateImagePickerView(AppCompatActivity activity) {
+                return new CustomImagePickerView(activity);
+            }
+
             @Override
             public ImagePickerCropLayout onCreateImagePickerCropSingleView(AppCompatActivity activity) {
                 // CustomImageCropSingleView extends ImagePickerCropLayout

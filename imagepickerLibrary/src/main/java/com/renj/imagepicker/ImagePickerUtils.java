@@ -63,7 +63,16 @@ public class ImagePickerUtils {
      * @return
      */
     public static void start(Context context, ImagePickerParams paramsConfig) {
-        start(context, paramsConfig, new ImagePickerViewModule());
+        start(context, null, paramsConfig);
+    }
+
+    /**
+     * 开始图片选择裁剪
+     *
+     * @return
+     */
+    public static void start(Context context, ImagePageStyle imagePageStyle, ImagePickerParams paramsConfig) {
+        start(context, imagePageStyle, paramsConfig, new ImagePickerViewModule());
     }
 
     /**
@@ -72,9 +81,18 @@ public class ImagePickerUtils {
      * @return
      */
     public static void start(Context context, ImagePickerParams paramsConfig, ImagePickerViewModule imagePickerViewModule) {
+        start(context, null, paramsConfig, imagePickerViewModule);
+    }
+
+    /**
+     * 开始图片选择裁剪
+     *
+     * @return
+     */
+    public static void start(Context context, ImagePageStyle imagePageStyle, ImagePickerParams paramsConfig, ImagePickerViewModule imagePickerViewModule) {
         if (imagePickerViewModule == null) imagePickerViewModule = new ImagePickerViewModule();
 
         RImagePickerHelp.addModule(paramsConfig.getOnResultCallBack(), imagePickerViewModule);
-        ImagePickerActivity.open(context, paramsConfig);
+        ImagePickerActivity.open(context, imagePageStyle, paramsConfig);
     }
 }
