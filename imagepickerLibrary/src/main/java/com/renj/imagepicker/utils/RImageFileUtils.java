@@ -86,7 +86,7 @@ public class RImageFileUtils {
             File file = new File(imageSavePath, name);
             OutputStream outputStream = new FileOutputStream(file);
             if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {
-                return new ImagePickerModel(file.getAbsolutePath(), name, System.currentTimeMillis());
+                return new ImagePickerModel(file.getAbsolutePath(), name, file.getTotalSpace(), System.currentTimeMillis());
             }
         } catch (Exception e) {
             e.printStackTrace();

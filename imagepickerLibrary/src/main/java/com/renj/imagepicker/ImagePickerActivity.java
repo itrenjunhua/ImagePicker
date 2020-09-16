@@ -242,7 +242,7 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
             sendBroadcast(intent1);//这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了
 
             ImagePickerModel imagePickerModel = new ImagePickerModel(cameraSavePath.getAbsolutePath(),
-                    cameraSavePath.getName(), cameraSavePath.lastModified());
+                    cameraSavePath.getName(), cameraSavePath.getTotalSpace(), cameraSavePath.lastModified());
             imagePickerLayout.handlerCameraResult(imagePickerModel);
         }
     }

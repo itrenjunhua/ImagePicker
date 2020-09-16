@@ -86,6 +86,7 @@ public class RLoadSDImageUtils {
             Cursor cursor = mContentResolver.query(mImageUri, new String[]{
                             MediaStore.Images.Media.DATA,
                             MediaStore.Images.Media.DISPLAY_NAME,
+                            MediaStore.Images.Media.SIZE,
                             MediaStore.Images.Media.DATE_ADDED,},
                     null,
                     null,
@@ -97,8 +98,9 @@ public class RLoadSDImageUtils {
             while (cursor.moveToNext()) {
                 String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
                 String name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME));
+                long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.SIZE));
                 long time = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
-                imagePickerModels.add(new ImagePickerModel(path, name, time));
+                imagePickerModels.add(new ImagePickerModel(path, name, size, time));
             }
             cursor.close();
 
