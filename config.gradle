@@ -40,10 +40,6 @@ ext {
             // Glide 图片加载库
             "glide"                   : "com.github.bumptech.glide:glide:${dependVersion.imageGlide}",
             "glideCompiler"           : "com.github.bumptech.glide:compiler:${dependVersion.imageGlide}",
-            // 图片加载库封装库框架
-            "imageloaderlibrary"      : ":imageloaderlibrary",
-            // 图片加载库Glide具体实现库
-            "glidelibrary"            : ":glidelibrary",
             // 图片选择库封装
             "imagepickerLibrary"      : ":imagepickerLibrary"
     ]

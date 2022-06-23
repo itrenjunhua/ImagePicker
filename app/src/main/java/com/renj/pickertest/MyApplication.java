@@ -25,8 +25,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        ImageLoaderManager.init(this);
-
         ImagePickerUtils.init("", new ImagePickerLoaderModule() {
             @Override
             public void loadImage(String path, ImageView imageView) {
@@ -48,6 +46,5 @@ public class MyApplication extends Application {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        ImageLoaderManager.getDefaultImageLoaderModule().clearMemoryCache();
     }
 }

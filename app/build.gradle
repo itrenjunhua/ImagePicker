@@ -37,10 +37,9 @@ dependencies {
     implementation rootProject.ext.dependencies["butterknife"]
     annotationProcessor rootProject.ext.dependencies["butterknifeCompiler"]
 
-    // 图片加载库封装库框架
-    implementation project(rootProject.ext.dependencies["imageloaderlibrary"])
-    // 图片加载库Glide具体实现库
-    implementation project(rootProject.ext.dependencies["glidelibrary"])
+    // Glide 图片加载库
+    api rootProject.ext.dependencies["glide"]
+    annotationProcessor rootProject.ext.dependencies["glideCompiler"]
     // 图片选择库封装
     implementation project(rootProject.ext.dependencies["imagepickerLibrary"])
 }

@@ -1,1 +1,1 @@
-include ':app', ':imagepickerLibrary', ':glidelibrary', ':imageloaderlibrary'
+include ':app', ':imagepickerLibrary'
