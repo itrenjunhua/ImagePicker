@@ -137,18 +137,14 @@ public class ImagePickerActivity extends AppCompatActivity implements IImagePick
      */
     private void startLoadImage() {
         loadingDialog.show();
-        RLoadSDImageUtils.loadImageForSdCard(this, imagePickerParams, new RLoadSDImageUtils.LoadImageForSdCardFinishListener() {
-            @Override
-            public void finish(final List<ImagePickerModel> imagePickerModels, final List<ImagePickerFolderModel> imagePickerFolderModels) {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        imagePickerLayout.onLoadImageFinish(imagePickerModels, imagePickerFolderModels);
-                        loadingDialog.dismiss();
-                    }
-                });
-            }
+        RLoadSDImageUtils.loadImageForSdCard(this, imagePickerParams, (imagePickerModels, imagePickerFolderModels) -> {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> {
+                if (imagePickerLayout != null)
+                    imagePickerLayout.onLoadImageFinish(imagePickerModels, imagePickerFolderModels);
+                if (loadingDialog != null)
+                    loadingDialog.dismiss();
+            });
         });
     }
 
