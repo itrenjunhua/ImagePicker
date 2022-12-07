@@ -7,7 +7,7 @@
     <com.renj.imagepicker.weight.IPPhotoView
         android:id="@+id/photo_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <com.renj.imagepicker.weight.IPCropDrawView
         android:id="@+id/crop_view"

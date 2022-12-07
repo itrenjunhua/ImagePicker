@@ -9,6 +9,7 @@ import com.renj.imagepicker.listener.OnResultCallBack;
 import com.renj.imagepicker.model.ImagePickerModel;
 import com.renj.imagepicker.ImagePickerParams;
 import com.renj.imagepicker.ImagePickerUtils;
+import com.renj.imagepicker.model.ImagePickerTouchType;
 import com.renj.pickertest.R;
 import com.renj.pickertest.utils.ImageLoaderManager;
 
@@ -60,6 +61,7 @@ public class CropSingleActivity extends BaseActivity {
                 .height(200)
                 .isOvalCrop(false)
                 .cropBorderWidth(2)
+                .cropViewDecorativeDrawable(R.mipmap.crop_left_top, R.mipmap.crop_right_top, R.mipmap.crop_right_bottom, R.mipmap.crop_left_bottom)
                 .maskColor(Color.parseColor("#88000000"))
                 .cropBorderColor(Color.parseColor("#ff0000"))
                 .onResult(new OnResultCallBack() {

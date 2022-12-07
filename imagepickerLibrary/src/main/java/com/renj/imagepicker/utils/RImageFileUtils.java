@@ -58,7 +58,7 @@ public class RImageFileUtils {
     /**
      * 获取默认保存路径
      *
-     * @return
+     * @return 默认保存路径
      */
     @Nullable
     private static File getDefaultPath() {
@@ -71,49 +71,50 @@ public class RImageFileUtils {
         return null;
     }
 
-    /**
-     * 保存图片到文件
-     *
-     * @param name   文件名称
-     * @param bitmap 需要保存的图片
-     * @return ImageModel 对象
-     */
-    @Nullable
-    public static ImagePickerModel saveBitmap2File(@NonNull String name, @NonNull Bitmap bitmap) {
-        if (imageSavePath == null || bitmap == null) return null;
+        /**
+         * 保存图片到文件
+         *
+         * @param name   文件名称
+         * @param bitmap 需要保存的图片
+         * @return ImageModel 对象
+         */
+        @Nullable
+        public static ImagePickerModel saveBitmap2File (@NonNull String name, @NonNull Bitmap bitmap)
+        {
+            if (imageSavePath == null || bitmap == null) return null;
 
-        try {
-            File file = new File(imageSavePath, name);
-            OutputStream outputStream = new FileOutputStream(file);
-            if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {
-                return new ImagePickerModel(file.getAbsolutePath(), name, file.getTotalSpace(), System.currentTimeMillis());
+            try {
+                File file = new File(imageSavePath, name);
+                OutputStream outputStream = new FileOutputStream(file);
+                if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {
+                    return new ImagePickerModel(file.getAbsolutePath(), name, file.getTotalSpace(), System.currentTimeMillis());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
-    }
 
-    /**
-     * 得到保存的文件名称，减少文件名的重复
-     *
-     * @return
-     */
-    @NonNull
-    public static String getName() {
-        return "crop_" + System.currentTimeMillis() + ".png";
-    }
+        /**
+         * 得到保存的文件名称，减少文件名的重复
+         *
+         * @return 保存的文件名
+         */
+        @NonNull
+        public static String getName () {
+            return "crop_" + System.currentTimeMillis() + ".png";
+        }
 
-    /**
-     * 获取使用相机时保存的照片路径
-     *
-     * @return
-     */
-    @NonNull
-    public static File getCameraSavePath() {
-        if (imageSavePath == null) return null;
+        /**
+         * 获取使用相机时保存的照片路径
+         *
+         * @return 相机拍照保存的照片路径
+         */
+        @Nullable
+        public static File getCameraSavePath () {
+            if (imageSavePath == null) return null;
 
-        String name = "camera_" + System.currentTimeMillis() + ".png";
-        return new File(imageSavePath, name);
+            String name = "camera_" + System.currentTimeMillis() + ".png";
+            return new File(imageSavePath, name);
+        }
     }
-}

@@ -2,6 +2,7 @@ package com.renj.imagepicker;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 
@@ -51,11 +52,17 @@ public class ImagePickerParams implements Parcelable {
     int widthRatio; // 改变裁剪范围的宽比例
     int heightRadio; // 改变裁剪范围的高比例
 
+    int cropViewLeftTopDecorativeDrawableRes; // 裁剪视图左上角装饰图片
+    int cropViewRightTopDecorativeDrawableRes; // 裁剪视图右上角装饰图片
+    int cropViewRightBottomDecorativeDrawableRes; // 裁剪视图右下角装饰图片
+    int cropViewLeftBottomDecorativeDrawableRes; // 裁剪视图左下角装饰图片
+    int cropViewDecorativeDrawableOffset; // 装饰图片绘制偏移值，防止装饰图片占用裁剪框内容
+
     /*********** 结果回调 ***********/
     private OnResultCallBack onResultCallBack;
 
     private ImagePickerParams(Builder builder) {
-        /*********** 图片选择和裁剪参数 ***********/
+        // ********** 图片选择和裁剪参数 ***********
         this.width = builder.width;
         this.height = builder.height;
         this.maxCount = builder.maxCount;
@@ -77,6 +84,11 @@ public class ImagePickerParams implements Parcelable {
         this.autoRatioScale = builder.autoRatioScale;
         this.widthRatio = builder.widthRatio;
         this.heightRadio = builder.heightRadio;
+        this.cropViewLeftTopDecorativeDrawableRes = builder.cropViewLeftTopDecorativeDrawableRes;
+        this.cropViewRightTopDecorativeDrawableRes = builder.cropViewRightTopDecorativeDrawableRes;
+        this.cropViewRightBottomDecorativeDrawableRes = builder.cropViewRightBottomDecorativeDrawableRes;
+        this.cropViewLeftBottomDecorativeDrawableRes = builder.cropViewLeftBottomDecorativeDrawableRes;
+        this.cropViewDecorativeDrawableOffset = builder.cropViewDecorativeDrawableOffset;
         this.onResultCallBack = builder.onResultCallBack;
     }
 
@@ -164,6 +176,26 @@ public class ImagePickerParams implements Parcelable {
         return heightRadio;
     }
 
+    public int getCropViewLeftTopDecorativeDrawableRes() {
+        return cropViewLeftTopDecorativeDrawableRes;
+    }
+
+    public int getCropViewRightTopDecorativeDrawableRes() {
+        return cropViewRightTopDecorativeDrawableRes;
+    }
+
+    public int getCropViewRightBottomDecorativeDrawableRes() {
+        return cropViewRightBottomDecorativeDrawableRes;
+    }
+
+    public int getCropViewLeftBottomDecorativeDrawableRes() {
+        return cropViewLeftBottomDecorativeDrawableRes;
+    }
+
+    public int getCropViewDecorativeDrawableOffset() {
+        return cropViewDecorativeDrawableOffset;
+    }
+
     OnResultCallBack getOnResultCallBack() {
         return onResultCallBack;
     }
@@ -193,11 +225,17 @@ public class ImagePickerParams implements Parcelable {
         private int widthRatio; // 改变裁剪范围的宽比例
         private int heightRadio; // 改变裁剪范围的高比例
 
+        private int cropViewLeftTopDecorativeDrawableRes; // 裁剪视图左上角装饰图片
+        private int cropViewRightTopDecorativeDrawableRes; // 裁剪视图右上角装饰图片
+        private int cropViewRightBottomDecorativeDrawableRes; // 裁剪视图右下角装饰图片
+        private int cropViewLeftBottomDecorativeDrawableRes; // 裁剪视图左下角装饰图片
+        private int cropViewDecorativeDrawableOffset; // 装饰图片绘制偏移值，防止装饰图片占用裁剪框内容
+
         /*********** 结果回调 ***********/
         private OnResultCallBack onResultCallBack;
 
         public Builder() {
-            /*********** 图片选择和裁剪参数 ***********/
+            // *********** 图片选择和裁剪参数 ***********
             this.width = RImagePickerConfigData.WIDTH; // 裁剪宽度
             this.height = RImagePickerConfigData.HEIGHT; // 裁剪高度
             this.maxCount = RImagePickerConfigData.SELECT_COUNT; // 选择图片张数
@@ -220,7 +258,12 @@ public class ImagePickerParams implements Parcelable {
             this.widthRatio = RImagePickerConfigData.SCALE_WIDTH_RATIO; // 改变裁剪范围的宽比例
             this.heightRadio = RImagePickerConfigData.SCALE_HEIGHT_RATIO; // 改变裁剪范围的高比例
 
-            /*********** 结果回调 ***********/
+            this.cropViewLeftTopDecorativeDrawableRes = 0;
+            this.cropViewRightTopDecorativeDrawableRes = 0;
+            this.cropViewRightBottomDecorativeDrawableRes = 0;
+            this.cropViewLeftBottomDecorativeDrawableRes = 0;
+
+            // *********** 结果回调 ***********
             this.onResultCallBack = null;
         }
 
@@ -228,7 +271,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置裁剪宽度，单位 dp；默认 200dp
          *
          * @param width 裁剪宽
-         * @return
+         * @return 链式调用对象
          */
         public Builder width(int width) {
             this.width = width;
@@ -239,7 +282,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置裁剪高度，单位 dp；默认 200dp
          *
          * @param height 裁剪高度
-         * @return
+         * @return 链式调用对象
          */
         public Builder height(int height) {
             this.height = height;
@@ -250,12 +293,12 @@ public class ImagePickerParams implements Parcelable {
          * 设置图片选择张数，默认1张
          *
          * @param maxCount 需要选择的图片张数<br/>
-         *                    <b>注意：该值与结果监听 {@link OnResultCallBack} 对象的泛型相关：</b>
-         *                    <br/>&nbsp;&nbsp;&nbsp;&nbsp;
-         *                    <b>1.当选择或裁剪的只是单张图片(maxCount = 1)时，泛型应该为 {@link ImagePickerModel}</b>
-         *                    <br/>&nbsp;&nbsp;&nbsp;&nbsp;
-         *                    <b>2.当选择或裁剪的只是多张图片(maxCount > 1)时，泛型应该为 List<{@link ImagePickerModel}></{@link></b>
-         * @return
+         *                 <b>注意：该值与结果监听 {@link OnResultCallBack} 对象的泛型相关：</b>
+         *                 <br/>&nbsp;&nbsp;&nbsp;&nbsp;
+         *                 <b>1.当选择或裁剪的只是单张图片(maxCount = 1)时，泛型应该为 {@link ImagePickerModel}</b>
+         *                 <br/>&nbsp;&nbsp;&nbsp;&nbsp;
+         *                 <b>2.当选择或裁剪的只是多张图片(maxCount > 1)时，泛型应该为 List<{@link ImagePickerModel}></{@link></b>
+         * @return 链式调用对象
          */
         public Builder maxCount(int maxCount) {
             this.maxCount = maxCount;
@@ -266,7 +309,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置是否需要裁剪
          *
          * @param isCrop true：需要；false：不需要
-         * @return
+         * @return 链式调用对象
          */
         public Builder isCrop(boolean isCrop) {
             this.isCrop = isCrop;
@@ -278,7 +321,7 @@ public class ImagePickerParams implements Parcelable {
          * <b>注意：圆形的半径为裁剪宽度、裁剪高度较小值得一半</b>
          *
          * @param isOvalCrop true：需要；false：不需要
-         * @return
+         * @return 链式调用对象
          */
         public Builder isOvalCrop(boolean isOvalCrop) {
             this.isOvalCrop = isOvalCrop;
@@ -289,7 +332,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置图片的最小缩放比例
          *
          * @param minScale 最小缩放比例
-         * @return
+         * @return 链式调用对象
          */
         public Builder minScale(float minScale) {
             this.minScale = minScale;
@@ -300,7 +343,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置图片的最大缩放比例
          *
          * @param maxScale 最大缩放比例
-         * @return
+         * @return 链式调用对象
          */
         public Builder maxScale(float maxScale) {
             this.maxScale = maxScale;
@@ -311,7 +354,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置边界滑动阻力系数，(达到边界时增加滑动阻力，图片实际移动距离和手指移动距离的比值[0-1]，值越大，图片实际移动距离和手指移动距离差值越小; 默认0.25)
          *
          * @param boundaryResistance 边界滑动阻力系数
-         * @return
+         * @return 链式调用对象
          */
         public Builder boundaryResistance(@FloatRange(from = 0, to = 1) float boundaryResistance) {
             this.boundaryResistance = boundaryResistance;
@@ -322,7 +365,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置裁剪边框宽度
          *
          * @param cropBorderWidth 裁剪边框宽度
-         * @return
+         * @return 链式调用对象
          */
         public Builder cropBorderWidth(float cropBorderWidth) {
             this.cropBorderWidth = cropBorderWidth;
@@ -333,7 +376,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置裁剪边框颜色
          *
          * @param cropBorderColor 裁剪边框颜色
-         * @return
+         * @return 链式调用对象
          */
         public Builder cropBorderColor(int cropBorderColor) {
             this.cropBorderColor = cropBorderColor;
@@ -344,7 +387,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置遮罩层颜色
          *
          * @param maskColor 遮罩层颜色
-         * @return
+         * @return 链式调用对象
          */
         public Builder maskColor(int maskColor) {
             this.maskColor = maskColor;
@@ -355,7 +398,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置是否双击连续放大
          *
          * @param isContinuityEnlarge true：是；false：否  当设置为 true 时，双击时若图片的缩放小于2时变为2，当图片的缩放倍数在[2,4)时变为4
-         * @return
+         * @return 链式调用对象
          */
         public Builder isContinuityEnlarge(boolean isContinuityEnlarge) {
             this.isContinuityEnlarge = isContinuityEnlarge;
@@ -366,7 +409,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置是否显示打开相机图片，默认显示
          *
          * @param isShowCamera true：显示 false：不显示
-         * @return
+         * @return 链式调用对象
          */
         public Builder isShowCamera(boolean isShowCamera) {
             this.isShowCamera = isShowCamera;
@@ -377,7 +420,7 @@ public class ImagePickerParams implements Parcelable {
          * 指定文件后缀名
          *
          * @param fileSuffix 显示的文件后缀
-         * @return
+         * @return 链式调用对象
          */
         public Builder fileSuffix(String... fileSuffix) {
             this.fileSuffix = fileSuffix;
@@ -388,7 +431,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置需要绘制的分割线条数 小于1时表示不绘制
          *
          * @param cellLineCount 需要绘制的分割线条数 小于1时表示不绘制
-         * @return
+         * @return 链式调用对象
          */
         public Builder cellLineCount(int cellLineCount) {
             this.cellLineCount = cellLineCount;
@@ -399,7 +442,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置分割线条宽度
          *
          * @param cellBorderWidth 分割线条宽度
-         * @return
+         * @return 链式调用对象
          */
         public Builder cellBorderWidth(float cellBorderWidth) {
             this.cellBorderWidth = cellBorderWidth;
@@ -410,7 +453,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置缩放点半径
          *
          * @param scalePointRadius 缩放点半径
-         * @return
+         * @return 链式调用对象
          */
         public Builder scalePointRadius(float scalePointRadius) {
             this.scalePointRadius = scalePointRadius;
@@ -425,7 +468,7 @@ public class ImagePickerParams implements Parcelable {
          *                         /{@link ImagePickerTouchType#TOUCH_OFFSET}
          *                         /{@link ImagePickerTouchType#TOUCH_OFFSET_AND_SCALE}
          *                         /{@link ImagePickerTouchType#TOUCH_NONE}
-         * @return
+         * @return 链式调用对象
          */
         public Builder touchHandlerType(@ImagePickerTouchType int touchHandlerType) {
             this.touchHandlerType = touchHandlerType;
@@ -436,7 +479,7 @@ public class ImagePickerParams implements Parcelable {
          * 设置 改变裁剪范围时,是否按照比例改变
          *
          * @param autoRatioScale 改变裁剪范围时,是否按照比例改变 true：是
-         * @return
+         * @return 链式调用对象
          */
         public Builder autoRatioScale(boolean autoRatioScale) {
             this.autoRatioScale = autoRatioScale;
@@ -448,11 +491,51 @@ public class ImagePickerParams implements Parcelable {
          *
          * @param widthRatio  改变裁剪范围的宽比例
          * @param heightRadio 改变裁剪范围的高比例
-         * @return
+         * @return 链式调用对象
          */
         public Builder widthAndHeightRadio(int widthRatio, int heightRadio) {
             this.widthRatio = widthRatio;
             this.heightRadio = heightRadio;
+            return this;
+        }
+
+        /**
+         * 设置裁剪视图四个角的装饰图
+         *
+         * @param cropViewLeftTopDecorativeDrawable     裁剪视图左上角装饰图资源
+         * @param cropViewRightTopDecorativeDrawable    裁剪视图右上角装饰图资源
+         * @param cropViewRightBottomDecorativeDrawable 裁剪视图右下角装饰图资源
+         * @param cropViewLeftBottomDecorativeDrawable  裁剪视图左下角装饰图资源
+         * @return 链式调用对象
+         */
+        public Builder cropViewDecorativeDrawable(@DrawableRes int cropViewLeftTopDecorativeDrawable,
+                                                  @DrawableRes int cropViewRightTopDecorativeDrawable,
+                                                  @DrawableRes int cropViewRightBottomDecorativeDrawable,
+                                                  @DrawableRes int cropViewLeftBottomDecorativeDrawable) {
+            return cropViewDecorativeDrawable(cropViewLeftTopDecorativeDrawable, cropViewRightTopDecorativeDrawable,
+                    cropViewRightBottomDecorativeDrawable, cropViewLeftBottomDecorativeDrawable, 4);
+        }
+
+        /**
+         * 设置裁剪视图四个角的装饰图
+         *
+         * @param cropViewLeftTopDecorativeDrawable     裁剪视图左上角装饰图资源
+         * @param cropViewRightTopDecorativeDrawable    裁剪视图右上角装饰图资源
+         * @param cropViewRightBottomDecorativeDrawable 裁剪视图右下角装饰图资源
+         * @param cropViewLeftBottomDecorativeDrawable  裁剪视图左下角装饰图资源
+         * @param cropViewDecorativeDrawableOffset      装饰图片绘制偏移值，防止装饰图片占用裁剪框内容 单位：dp
+         * @return 链式调用对象
+         */
+        public Builder cropViewDecorativeDrawable(@DrawableRes int cropViewLeftTopDecorativeDrawable,
+                                                  @DrawableRes int cropViewRightTopDecorativeDrawable,
+                                                  @DrawableRes int cropViewRightBottomDecorativeDrawable,
+                                                  @DrawableRes int cropViewLeftBottomDecorativeDrawable,
+                                                  int cropViewDecorativeDrawableOffset) {
+            this.cropViewLeftTopDecorativeDrawableRes = cropViewLeftTopDecorativeDrawable;
+            this.cropViewRightTopDecorativeDrawableRes = cropViewRightTopDecorativeDrawable;
+            this.cropViewRightBottomDecorativeDrawableRes = cropViewRightBottomDecorativeDrawable;
+            this.cropViewLeftBottomDecorativeDrawableRes = cropViewLeftBottomDecorativeDrawable;
+            this.cropViewDecorativeDrawableOffset = cropViewDecorativeDrawableOffset;
             return this;
         }
 
@@ -505,6 +588,40 @@ public class ImagePickerParams implements Parcelable {
         dest.writeByte(this.autoRatioScale ? (byte) 1 : (byte) 0);
         dest.writeInt(this.widthRatio);
         dest.writeInt(this.heightRadio);
+        dest.writeInt(this.cropViewLeftTopDecorativeDrawableRes);
+        dest.writeInt(this.cropViewRightTopDecorativeDrawableRes);
+        dest.writeInt(this.cropViewRightBottomDecorativeDrawableRes);
+        dest.writeInt(this.cropViewLeftBottomDecorativeDrawableRes);
+        dest.writeInt(this.cropViewDecorativeDrawableOffset);
+    }
+
+    public void readFromParcel(Parcel source) {
+        this.width = source.readInt();
+        this.height = source.readInt();
+        this.maxCount = source.readInt();
+        this.isCrop = source.readByte() != 0;
+        this.isOvalCrop = source.readByte() != 0;
+        this.minScale = source.readFloat();
+        this.maxScale = source.readFloat();
+        this.boundaryResistance = source.readFloat();
+        this.cropBorderWidth = source.readFloat();
+        this.cropBorderColor = source.readInt();
+        this.maskColor = source.readInt();
+        this.isContinuityEnlarge = source.readByte() != 0;
+        this.isShowCamera = source.readByte() != 0;
+        this.fileSuffix = source.createStringArray();
+        this.cellLineCount = source.readInt();
+        this.cellBorderWidth = source.readFloat();
+        this.scalePointRadius = source.readFloat();
+        this.touchHandlerType = source.readInt();
+        this.autoRatioScale = source.readByte() != 0;
+        this.widthRatio = source.readInt();
+        this.heightRadio = source.readInt();
+        this.cropViewLeftTopDecorativeDrawableRes = source.readInt();
+        this.cropViewRightTopDecorativeDrawableRes = source.readInt();
+        this.cropViewRightBottomDecorativeDrawableRes = source.readInt();
+        this.cropViewLeftBottomDecorativeDrawableRes = source.readInt();
+        this.cropViewDecorativeDrawableOffset = source.readInt();
     }
 
     protected ImagePickerParams(Parcel in) {
@@ -529,6 +646,11 @@ public class ImagePickerParams implements Parcelable {
         this.autoRatioScale = in.readByte() != 0;
         this.widthRatio = in.readInt();
         this.heightRadio = in.readInt();
+        this.cropViewLeftTopDecorativeDrawableRes = in.readInt();
+        this.cropViewRightTopDecorativeDrawableRes = in.readInt();
+        this.cropViewRightBottomDecorativeDrawableRes = in.readInt();
+        this.cropViewLeftBottomDecorativeDrawableRes = in.readInt();
+        this.cropViewDecorativeDrawableOffset = in.readInt();
     }
 
     public static final Parcelable.Creator<ImagePickerParams> CREATOR = new Parcelable.Creator<ImagePickerParams>() {

@@ -1,11 +1,13 @@
 package com.renj.imagepicker.weight;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -33,11 +35,11 @@ import static android.graphics.Canvas.ALL_SAVE_FLAG;
  */
 public class IPCropDrawView extends View {
     // 用户绘制背景的画笔
-    private Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     // 用于绘制边框的画笔
-    private Paint borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     // 用于绘制单元格的画笔
-    private Paint cellPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint cellPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     // 遮罩层颜色
     private int maskColor = RImagePickerConfigData.MASK_COLOR;
     // 边框颜色
@@ -53,13 +55,13 @@ public class IPCropDrawView extends View {
     // 裁剪高度
     private int cropHeight = dp2Px(RImagePickerConfigData.WIDTH);
     // 裁剪范围
-    private RectF cropArea = new RectF();
+    private final RectF cropArea = new RectF();
     // 裁剪形状
     private CropShape cropShape = RImagePickerConfigData.IS_OVAL_CROP ? CropShape.CROP_OVAL : CropShape.CROP_RECT;
     // 控件的范围
-    private RectF viewRectF = new RectF();
+    private final RectF viewRectF = new RectF();
     // 用于计算的RectF
-    private RectF calculateRectF = new RectF();
+    private final RectF calculateRectF = new RectF();
     // 需要绘制的分割线条数 小于1时表示不绘制
     private int cellLineCount = RImagePickerConfigData.CELL_LINE_COUNT;
     // 触摸处理类型 移动/缩放/移动+缩放/不做处理
@@ -68,6 +70,11 @@ public class IPCropDrawView extends View {
     private boolean autoRatioScale = RImagePickerConfigData.AUTO_RATIO_SCALE;
     // 改变裁剪范围的宽高比例
     private int widthRatio = RImagePickerConfigData.SCALE_WIDTH_RATIO, heightRadio = RImagePickerConfigData.SCALE_HEIGHT_RATIO;
+    private Drawable leftTopDecorativeDrawable; // 裁剪视图左上角装饰图片
+    private Drawable rightTopDecorativeDrawable; // 裁剪视图右上角装饰图片
+    private Drawable rightBottomDecorativeDrawable; // 裁剪视图右下角装饰图片
+    private Drawable leftBottomDecorativeDrawable; // 裁剪视图左下角装饰图片
+    private int decorativeDrawableOffset; // 装饰图片偏移值
 
     // 按钮按下的位置
     private int downX, downY;
@@ -164,6 +171,54 @@ public class IPCropDrawView extends View {
             canvas.drawCircle(cropArea.centerX(), cropArea.bottom, scalePointRadius, borderPaint);
         }
 
+        if (leftTopDecorativeDrawable != null) {
+            int intrinsicWidth = leftTopDecorativeDrawable.getIntrinsicWidth();
+            int intrinsicHeight = leftTopDecorativeDrawable.getIntrinsicHeight();
+            leftTopDecorativeDrawable.setBounds(
+                    (int) (cropArea.left - decorativeDrawableOffset),
+                    (int) (cropArea.top - decorativeDrawableOffset),
+                    (int) (cropArea.left + intrinsicWidth - decorativeDrawableOffset),
+                    (int) (cropArea.top + intrinsicHeight - decorativeDrawableOffset)
+            );
+            leftTopDecorativeDrawable.draw(canvas);
+        }
+
+        if (rightTopDecorativeDrawable != null) {
+            int intrinsicWidth = rightTopDecorativeDrawable.getIntrinsicWidth();
+            int intrinsicHeight = rightTopDecorativeDrawable.getIntrinsicHeight();
+            rightTopDecorativeDrawable.setBounds(
+                    (int) (cropArea.right - intrinsicWidth + decorativeDrawableOffset),
+                    (int) (cropArea.top - decorativeDrawableOffset),
+                    (int) (cropArea.right + decorativeDrawableOffset),
+                    (int) (cropArea.top + intrinsicHeight - decorativeDrawableOffset)
+            );
+            rightTopDecorativeDrawable.draw(canvas);
+        }
+
+        if (rightBottomDecorativeDrawable != null) {
+            int intrinsicWidth = rightBottomDecorativeDrawable.getIntrinsicWidth();
+            int intrinsicHeight = rightBottomDecorativeDrawable.getIntrinsicHeight();
+            rightBottomDecorativeDrawable.setBounds(
+                    (int) (cropArea.right - intrinsicWidth + decorativeDrawableOffset),
+                    (int) (cropArea.bottom - intrinsicHeight - decorativeDrawableOffset),
+                    (int) (cropArea.right + decorativeDrawableOffset),
+                    (int) (cropArea.bottom + decorativeDrawableOffset)
+            );
+            rightBottomDecorativeDrawable.draw(canvas);
+        }
+
+        if (leftBottomDecorativeDrawable != null) {
+            int intrinsicWidth = leftBottomDecorativeDrawable.getIntrinsicWidth();
+            int intrinsicHeight = leftBottomDecorativeDrawable.getIntrinsicHeight();
+            leftBottomDecorativeDrawable.setBounds(
+                    (int) (cropArea.left - decorativeDrawableOffset),
+                    (int) (cropArea.bottom - intrinsicWidth + decorativeDrawableOffset),
+                    (int) (cropArea.left + intrinsicHeight - decorativeDrawableOffset),
+                    (int) (cropArea.bottom + decorativeDrawableOffset)
+            );
+            leftBottomDecorativeDrawable.draw(canvas);
+        }
+
         if (cellLineCount > 0) {
             borderPaint.setStyle(Paint.Style.STROKE);
             if (cropShape == CropShape.CROP_OVAL)
@@ -188,8 +243,6 @@ public class IPCropDrawView extends View {
 
     /**
      * 设置裁剪控件参数
-     *
-     * @param imagePickerParams
      */
     public void setCropViewParams(@NonNull ImagePickerParams imagePickerParams) {
         this.maskColor = imagePickerParams.getMaskColor();
@@ -206,9 +259,15 @@ public class IPCropDrawView extends View {
         this.touchHandlerType = imagePickerParams.getTouchHandlerType();
         this.cropShape = imagePickerParams.isOvalCrop() ? CropShape.CROP_OVAL : CropShape.CROP_RECT;
 
+        this.leftTopDecorativeDrawable = getDrawable(imagePickerParams.getCropViewLeftTopDecorativeDrawableRes());
+        this.rightTopDecorativeDrawable = getDrawable(imagePickerParams.getCropViewRightTopDecorativeDrawableRes());
+        this.rightBottomDecorativeDrawable = getDrawable(imagePickerParams.getCropViewRightBottomDecorativeDrawableRes());
+        this.leftBottomDecorativeDrawable = getDrawable(imagePickerParams.getCropViewLeftBottomDecorativeDrawableRes());
+        this.decorativeDrawableOffset = dp2Px(imagePickerParams.getCropViewDecorativeDrawableOffset());
+
         setPaintInfo();
-        float left = (viewRectF.width() - cropWidth) / 2;
-        float top = (viewRectF.hashCode() - cropHeight) / 2;
+        float left = (viewRectF.width() - cropWidth) / 2f;
+        float top = (viewRectF.hashCode() - cropHeight) / 2f;
         cropArea.set(left, top, left + cropWidth, top + cropHeight);
         postInvalidate();
     }
@@ -302,12 +361,20 @@ public class IPCropDrawView extends View {
 
     /**
      * dp转换成px
-     *
-     * @param dp
-     * @return
      */
-    private int dp2Px(float dp) {
+    protected int dp2Px(float dp) {
         return (int) (getResources().getDisplayMetrics().density * dp + 0.5);
+    }
+
+    protected Drawable getDrawable(int drawableResId) {
+        if (drawableResId != 0) {
+            try {
+                return getContext().getResources().getDrawable(drawableResId);
+            } catch (Resources.NotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     /**

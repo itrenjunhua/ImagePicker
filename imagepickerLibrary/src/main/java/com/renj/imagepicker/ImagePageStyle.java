@@ -18,8 +18,8 @@ import android.os.Parcelable;
  * ======================================================================
  */
 public class ImagePageStyle implements Parcelable {
-    private int statusBarColor;
-    private boolean statusBarDark;
+    private final int statusBarColor; // 状态栏颜色
+    private final boolean statusBarDark; // 状态栏文字时候深色
 
     private ImagePageStyle(Builder builder) {
         this.statusBarColor = builder.statusBarColor;
@@ -43,11 +43,17 @@ public class ImagePageStyle implements Parcelable {
             this.statusBarDark = false;
         }
 
+        /**
+         * 状态栏颜色
+         */
         public Builder statusBarColor(int statusBarColor) {
             this.statusBarColor = statusBarColor;
             return this;
         }
 
+        /**
+         * 状态栏文字时候深色
+         */
         public Builder statusBarDark(boolean statusBarDark) {
             this.statusBarDark = statusBarDark;
             return this;
