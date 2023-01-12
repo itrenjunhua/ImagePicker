@@ -336,6 +336,10 @@ public class IPCropDrawView extends View {
         return super.onTouchEvent(event);
     }
 
+    RectF getCropArea() {
+        return cropArea;
+    }
+
     private OnCropAreaChangeListener onCropAreaChangeListener;
 
     public void setOnCropAreaChangeListener(OnCropAreaChangeListener onCropAreaChangeListener) {

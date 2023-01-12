@@ -44,7 +44,7 @@ import static android.graphics.Canvas.ALL_SAVE_FLAG;
 public class IPPhotoView extends AppCompatImageView implements View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
 
     // 用于进行变换的 Matrix
-    private Matrix imageMatrix = new Matrix();
+    private final Matrix imageMatrix = new Matrix();
     // 最小、最大缩放比例
     private float minScale = RImagePickerConfigData.MIN_SCALE, maxScale = RImagePickerConfigData.MAX_SCALE;
     // 边界滑动阻力系数
@@ -53,13 +53,15 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
     // 增加一个变量减少重复的调用布局完成监听方法
     private boolean isOnce = true;
     // 移动临界值
-    private int touchSlop;
+    private final int touchSlop;
     // 初始时的缩放比例，在自动缩放时使用到的
     private float initScale = 1.0f;
     // 是否双击连续放大
     private boolean isContinuityEnlarge = RImagePickerConfigData.IS_CONTINUITY_ENLARGE;
     // 是否正在自动缩放
     private boolean isAutoScale = false;
+    // 图片移动边界值，默认当前控件范围
+    private RectF imageMoveRect;
 
     public IPPhotoView(Context context) {
         this(context, null);
@@ -78,7 +80,7 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
     }
 
     // 用于检测缩放的手势
-    private ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(getContext(),
+    private final ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(getContext(),
             new ScaleGestureDetector.SimpleOnScaleGestureListener() {
                 @Override
                 public boolean onScale(ScaleGestureDetector detector) {
@@ -100,7 +102,7 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
             });
 
     // 用于检测双击的事件，双击效果，当前缩放比例在 2 以下时，将比例设置为 2，当前缩放比例在2-4之间时，将比例设置为 4，其他情况将比例设置为初始比例
-    private GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+    private final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             if (getDrawable() == null)
@@ -158,12 +160,22 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
         int height = getHeight();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (imageRect.width() > width || imageRect.height() > height)
-                    getParent().requestDisallowInterceptTouchEvent(true);
+                if (imageMoveRect == null) {
+                    if (imageRect.width() > width || imageRect.height() > height)
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                } else {
+                    if (imageRect.width() > imageMoveRect.width() || imageRect.height() > imageMoveRect.height())
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (imageRect.width() > width || imageRect.height() > height)
-                    getParent().requestDisallowInterceptTouchEvent(true);
+                if (imageMoveRect == null) {
+                    if (imageRect.width() > width || imageRect.height() > height)
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                } else {
+                    if (imageRect.width() > imageMoveRect.width() || imageRect.height() > imageMoveRect.height())
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                }
 
                 int dx = downX - lastX;
                 int dy = downY - lastY;
@@ -186,29 +198,59 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
                         isCheckLeftRight = true;
 
                         // 图片宽度 <= 控件宽度
-                        if (imageRect.width() <= width) {
-                            isCheckLeftRight = false;
-                            dx = 0;
+                        if (imageMoveRect == null) {
+                            if (imageRect.width() <= width) {
+                                isCheckLeftRight = false;
+                                dx = 0;
+                            }
+                        } else {
+                            if (imageRect.width() <= imageMoveRect.width()) {
+                                isCheckLeftRight = false;
+                                dx = 0;
+                            }
                         }
-                        // 图片高度 <= 控件高度
-                        if (imageRect.height() <= height) {
-                            isCheckTopBottom = false;
-                            dy = 0;
+
+                        if (imageMoveRect == null) {
+                            // 图片高度 <= 控件高度
+                            if (imageRect.height() <= height) {
+                                isCheckTopBottom = false;
+                                dy = 0;
+                            }
+                        } else {
+                            if (imageRect.height() <= imageMoveRect.height()) {
+                                isCheckTopBottom = false;
+                                dy = 0;
+                            }
                         }
 
                         // 达到边界时增加滑动阻力，图片实际移动距离和手指一动距离的比值[0-1]
-                        // 如果 左边界 > 0
-                        if (imageRect.left > 0 && isCheckLeftRight)
-                            dx = (int) (dx * boundaryResistance);
-                        // 如果 右边界 < 控件宽度
-                        if (imageRect.right < width && isCheckLeftRight)
-                            dx = (int) (dx * boundaryResistance);
-                        // 如果 上边界 > 0
-                        if (imageRect.top > 0 && isCheckTopBottom)
-                            dy = (int) (dy * boundaryResistance);
-                        // 如果 下边界 < 控件高度
-                        if (imageRect.bottom < height && isCheckTopBottom)
-                            dy = (int) (dy * boundaryResistance);
+                        if (imageMoveRect == null) {
+                            // 如果 左边界 > 0
+                            if (imageRect.left > 0 && isCheckLeftRight)
+                                dx = (int) (dx * boundaryResistance);
+                            // 如果 右边界 < 控件宽度
+                            if (imageRect.right < width && isCheckLeftRight)
+                                dx = (int) (dx * boundaryResistance);
+                            // 如果 上边界 > 0
+                            if (imageRect.top > 0 && isCheckTopBottom)
+                                dy = (int) (dy * boundaryResistance);
+                            // 如果 下边界 < 控件高度
+                            if (imageRect.bottom < height && isCheckTopBottom)
+                                dy = (int) (dy * boundaryResistance);
+                        } else {
+                            // 如果 左边界 > 0
+                            if (imageRect.left > imageMoveRect.left && isCheckLeftRight)
+                                dx = (int) (dx * boundaryResistance);
+                            // 如果 右边界 < 控件宽度
+                            if (imageRect.right < imageMoveRect.right && isCheckLeftRight)
+                                dx = (int) (dx * boundaryResistance);
+                            // 如果 上边界 > 0
+                            if (imageRect.top > imageMoveRect.top && isCheckTopBottom)
+                                dy = (int) (dy * boundaryResistance);
+                            // 如果 下边界 < 控件高度
+                            if (imageRect.bottom < imageMoveRect.bottom && isCheckTopBottom)
+                                dy = (int) (dy * boundaryResistance);
+                        }
                         imageMatrix.postTranslate(dx, dy);
                         // restoreBounds();
                         setImageMatrix(imageMatrix);
@@ -229,6 +271,13 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
                 break;
         }
         return true;
+    }
+
+    /**
+     * 设置图片移动范围边界，默认控件边界
+     */
+    void setImageMoveRect(RectF imageMoveRect) {
+        this.imageMoveRect = imageMoveRect;
     }
 
     /**
@@ -276,24 +325,39 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
     /**
      * 手指抬起时，将图片超出边界的位置恢复，是图片的边与控件的边对齐
      */
-    private void restoreBounds() {
+    void restoreBounds() {
         float dx = 0, dy = 0;
         int width = getWidth();
         int height = getHeight();
         RectF imageRect = getImageRect();
 
-        // 如果 左边界 > 0
-        if (imageRect.left > 0 && isCheckLeftRight)
-            dx = -imageRect.left;
-        // 如果 右边界 < 控件宽度
-        if (imageRect.right < width && isCheckLeftRight)
-            dx = width - imageRect.right;
-        // 如果 上边界 > 0
-        if (imageRect.top > 0 && isCheckTopBottom)
-            dy = -imageRect.top;
-        // 如果 下边界 < 控件高度
-        if (imageRect.bottom < height && isCheckTopBottom)
-            dy = height - imageRect.bottom;
+        if (imageMoveRect == null) {
+            // 如果 左边界 > 0
+            if (imageRect.left > 0 && isCheckLeftRight)
+                dx = -imageRect.left;
+            // 如果 右边界 < 控件宽度
+            if (imageRect.right < width && isCheckLeftRight)
+                dx = width - imageRect.right;
+            // 如果 上边界 > 0
+            if (imageRect.top > 0 && isCheckTopBottom)
+                dy = -imageRect.top;
+            // 如果 下边界 < 控件高度
+            if (imageRect.bottom < height && isCheckTopBottom)
+                dy = height - imageRect.bottom;
+        } else {
+            // 如果 左边界 > 0
+            if (imageRect.left > imageMoveRect.left && isCheckLeftRight)
+                dx = -(imageRect.left - imageMoveRect.left);
+            // 如果 右边界 < 控件宽度
+            if (imageRect.right < imageMoveRect.right && isCheckLeftRight)
+                dx = imageMoveRect.right - imageRect.right;
+            // 如果 上边界 > 0
+            if (imageRect.top > imageMoveRect.top && isCheckTopBottom)
+                dy = -(imageRect.top - imageMoveRect.top);
+            // 如果 下边界 < 控件高度
+            if (imageRect.bottom < imageMoveRect.bottom && isCheckTopBottom)
+                dy = imageMoveRect.bottom - imageRect.bottom;
+        }
 
         // imageMatrix.postTranslate(dx, dy);
 
@@ -397,8 +461,6 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
 
     /**
      * 获取当前图片显示的范围
-     *
-     * @return
      */
     private RectF getImageRect() {
         RectF rectF = new RectF();
@@ -413,8 +475,6 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
 
     /**
      * 获取当前缩放比例
-     *
-     * @return
      */
     private float getCurrentScale() {
         float[] floats = new float[9];
@@ -425,8 +485,6 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
 
     /**
      * 设置裁剪控件参数
-     *
-     * @param imagePickerParams
      */
     public void setCropViewParams(ImagePickerParams imagePickerParams) {
         this.minScale = imagePickerParams.getMinScale();
@@ -456,15 +514,12 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
      * 自动方法和缩小的任务
      */
     class AutoScaleTask implements Runnable {
-        // 每次放大的倍数
-        private final float BIGGER = 1.02f;
-        // 每次缩小的倍数
-        private final float SMALLER = 0.98f;
-        private int centerX, centerY;
+        private final int centerX;
+        private final int centerY;
         // 目标比例
-        private float targetScale;
+        private final float targetScale;
         // 自动进行缩放时使用的比例
-        private float tempScale;
+        private final float tempScale;
 
         public AutoScaleTask(float targetScale, int centerX, int centerY) {
             this.targetScale = targetScale;
@@ -473,6 +528,10 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
 
             // 判断是缩小还是放大
             float currentScale = getCurrentScale();
+            // 每次放大的倍数
+            float BIGGER = 1.02f;
+            // 每次缩小的倍数
+            float SMALLER = 0.98f;
             if (currentScale > targetScale)
                 tempScale = SMALLER;
             else tempScale = BIGGER;
@@ -504,7 +563,8 @@ public class IPPhotoView extends AppCompatImageView implements View.OnTouchListe
     class RestoreBoundsTask implements Runnable {
         private int count;
         private int alreadyMoveCount;
-        private float moveX, moveY;
+        private final float moveX;
+        private final float moveY;
 
         public RestoreBoundsTask(float dx, float dy) {
             alreadyMoveCount = 0;

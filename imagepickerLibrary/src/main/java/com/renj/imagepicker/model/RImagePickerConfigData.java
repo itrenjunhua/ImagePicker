@@ -106,6 +106,11 @@ public interface RImagePickerConfigData {
     int CROP_BORDER_COLOR = 0xFFFFFFFF;
 
     /**
+     * 裁剪移动边界模式
+     */
+    int CROP_MOVE_BOUNDS_TYPE = ImagePickerMoveType.MOVE_IMAGE_VIEW;
+
+    /**
      * 遮罩层颜色
      */
     int MASK_COLOR = 0x80000000;

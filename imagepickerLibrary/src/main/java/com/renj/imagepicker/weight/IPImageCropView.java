@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 import com.renj.imagepicker.ImagePickerParams;
 import com.renj.imagepicker.R;
 import com.renj.imagepicker.model.ImagePickerModel;
+import com.renj.imagepicker.model.ImagePickerMoveType;
+import com.renj.imagepicker.model.ImagePickerTouchType;
 import com.renj.imagepicker.utils.ImagePickerLoaderUtils;
 
 /**
@@ -87,23 +89,10 @@ public class IPImageCropView extends RelativeLayout {
      * @return {@link ImagePickerModel} 对象
      */
     public void cut(@NonNull final CutListener cutListener) {
-        runOnNewThread(new Runnable() {
-            @Override
-            public void run() {
-                cropDrawView.confirmCrop(new IPCropDrawView.OnCropRangeListener() {
-                    @Override
-                    public void cropRange(IPCropDrawView.CropShape cropShape, RectF cropRectF) {
-                        final ImagePickerModel imagePickerModel = photoView.cropBitmap(cropShape, cropRectF);
-                        runOnMainThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                cutListener.cutFinish(imagePickerModel);
-                            }
-                        });
-                    }
-                });
-            }
-        });
+        runOnNewThread(() -> cropDrawView.confirmCrop((cropShape, cropRectF) -> {
+            final ImagePickerModel imagePickerModel = photoView.cropBitmap(cropShape, cropRectF);
+            runOnMainThread(() -> cutListener.cutFinish(imagePickerModel));
+        }));
     }
 
     private void runOnNewThread(Runnable runnable) {
@@ -118,12 +107,17 @@ public class IPImageCropView extends RelativeLayout {
 
     /**
      * 设置裁剪控件参数
-     *
-     * @param imagePickerParams
      */
     public void setCropViewParams(@NonNull ImagePickerParams imagePickerParams) {
         cropDrawView.setCropViewParams(imagePickerParams);
         photoView.setCropViewParams(imagePickerParams);
+        if (imagePickerParams.getCropMoveBoundsType() == ImagePickerMoveType.MOVE_CROP_VIEW) {
+            photoView.setImageMoveRect(cropDrawView.getCropArea());
+            cropDrawView.setOnCropAreaChangeListener(cropArea -> {
+                photoView.setImageMoveRect(cropArea);
+                photoView.restoreBounds();
+            });
+        }
     }
 
     public interface CutListener {

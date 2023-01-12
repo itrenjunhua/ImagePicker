@@ -7,6 +7,7 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 
 import com.renj.imagepicker.listener.OnResultCallBack;
+import com.renj.imagepicker.model.ImagePickerMoveType;
 import com.renj.imagepicker.model.RImagePickerConfigData;
 import com.renj.imagepicker.model.ImagePickerModel;
 import com.renj.imagepicker.model.ImagePickerTouchType;
@@ -40,6 +41,7 @@ public class ImagePickerParams implements Parcelable {
     float boundaryResistance; // 边界滑动阻力系数
     float cropBorderWidth; // 裁剪线条宽度
     int cropBorderColor; // 裁剪线条颜色
+    int cropMoveBoundsType; // 裁剪移动边界模式  图片控件边界做边界/裁剪控件边界做边界
     int maskColor; // 遮罩层颜色
     boolean isContinuityEnlarge; // 是否双击连续放大
     boolean isShowCamera; // 是否显示打开相机按钮
@@ -73,6 +75,7 @@ public class ImagePickerParams implements Parcelable {
         this.boundaryResistance = builder.boundaryResistance;
         this.cropBorderWidth = builder.cropBorderWidth;
         this.cropBorderColor = builder.cropBorderColor;
+        this.cropMoveBoundsType = builder.cropMoveBoundsType;
         this.maskColor = builder.maskColor;
         this.isContinuityEnlarge = builder.isContinuityEnlarge;
         this.isShowCamera = builder.isShowCamera;
@@ -130,6 +133,10 @@ public class ImagePickerParams implements Parcelable {
 
     public int getCropBorderColor() {
         return this.cropBorderColor;
+    }
+
+    public int getCropMoveBoundsType() {
+        return cropMoveBoundsType;
     }
 
     public int getMaskColor() {
@@ -213,6 +220,7 @@ public class ImagePickerParams implements Parcelable {
         private float boundaryResistance; // 边界滑动阻力系数
         private float cropBorderWidth; // 裁剪线条宽度
         private int cropBorderColor; // 裁剪线条颜色
+        private int cropMoveBoundsType; // 裁剪移动边界模式  图片控件边界做边界/裁剪控件边界做边界
         private int maskColor; // 遮罩层颜色
         private boolean isContinuityEnlarge; // 是否双击连续放大
         private boolean isShowCamera; // 是否显示打开相机按钮
@@ -246,6 +254,7 @@ public class ImagePickerParams implements Parcelable {
             this.boundaryResistance = RImagePickerConfigData.BOUNDARY_RESISTANCE; // 边界滑动阻力系数
             this.cropBorderWidth = RImagePickerConfigData.CROP_BORDER_WIDTH; // 裁剪线条宽度
             this.cropBorderColor = RImagePickerConfigData.CROP_BORDER_COLOR; // 裁剪线条颜色
+            this.cropMoveBoundsType = RImagePickerConfigData.CROP_MOVE_BOUNDS_TYPE; // 裁剪移动边界模式
             this.maskColor = RImagePickerConfigData.MASK_COLOR; // 遮罩层颜色
             this.isContinuityEnlarge = RImagePickerConfigData.IS_CONTINUITY_ENLARGE; // 是否双击连续放大
             this.isShowCamera = RImagePickerConfigData.IS_SHOW_CAMERA; // 是否显示打开相机按钮
@@ -380,6 +389,19 @@ public class ImagePickerParams implements Parcelable {
          */
         public Builder cropBorderColor(int cropBorderColor) {
             this.cropBorderColor = cropBorderColor;
+            return this;
+        }
+
+        /**
+         * 设置裁剪移动边界模式
+         *
+         * @param cropMoveBoundsType 裁剪时图片拖动范围类型 显示图片的控件范围内移动，默认值/以裁剪框范围的边界作为图片移动的边界值
+         *                           {@link ImagePickerMoveType#MOVE_IMAGE_VIEW}
+         *                           /{@link ImagePickerMoveType#MOVE_CROP_VIEW}
+         * @return 链式调用对象
+         */
+        public Builder cropMoveBoundsType(@ImagePickerMoveType int cropMoveBoundsType) {
+            this.cropMoveBoundsType = cropMoveBoundsType;
             return this;
         }
 
@@ -577,6 +599,7 @@ public class ImagePickerParams implements Parcelable {
         dest.writeFloat(this.boundaryResistance);
         dest.writeFloat(this.cropBorderWidth);
         dest.writeInt(this.cropBorderColor);
+        dest.writeInt(this.cropMoveBoundsType);
         dest.writeInt(this.maskColor);
         dest.writeByte(this.isContinuityEnlarge ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isShowCamera ? (byte) 1 : (byte) 0);
@@ -606,6 +629,7 @@ public class ImagePickerParams implements Parcelable {
         this.boundaryResistance = source.readFloat();
         this.cropBorderWidth = source.readFloat();
         this.cropBorderColor = source.readInt();
+        this.cropMoveBoundsType = source.readInt();
         this.maskColor = source.readInt();
         this.isContinuityEnlarge = source.readByte() != 0;
         this.isShowCamera = source.readByte() != 0;
@@ -635,6 +659,7 @@ public class ImagePickerParams implements Parcelable {
         this.boundaryResistance = in.readFloat();
         this.cropBorderWidth = in.readFloat();
         this.cropBorderColor = in.readInt();
+        this.cropMoveBoundsType = in.readInt();
         this.maskColor = in.readInt();
         this.isContinuityEnlarge = in.readByte() != 0;
         this.isShowCamera = in.readByte() != 0;
